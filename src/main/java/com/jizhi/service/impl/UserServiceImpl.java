@@ -151,23 +151,22 @@ public class UserServiceImpl implements UserSevice{
 	@Override
 	public boolean forgetPsw(LoginInfo info) {
 		String tel = info.getTel();
-		//String msgCode = info.getCode();
+		String msgCode = info.getCode();
 		String password = info.getPassword();
 		//从redis中查询该手机对应的验证码
-		//String record = this.redisService.get(tel);
+		String record = this.redisService.get(tel);
 		HashMap<String, Object> map=new HashMap<String, Object>();
 		map.put("tel", tel);
 		map.put("password", password);
 		//验证码一致，更新密码
-		//if(msgCode.equals(record)) {
+		if(msgCode.equals(record)) {
 			this.userDao.updatePswByTel(map);
-			
 			return true;
-		//}
-		//验证码不一致，
-		/*
-		 * else { return false; }
-		 */
+		}
+		else { 
+			return false; 
+			}
+
 	}
 
 	
