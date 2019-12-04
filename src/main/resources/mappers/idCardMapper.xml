@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.IdCardDao">
+	<resultMap type="com.jizhi.pojo.IdCard" id="idCard">
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="name" property="name"/>
+		<result column="idNum" property="idNum"/>
+		<result column="pic" property="pic"/>
+	</resultMap>
+	
+	<insert id="save" parameterType="com.jizhi.pojo.IdCard">
+		insert into idCard(user_id,name,idNum,pic) values(#{userId},#{name},#{idNum},#{pic})
+	</insert>
+	
+	<update id="update" parameterType="com.jizhi.pojo.IdCard">
+		update idCard set user_id=#{userId},name=#{name},pic=#{pic},idNum=#{idNum}
+	</update>
+</mapper>

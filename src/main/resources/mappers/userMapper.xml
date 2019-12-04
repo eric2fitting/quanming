@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.UserDao">
+	<resultMap type="com.jizhi.pojo.User" id="user">
+		<id column="id" property="id"/>
+		<result column="tel" property="tel"/>
+		<result column="userName" property="userName"/>
+		<result column="state" property="state"/>
+		<result column="isFrozen" property="isFrozen"/>
+		<result column="password" property="password"/>
+		<result column="inviteCode" property="inviteCode"/>
+		<result column="invitedCode" property="invitedCode"/>
+		<result column="isConfirmed" property="isConfirmed"/>	
+		<result column="secondpsw" property="secondpsw"/>
+	</resultMap>
+	
+	<select id="queryByTel" parameterType="java.lang.String" resultMap="user">
+		select id,
+			   tel,
+			   userName,
+			   state,
+			   isFrozen,
+			   password,
+			   inviteCode,
+			   invitedCode,
+			   isConfirmed,
+			   secondpsw from user where tel=#{tel}
+	</select>
+	
+	<insert id="save" parameterType="com.jizhi.pojo.User">
+		insert into user(tel,password,secondpsw,invitedCode) 
+		values
+		(#{user.tel},#{user.password},#{user.secondpsw},#{user.invitedCode})
+	</insert>
+	
+	<!-- 修改密码 -->
+	<update id="updatePsw" parameterType="java.util.Map">
+		update user set password=#{newPsw} where password=#{oldPsw}
+	</update>
+	
+	<!-- 修改二级密码 -->
+	<update id="updateSecondPsw" parameterType="java.util.Map">
+		update user set secondpsw=#{newPsw} where id=#{userId}
+	</update>
+	
+	<update id="updatePswByTel" parameterType="java.util.Map">
+		update user set password=#{password} where tel=#{tel}
+	</update>
+	
+	<select id="queryByRandom" parameterType="java.lang.String" resultMap="user">
+		select id,tel from user where inviteCode=#{inviteCode}
+	</select>
+	
+	<select id="queryById" parameterType="java.lang.Integer" resultMap="user">
+		select id,
+			   userName,
+			   tel,
+			   state,
+			   isFrozen,
+			   password,
+			   inviteCode,
+			   invitedCode,
+			   isConfirmed,
+			   secondpsw from user where id=#{id}
+	</select>
+	
+	<update id="updateUserName" parameterType="java.util.Map">
+		update user set userName=#{userName} where id=#{userId}
+	</update>
+</mapper>

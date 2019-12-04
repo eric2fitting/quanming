@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.OrderTimeDao">
+	<resultMap type="com.jizhi.pojo.OrderTime" id="orderTime">
+		<id column="id" property="id"/>
+		<result column="startTime" property="startTime"/>
+		<result column="endTime" property="endTime"/>
+		<result column="animalId" property="animalId"/>
+	</resultMap>
+
+	<select id="queryByAnimalId" parameterType="java.lang.Integer" resultMap="orderTime">
+		select animalId, startTime,endTime from order_time where animalId=#{animalId}
+	</select>
+	<select id="queryStartTimeByAnimalId" resultType="java.lang.String">
+		select startTime from order_time where animalId=#{animalId}
+	</select>
+	
+	<select id="orderTimeDao" parameterType="java.util.Map" resultType="java.lang.String">
+		select endTime from order_time 
+		where 
+		animalId=#{map.animalId} and startTime=#{map.startTime}
+	</select>
+</mapper>

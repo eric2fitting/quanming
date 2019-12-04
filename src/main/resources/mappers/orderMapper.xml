@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.OrderDao">
+	<resultMap type="com.jizhi.pojo.Order" id="order">
+		<id column="id" property="id"/>
+		<result column="userId" property="userId"/>
+		<result column="animalId" property="animalId"/>
+		<result column="date" property="date"/>
+		<result column="time" property="time"/>
+		<result column="state" property="state"/>
+	</resultMap>
+	
+	<insert id="save" parameterType="com.jizhi.pojo.Order">
+		insert into orders(userId,animalId,date,time)
+		 values
+		#{userId},#{animalId},#{date},#{time}
+	</insert>
+	
+	<select id="queryByUserIdAndTime" resultMap="order">
+		select userId,animalId,date,time,state from orders where userId=#{userId} and time=#{startTime}
+	</select>
+	
+	
+	<select id="queryAll" parameterType="java.util.HashMap">
+		select id,userId,animalId,date,time,state from orders 
+		where 
+		animalId=#{map.animalId},date=#{map.date},time=#{map.time},state=1
+	</select>
+	
+	<update id="updateState" parameterType="java.lang.Integer">
+		update orders set state=2 where id=#{id}
+	</update>
+	
+	<select id="queryAllByUserId" parameterType="java.lang.Integer" resultMap="order">
+		select date,state animalId from orders where userId=#{userId}
+	</select>
+	
+	<select id="querySuccessOrder" parameterType="java.lang.Integer" resultMap="order">
+		select id,userId,date,state animalId from orders where userId=#{userId}
+	</select>
+	
+</mapper>

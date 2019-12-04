@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.MatchDao">
+	<resultMap type="com.jizhi.pojo.Match" id="match">
+		<id column="id" property="id"/>
+		<result column="orderId" property="orderId"/>
+		<result column="propertyId" property="propertyId"/>
+		<result column="price" property="price"/>
+		<result column="buyerConfirm" property="buyerConfirm"/>
+		<result column="sellerConfirm" property="sellerConfirm"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="com.jizhi.pojo.Match">
+		insert into match(orderId,propertyId,price,buyerConfirm,sellerConfirm) 
+		values 
+		(#{orderId},#{propertyId},#{price},#{buyerConfirm},#{sellerConfirm})
+	</insert>
+	
+	<select id="queryByUserId" parameterType="java.lang.Integer" resultMap="match">
+		select id,animalId,price,buyerConfirm from match where buyerId=#{buyerId} and sellerConfirm=0
+	</select>
+	
+	<select id="queryByOrderId" parameterType="java.lang.Integer" resultType="match">
+		select id,orderId,propertyId,price,buyerConfirm 
+		from match 
+		where orderId=#{orderId} and sellerConfirm=0
+	</select>
+	
+</mapper>

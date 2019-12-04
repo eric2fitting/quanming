@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.AccountCardDao">
+	<resultMap type="com.jizhi.pojo.AccountCard" id="accountCard">
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="type" property="type"/>
+		<result column="accountName" property="accountName"/>
+		<result column="accountNum" property="accountNum"/>
+		<result column="pic" property="pic"/>
+	</resultMap>
+	
+	<insert id="save" parameterType="com.jizhi.pojo.AccountCard">
+		insert into accountcard(user_id,type,accountName,accountNum,pic) 
+		values(#{userId},#{type},#{accountName},#{accountNum},#{pic})
+	</insert>
+	
+	<delete id="del" parameterType="int">
+		delete from accountcard where user_id=#{userId}
+	</delete>
+	
+	<update id="update" parameterType="com.jizhi.pojo.AccountCard">
+		update accountcard set
+		type=#{type},
+		accountName=#{accountName},
+		accountNum=#{accountNum},
+		pic=#{pic} 
+		where user_id=#{userId}
+	</update>
+	
+</mapper>

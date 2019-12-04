@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.ProfitsDao">
+	<resultMap type="com.jizhi.pojo.Profits" id="profits">
+		<id column="id" property="id"/>
+		<result column="userId" property="userId"/>
+		<result column="animalProfit" property="animalProfit"/>
+		<result column="shareProfit" property="shareProfit"/>
+		<result column="NFC" property="NFC"/>
+	</resultMap>
+	
+	<select id="queryTotalMonet" parameterType="java.lang.Integer">
+		select sum(animalProfit),sum(shareProfit),sum(NFC) from profits where userId=#{userId}
+	</select>
+	
+	
+</mapper>
