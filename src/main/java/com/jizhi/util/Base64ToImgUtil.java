@@ -8,10 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
 
-import com.mysql.jdbc.StringUtils;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
 
 import sun.misc.BASE64Decoder;
 
@@ -22,7 +23,7 @@ public class Base64ToImgUtil {
 		byte[] byteImg;
 		try {
 			//若前端传来的图片是空
-			if(StringUtils.isEmptyOrWhitespaceOnly(base64)) {
+			if(StringUtils.isEmpty(base64)) {
 				return null;
 			}else {
 				//把前端传来的base64转成字节码

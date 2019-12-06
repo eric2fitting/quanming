@@ -11,7 +11,7 @@
 		<result column="NFC" property="NFC"/>
 	</resultMap>
 	
-	<select id="queryTotalMonet" parameterType="java.lang.Integer">
+	<select id="selectAllProfits" parameterType="java.lang.Integer" resultMap="profits">
 		select sum(animalProfit),sum(shareProfit),sum(NFC) from profits where userId=#{userId}
 	</select>
 	

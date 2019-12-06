@@ -1,6 +1,8 @@
 package com.jizhi.service.impl;
                 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -11,12 +13,16 @@ import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Profits;
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.LoginInfo;
+import com.jizhi.pojo.vo.MyTeam;
+import com.jizhi.pojo.vo.PswInfo;
+import com.jizhi.pojo.vo.TeamMate;
 import com.jizhi.pojo.vo.UserInfo;
 import com.jizhi.service.ProfitsService;
 import com.jizhi.service.PropertyService;
 import com.jizhi.service.UserSevice;
 import com.jizhi.util.RedisService;
 import com.jizhi.util.SMS;
+import com.sun.glass.ui.Size;
 
 @Service
 public class UserServiceImpl implements UserSevice{
@@ -119,35 +125,11 @@ public class UserServiceImpl implements UserSevice{
 		}
 		
 	}
-	/**
-	 * 修改密码
-	 */
-	@Override
-	public int updatePsw(String code, String token, String oldPsw, String newPsw) {
-		int i;
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		//表示修改密码
-		if("0".equals(code)) {
-			map.put("oldPsw", oldPsw);
-			map.put("newPsw", newPsw);
-			i=this.userDao.updatePsw(map);
-			//修改二级密码
-		}else if ("1".equals(code)) {
-			String user_Id = this.redisService.get(token);
-			int userId = Integer.parseInt(user_Id);
-			map.put("userId", userId);
-			map.put("newPsw", newPsw);
-			i=this.userDao.updateSecondPsw(map);
-		}else {
-			i=0;
-		}
-		return i;
-	}
+
+	
 	/**
 	 * 忘记密码重新设置
 	 */
-	
-	
 	@Override
 	public boolean forgetPsw(LoginInfo info) {
 		String tel = info.getTel();
@@ -180,7 +162,11 @@ public class UserServiceImpl implements UserSevice{
 		Random random = new Random();
 		return random.nextInt(899999)+100000+"";
 	}
-
+	
+	
+	/**
+	 * 修改用户名
+	 */
 
 	@Override
 	public Integer updateUserName(String userName, String token) {
@@ -192,8 +178,11 @@ public class UserServiceImpl implements UserSevice{
 		Integer i=userDao.updateUserName(map);
 		return i;
 	}
-
-
+	
+	
+	/**
+	 * 查询用户个人信息资产等
+	 */
 	@Override
 	public UserInfo queryUserInfo(String token) {
 		String user_id = this.redisService.get(token);
@@ -208,10 +197,87 @@ public class UserServiceImpl implements UserSevice{
 		userInfo.setUserName(user.getUserName());
 		userInfo.setTel(user.getTel());
 		userInfo.setTotalMoney(totalMoney);
-		userInfo.setAnimalProfit(profits.getAnimalProfit());
-		userInfo.setShareProfit(profits.getShareProfit());
-		userInfo.setNFC(profits.getNFC());
+		if(profits!=null) {
+			userInfo.setAnimalProfit(profits.getAnimalProfit());
+			userInfo.setShareProfit(profits.getShareProfit());
+			userInfo.setNFC(profits.getNFC());
+		}
 		return userInfo;
+	}
+
+	/**
+	 * 修改密码
+	 */
+	@Override
+	public int updatePsw(String token, PswInfo pswInfo) {
+		//根据token从redis中取出UserId
+		String string = this.redisService.get(token);
+		Integer userId=Integer.parseInt(string);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("oldPsw", pswInfo.getOldPsw());
+		map.put("newPsw", pswInfo.getNewPsw());
+		return userDao.updatePsw(map);
+	}
+
+	/**
+	 * 修改二级密码
+	 */
+	@Override
+	public int updateSecondPsw(String token, PswInfo pswInfo) {
+		//根据token从redis中取出UserId
+		String string = this.redisService.get(token);
+		Integer userId=Integer.parseInt(string);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("newPsw", pswInfo.getNewPsw());
+		return userDao.updateSecondPsw(map);
+	}
+
+	/**
+	 * 查找用户的团队信息
+	 */
+	@Override
+	public MyTeam queryMyTeam(String token) {
+		String string = redisService.get(token);
+		Integer id = Integer.parseInt(string);
+		User record = userDao.queryById(id);
+		//用户自己的邀请码也就是别人被邀请的码
+		String invitedCode = record.getInviteCode();
+		List<User> users=userDao.queryByInvitedCode(invitedCode);
+		ArrayList<TeamMate> teamMates = new ArrayList<TeamMate>();
+		Double teamProfit=0.00;
+		Integer activedNum=0;
+		Integer activeNum=0;
+		Integer unActiveNum=0;
+		int numbers=users.size();
+		for(User user:users) {
+			TeamMate mate = new TeamMate();
+			mate.setName(user.getUserName());//设置团员名字
+			String state = user.getState();
+			mate.setState(state);//设置团员活跃状态
+			mate.setID("ID:"+user.getTel());//设置团员ID
+			Integer userId=user.getId();
+			Double totalMoney = propertyService.queryTotalMonet(userId);
+			//查找该团员所有交易得到分享
+			
+			teamProfit=teamProfit+totalMoney;
+			if(state=="已激活") {
+				activeNum++;
+			}else if (state=="活跃") {
+				activedNum++;
+			}else if (state=="未激活用户") {
+				unActiveNum++;
+			}
+		}
+		MyTeam myTeam = new MyTeam();
+		myTeam.setActivedNum(activedNum);
+		myTeam.setActiveNum(activeNum);
+		myTeam.setTeamNum(teamMates.size());
+		myTeam.setUnActiveNum(unActiveNum);
+		myTeam.setTeamMates(teamMates);
+		myTeam.setTeamProfit(teamProfit);
+		return myTeam;
 	}
 
 

@@ -1,5 +1,7 @@
 package com.jizhi.dao;
 
+import java.util.HashMap;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.jizhi.pojo.Match;
@@ -10,5 +12,7 @@ public interface MatchDao {
 	Integer add(Match match);
 
 	Match queryByOrderId(Integer id);
+
+	Match queryByPropertyId(HashMap<String,Object> map);
 
 }

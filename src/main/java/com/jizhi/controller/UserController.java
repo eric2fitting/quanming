@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.LoginInfo;
+import com.jizhi.pojo.vo.MyTeam;
+import com.jizhi.pojo.vo.PswInfo;
 import com.jizhi.pojo.vo.UserInfo;
 import com.jizhi.service.UserSevice;
 
@@ -20,13 +22,11 @@ import com.jizhi.service.UserSevice;
 public class UserController {
 	@Autowired
 	private UserSevice userSevice;
-	
 	/*
 	 *登陆
 	 */
-
 	@RequestMapping("/login")
-	public FinalResult login( User user) {
+	public FinalResult login( @RequestBody User user) {
 		HashMap<String, Object> map=this.userSevice.query(user);
 		FinalResult finalResult = new FinalResult();
 		if(map==null) {
@@ -61,25 +61,40 @@ public class UserController {
 	
 	
 	/**
-	 * 修改密码
-	 * code=0，表示修改密码；如果是1，表示2修改二级密码。
+	 * 修改登录密码
+	 * 
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/updatePsw")
-	public FinalResult updatePsw(HttpServletRequest request) {
-		String token=request.getParameter("token");
-		String code = request.getParameter("code");
-		String oldPsw = request.getParameter("oldPsw");
-		String newPsw = request.getParameter("newPsw");
-		int i=this.userSevice.updatePsw(code,token,oldPsw,newPsw);;	
+	public FinalResult updatePsw(@RequestBody PswInfo pswInfo,HttpServletRequest request) {
+		String token=request.getHeader("token");
+		int i=this.userSevice.updatePsw(token,pswInfo);
 		FinalResult finalResult = new FinalResult();
-		if (i>0) {
-			finalResult.setCode("100");
-			finalResult.setMsg("修改密码成功");
+		if (i>0) { 
+			finalResult.setCode("100"); finalResult.setMsg("修改密码成功"); 
 		}else {
-			finalResult.setCode("104");
-			finalResult.setMsg("修改密码失败");
+			finalResult.setCode("104"); finalResult.setMsg("修改密码失败"); 
+		}
+		return finalResult;
+	}
+	
+	/**
+	 * 修改二级密码
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateSecondPsw")
+	public FinalResult updateSecondPsw(@RequestBody PswInfo pswInfo,HttpServletRequest request) {
+		String token=request.getHeader("token");
+		int i=this.userSevice.updateSecondPsw(token,pswInfo);
+		FinalResult finalResult = new FinalResult();
+		
+		if (i>0) { 
+			finalResult.setCode("100"); finalResult.setMsg("修改密码成功"); 
+		}else {
+			finalResult.setCode("104"); finalResult.setMsg("修改密码失败"); 
 		}
 		return finalResult;
 	}
@@ -98,10 +113,10 @@ public class UserController {
 		FinalResult finalResult=new FinalResult();
 		if(bool) {
 			finalResult.setCode("100");
-			finalResult.setMsg("已发送");
+			finalResult.setMsg("修改成功");
 		}else {
 			finalResult.setCode("104");
-			finalResult.setMsg("发送失败");
+			finalResult.setMsg("修改失败");
 		}
 		return finalResult;
 	}
@@ -126,9 +141,12 @@ public class UserController {
 		return finalResult;	
 	}
 	
+	/*
+	 *修改用户名
+	 */
 	@RequestMapping("/updateUserName")
-	public FinalResult updateUserName(HttpServletRequest request) {
-		String userName=request.getParameter("userName");
+	public FinalResult updateUserName(@RequestBody User user,HttpServletRequest request) {
+		String userName=user.getUserName();
 		String token = request.getHeader("token");
 		Integer i=this.userSevice.updateUserName(userName,token);
 		FinalResult finalResult=new FinalResult();
@@ -143,12 +161,11 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping("/query")
+	@RequestMapping("/userInfo")
 	public FinalResult queryUserInfo(HttpServletRequest request) {
 		String token = request.getHeader("token");
 		UserInfo  userInfo=userSevice.queryUserInfo(token);
 		FinalResult finalResult = new FinalResult();
-		
 		if(userInfo==null){
 			finalResult.setCode("104");
 			finalResult.setMsg("信息有误重新登录");;
@@ -159,4 +176,14 @@ public class UserController {
 		return finalResult;
 	}
 	
+	
+	@RequestMapping("/myTeam")
+	public FinalResult queryMyTeam(HttpServletRequest request) {
+		String token = request.getHeader("token");
+		MyTeam myTeam=userSevice.queryMyTeam(token);
+		FinalResult finalResult = new FinalResult();
+		finalResult.setCode("100");
+		finalResult.setBody(myTeam);
+		return finalResult;
+	}
 }

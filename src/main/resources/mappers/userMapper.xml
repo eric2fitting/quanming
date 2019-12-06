@@ -14,6 +14,7 @@
 		<result column="invitedCode" property="invitedCode"/>
 		<result column="isConfirmed" property="isConfirmed"/>	
 		<result column="secondpsw" property="secondpsw"/>
+		<result column="role" property="role"/>
 	</resultMap>
 	
 	<select id="queryByTel" parameterType="java.lang.String" resultMap="user">
@@ -26,7 +27,8 @@
 			   inviteCode,
 			   invitedCode,
 			   isConfirmed,
-			   secondpsw from user where tel=#{tel}
+			   secondpsw,
+			   role from user where tel=#{tel}
 	</select>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.User">
@@ -37,7 +39,7 @@
 	
 	<!-- 修改密码 -->
 	<update id="updatePsw" parameterType="java.util.Map">
-		update user set password=#{newPsw} where password=#{oldPsw}
+		update user set password=#{newPsw} where id=#{userId} and password=#{oldPsw}
 	</update>
 	
 	<!-- 修改二级密码 -->
@@ -63,10 +65,15 @@
 			   inviteCode,
 			   invitedCode,
 			   isConfirmed,
-			   secondpsw from user where id=#{id}
+			   secondpsw,role from user where id=#{id}
 	</select>
 	
 	<update id="updateUserName" parameterType="java.util.Map">
 		update user set userName=#{userName} where id=#{userId}
 	</update>
+	
+	
+	<select id="queryByInvitedCode" parameterType="java.lang.String" resultMap="user">
+		select id,userName,tel,state from user where invitedCode=#{invitedCode}
+	</select>
 </mapper>

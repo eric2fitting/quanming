@@ -22,8 +22,12 @@ public class TestAnything {
 		 * calendar.add(Calendar.DATE, 3);
 		 * System.out.println(simpleDateFormat.format(calendar.getTime()));
 		 */
-		testGetNearestTime();
+	
 		
+	}
+	public static void testList() {
+		ArrayList<Integer> arrayList = new ArrayList<Integer>();
+		System.out.println(arrayList.size());
 	}
 	
 	public static void testRandom() {

@@ -39,6 +39,9 @@ public class AutoMatchService {
 	@Autowired
 	private MatchService matchService;
 	
+	/**
+	 * 自动匹配预约用户和资产拥有者
+	 */
 	@Scheduled(fixedRate=60*1000*60)
 	public void match() {
 		SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm");
@@ -60,17 +63,18 @@ public class AutoMatchService {
 					}
 				}
 			}
-			//从list中取出即将到的时间
+			//从list中取出即将到的最近时间
 			int nearesti=0;
 			for(int i=1;i<list.size();i++ ) {
 				if(startTimes.get(nearesti).after(nowDate)&&startTimes.get(i).after(nowDate)) {
 					if(startTimes.get(nearesti).after(startTimes.get(i))) {
 						nearesti=i;
-					}else if (startTimes.get(nearesti).before(nowDate)&&startTimes.get(i).after(nowDate)) {
-						nearesti=i;
 					}
+				}else if (startTimes.get(nearesti).before(nowDate)&&startTimes.get(i).after(nowDate)) {
+					nearesti=i;
 				}
 			}
+			//TODO 如果
 			long sleepTime=(startTimes.get(nearesti).getTime()-nowDate.getTime());
 			Thread.sleep(sleepTime);
 			//开始自动匹配

@@ -1,7 +1,10 @@
 package com.jizhi.service.impl;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +29,23 @@ public class AccountCardServiceImpl implements AccountCardService{
 	public int save(AccountCard accountCard, HttpServletRequest request,String token) {
 		//将前端传来的图片上传到本地并记录地址pic
 		String pic = base64ToImgUtil.Base64ToImg(accountCard.getPic(), request);
-		accountCard.setPic(pic);
 		//根据token得到userId
 		String userId = this.redisService.get(token);
 		accountCard.setUserId(Integer.valueOf(userId));
-		return this.accountCardDao.save(accountCard);
+		if(StringUtils.isEmpty(accountCard.getAccountName()) 
+				|| StringUtils.isEmpty(accountCard.getAccountNum()) 
+				|| StringUtils.isEmpty(accountCard.getType())) {
+			return 0;
+		}else {
+			accountCard.setPic(pic);
+			if(accountCard.getType().equals("支付宝") || accountCard.getType().equals("微信")) {
+				if(StringUtils.isEmpty(pic)) {
+					return 0;
+				}
+			}
+			return this.accountCardDao.save(accountCard);
+		}
+		
 	}
 	@Override
 	public int delIdCard(String token) {
@@ -47,6 +62,12 @@ public class AccountCardServiceImpl implements AccountCardService{
 		String userId = this.redisService.get(token);
 		accountCard.setUserId(Integer.valueOf(userId));
 		return this.accountCardDao.update(accountCard);
+	}
+	@Override
+	public List<AccountCard> queryAll(String token) {
+		String string = redisService.get(token);
+		Integer userId = Integer.parseInt(string);
+		return accountCardDao.queryAll(userId);
 	}
 	
 	

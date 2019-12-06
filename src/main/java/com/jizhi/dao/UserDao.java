@@ -1,6 +1,7 @@
 package com.jizhi.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -27,6 +28,8 @@ public interface UserDao {
 	User queryById(int id);
 	//根据id修改用户名
 	Integer updateUserName(HashMap<String, Object> map);
+	//根据被邀请的邀请码查找用户列表
+	List<User> queryByInvitedCode(String invitedCode);
 
 	
 

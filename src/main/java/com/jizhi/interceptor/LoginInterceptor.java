@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,15 +15,16 @@ import com.jizhi.util.RedisService;
 import net.sf.json.JSONObject;
 
 public class LoginInterceptor implements HandlerInterceptor{
-	@Autowired
-	private RedisService redisService;
 	
+	@Autowired 
+	private RedisService redisService;
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String token = request.getHeader("token");
 		//token为空说明未登录
-		if(token==null) {
+		if(StringUtils.isEmpty(token)) {
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json; charset=utf-8");
 			PrintWriter out = response.getWriter();
@@ -32,9 +34,9 @@ public class LoginInterceptor implements HandlerInterceptor{
 			out.append(res.toString());
 			return false;
 		}else {
-			String userId = this.redisService.get(token);
+			String userId =redisService.get(token);
 			//token过期
-			if(userId==null) {
+			if(StringUtils.isEmpty(userId)) {
 				response.setCharacterEncoding("UTF-8");
 				response.setContentType("application/json; charset=utf-8");
 				PrintWriter out = response.getWriter();

@@ -20,6 +20,12 @@ public interface PropertyDao {
 
 	Property queryById(Integer id);
 
+
+	List<Property> queryByUserId(Integer userId);
+
+
+	List<Property> queryIsSelling(HashMap<String, Object> map);
+
 	
 
 }

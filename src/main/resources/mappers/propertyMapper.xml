@@ -16,10 +16,10 @@
 	<select id="queryCanSell" parameterType="java.util.Map" resultMap="property">
 		select id,userId,animalId,price,buyDate,buyTime from property 
 		where 
-		animalId=#{map.animalId},buyDate=#{map.buyDate},buyTime=#{map.buyTime}
+		animalId=#{animalId},buyDate=#{buyDate},buyTime=#{buyTime}
 	</select>
 	
-	<update id="updateState" parameterType="com.jizhi.pojo.Property">
+	<update id="updateState" parameterType="java.lang.Integer">
 		update property set isSold=1 where id=#{id}
 	</update>
 	<select id="queryTotalMonet" parameterType="java.lang.Integer" resultType="java.lang.Double">
@@ -30,5 +30,17 @@
 		select userId,animalId,buyDate,buyDatec 
 		from property 
 		where id=#{id}
+	</select>
+	
+	<select id="queryByUserId" parameterType="java.lang.Integer" resultMap="property">
+		select id,userId,animalId,price,buyDate,buyTime,isSold 
+		from property 
+		where userId=#{userId} and (isSold=0 or isSold=1)
+	</select>
+	
+	<select id="queryIsSelling" parameterType="java.util.Map" resultMap="property">
+		select id,userId,animalId,price,buyDate,buyTime,isSold 
+		from property 
+		where userId=#{userId} and isSold=#{isSold}
 	</select>
 </mapper>

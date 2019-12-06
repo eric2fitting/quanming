@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.vo.OrderDetail;
@@ -50,11 +51,9 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping("/try")
-	public FinalResult toOrder(HttpServletRequest request) {
-		String animal_Id = request.getParameter("animalId");
-		Integer animalId=Integer.parseInt(animal_Id);
-		String token = "token";
-		request.getHeader(token);
+	public FinalResult toOrder(@RequestBody Animal animal, HttpServletRequest request) {
+		Integer animalId = animal.getId();
+		String token = request.getHeader("token");
 		List<Integer> list=this.orderService.toOrder(animalId,token);
 		FinalResult finalResult = new FinalResult();
 		finalResult.setCode("100");

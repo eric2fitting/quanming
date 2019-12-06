@@ -1,5 +1,7 @@
 package com.jizhi.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.jizhi.pojo.AccountCard;
@@ -27,6 +29,9 @@ public interface AccountCardService {
 	 * @return
 	 */
 	int updateIdCard(AccountCard accountCard, HttpServletRequest request,String token);
+	
+	//银行卡或支付宝微信等收款方式列表
+	List<AccountCard> queryAll(String token);
 	
 	
 

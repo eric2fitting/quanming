@@ -30,4 +30,8 @@
 		where user_id=#{userId}
 	</update>
 	
+	<select id="queryAll" parameterType="java.lang.Integer" resultMap="accountCard">
+		select user_id,type,accountName,accountNum,pic from accountCard where user_id=#{userId}
+	</select>
+	
 </mapper>

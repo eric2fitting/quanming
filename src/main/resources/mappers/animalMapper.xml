@@ -28,7 +28,7 @@
 		select id,profit,cycle,nfc from animal where startTime=#{startTime} and isShow=1
 	</select>
 	
-	<select id="queryById" parameterType="int" resultMap="animal">
+	<select id="queryById" parameterType="java.lang.Integer" resultMap="animal">
 		select id,animalType,size,profit,minPrice,maxPrice,nfc from animal where id=#{AnimalId}
 	</select>
 </mapper>

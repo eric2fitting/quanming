@@ -1,8 +1,11 @@
 package com.jizhi.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,16 +22,16 @@ public class AccountCardController {
 	
 	
 	@RequestMapping("/save")
-	public FinalResult saveIdCard(AccountCard accountCard,HttpServletRequest request) {
+	public FinalResult saveIdCard(@RequestBody AccountCard accountCard,HttpServletRequest request) {
 		FinalResult finalResult = new FinalResult();
 		String token = request.getHeader("token");
 		int i=this.accountCardService.save(accountCard,request,token);
 		if(i>0) {
 			finalResult.setCode("100");
-			finalResult.setMsg("保存成功");
+			finalResult.setMsg("添加成功");
 		}else {
 			finalResult.setCode("104");
-			finalResult.setMsg("保存失败");
+			finalResult.setMsg("添加失败");
 		}
 		return finalResult;
 	}
@@ -50,7 +53,7 @@ public class AccountCardController {
 	}
 	
 	@RequestMapping("/update")
-	public FinalResult updateIdCard(AccountCard accountCard,HttpServletRequest request) {
+	public FinalResult updateIdCard(@RequestBody AccountCard accountCard,HttpServletRequest request) {
 		FinalResult finalResult = new FinalResult();
 		String token = request.getHeader("token");
 		int i=this.accountCardService.updateIdCard(accountCard,request,token);
@@ -63,5 +66,17 @@ public class AccountCardController {
 		}
 		return finalResult;
 	}
+	@RequestMapping("/queryAll")
+	public FinalResult queryAll(HttpServletRequest request) {
+		String token = request.getHeader("token");
+		List<AccountCard> list=accountCardService.queryAll(token);
+		FinalResult finalResult = new FinalResult();
+		finalResult.setCode("100");
+		finalResult.setBody(list);
+		return finalResult;
+	}
+	
+	
+	
 
 }
