@@ -113,10 +113,10 @@ public class UserController {
 		FinalResult finalResult=new FinalResult();
 		if(bool) {
 			finalResult.setCode("100");
-			finalResult.setMsg("修改成功");
+			finalResult.setMsg("已发送");
 		}else {
 			finalResult.setCode("104");
-			finalResult.setMsg("修改失败");
+			finalResult.setMsg("发送失败");
 		}
 		return finalResult;
 	}
@@ -184,6 +184,16 @@ public class UserController {
 		FinalResult finalResult = new FinalResult();
 		finalResult.setCode("100");
 		finalResult.setBody(myTeam);
+		return finalResult;
+	}
+	
+	@RequestMapping("/share")
+	public FinalResult share(HttpServletRequest request) {
+		String token = request.getHeader("token");
+		String inviteCode=userSevice.share(token);
+		FinalResult finalResult = new FinalResult();
+		finalResult.setCode("100");
+		finalResult.setBody(inviteCode);
 		return finalResult;
 	}
 }

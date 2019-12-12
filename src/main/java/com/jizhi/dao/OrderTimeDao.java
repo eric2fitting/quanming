@@ -12,8 +12,15 @@ public interface OrderTimeDao {
 
 	List<OrderTime> queryByAnimalId(Integer id);
 
-	List<String> queryStartTimeByAnimalId(Integer animalId);
 
 	String queryLastTime(HashMap<String, Object> map);
+
+
+	OrderTime queryById(Integer id);
+
+
+	List<OrderTime> queryByStartTime(String startTime);
+	
+	List<OrderTime> queryByEndTime(String endTime);
 
 }

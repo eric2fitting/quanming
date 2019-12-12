@@ -25,7 +25,7 @@ public class AccountCardController {
 	public FinalResult saveIdCard(@RequestBody AccountCard accountCard,HttpServletRequest request) {
 		FinalResult finalResult = new FinalResult();
 		String token = request.getHeader("token");
-		int i=this.accountCardService.save(accountCard,request,token);
+		int i=this.accountCardService.save(accountCard,token);
 		if(i>0) {
 			finalResult.setCode("100");
 			finalResult.setMsg("添加成功");
@@ -56,7 +56,7 @@ public class AccountCardController {
 	public FinalResult updateIdCard(@RequestBody AccountCard accountCard,HttpServletRequest request) {
 		FinalResult finalResult = new FinalResult();
 		String token = request.getHeader("token");
-		int i=this.accountCardService.updateIdCard(accountCard,request,token);
+		int i=this.accountCardService.updateIdCard(accountCard,token);
 		if(i>0) {
 			finalResult.setCode("100");
 			finalResult.setMsg("更新成功");

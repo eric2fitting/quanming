@@ -9,7 +9,7 @@ public class Order {
 	private Integer userId;
 	private Integer animalId;
 	private String date;
-	private Integer time;
+	private String time;
 	private Integer state;//预约状态，0失败，1预约中，2成功
 	
 	public Integer getState() {
@@ -42,10 +42,10 @@ public class Order {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public Integer getTime() {
+	public String getTime() {
 		return time;
 	}
-	public void setTime(Integer time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 

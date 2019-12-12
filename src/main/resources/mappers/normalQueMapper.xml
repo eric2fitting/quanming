@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.NormalQueDao">
+	<resultMap type="com.jizhi.pojo.NormalQue" id="normalQue">
+		<id column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="com.jizhi.pojo.NormalQue">
+		insert into normalque(title,content) values(#{title},#{content})
+	</insert>
+	
+	<select id="queryAll" resultMap="normalQue">
+		select title,content from normalque
+	</select>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from normalque where id=#{id}
+	</delete>
+	
+</mapper>

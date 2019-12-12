@@ -1,5 +1,6 @@
 package com.jizhi.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.jizhi.pojo.Animal;
@@ -12,5 +13,9 @@ public interface AnimalService {
 	List<Animal> queryByStartTime(String startTime);
 	//根据动物id查询所有信息
 	Animal queryById(Integer animalId);
+	//根据预约的最后时间查询所有动物列表
+	List<Animal> queryByEndTime(String endTime);
+	//根据动物类型和大小查找动物id
+	Integer queryAnimalId(HashMap<String, Object> map);
 
 }

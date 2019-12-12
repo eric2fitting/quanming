@@ -9,11 +9,20 @@
 		<result column="animalProfit" property="animalProfit"/>
 		<result column="shareProfit" property="shareProfit"/>
 		<result column="NFC" property="NFC"/>
+		<result column="sharerId" property="sharerId"/>
 	</resultMap>
 	
 	<select id="selectAllProfits" parameterType="java.lang.Integer" resultMap="profits">
 		select sum(animalProfit),sum(shareProfit),sum(NFC) from profits where userId=#{userId}
 	</select>
 	
+	<insert id="save" parameterType="com.jizhi.pojo.Profits">
+		insert into profits(userId,animalProfit,shareProfit,NFC,sharerId) 
+		values(#{userId},#{animalProfit},#{shareProfit},#{NFC},#{sharerId})
+	</insert>
+	
+	<select id="queryAllShareProfit" parameterType="java.lang.Integer" resultType="java.lang.Double">
+		select sum(shareProfit) from profits where and id=#{id}
+	</select>
 	
 </mapper>

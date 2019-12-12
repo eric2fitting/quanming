@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.ServiceOnlineDao">
+	<resultMap type="com.jizhi.pojo.ServiceOnline" id="serviceOnline">
+		<id column="id" property="id"/>
+		<result column="userId" property="userId"/>
+		<result column="que" property="que"/>
+		<result column="pic" property="pic"/>
+		<result column="answer" property="answer"/>
+		<result column="isAnswered" property="isAnswered"/>
+	</resultMap>
+	
+	<select id="queryByUserId" parameterType="java.lang.Integer" resultMap="serviceOnline">
+		select que,pic,answer from service_online where userId=#{userId}
+	</select>
+	
+	<insert id="addMsg" parameterType="com.jizhi.pojo.ServiceOnline">
+		insert into service_online(userId,que,isAnswered) values(#{userId},#{que},#{isAnswered})
+	</insert>
+	
+	<insert id="addPic" parameterType="com.jizhi.pojo.ServiceOnline">
+		insert into service_online(userId,pic,isAnswered) values(#{userId},#{pic},#{isAnswered})
+	</insert>
+
+</mapper>

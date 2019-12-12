@@ -8,21 +8,32 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jizhi.dao.AccountCardDao;
 import com.jizhi.dao.MatchDao;
 import com.jizhi.dao.OrderTimeDao;
+import com.jizhi.dao.UserDao;
+import com.jizhi.pojo.AccountCard;
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.Match;
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.Property;
+import com.jizhi.pojo.User;
+import com.jizhi.pojo.vo.BuyerDoPay;
 import com.jizhi.pojo.vo.BuyingDetail;
 import com.jizhi.pojo.vo.FeedingDetail;
+import com.jizhi.pojo.vo.PayInfo;
 import com.jizhi.service.AnimalService;
 import com.jizhi.service.MatchService;
 import com.jizhi.service.OrderService;
 import com.jizhi.service.PropertyService;
+import com.jizhi.util.AppPushUtil;
+import com.jizhi.util.Base64ToImgUtil;
 import com.jizhi.util.RedisService;
 
 @Service
@@ -39,39 +50,68 @@ public class MatchServiceImpl implements MatchService{
 	private RedisService redisService;
 	@Autowired
 	private OrderTimeDao orderTimeDao;
+	@Autowired
+	private UserDao userDao;
+	@Autowired
+	private AccountCardDao accountCardDao;
+	@Autowired
+	private Base64ToImgUtil base64ToImgUtil;
+	@Autowired
+	private AppPushUtil appPushUtil;
+	
+	private String content1="恭喜你成功卖出小动物，请尽快联系买家付款并完成交易";
+	private String content2="恭喜你成功匹配到小动物，请尽快付款并联系卖家完成交易";
+	private String title="恭喜你匹配成功";
 
 	//一对一匹配，写入数据库
 	public void doMatch(Order order, Property property) {
 		//预约id
 		Integer orderId = order.getId();
+		Integer buyerId = order.getUserId();//买家id
 		//资产id
 		Integer propertyId = property.getId();
+		Integer sellerId = property.getUserId();//买家id
 		//根据动物id查找利润率
 		Integer animalId = order.getAnimalId();
 		Animal animal=animalService.queryById(animalId);
 		Integer profit = animal.getProfit();
 		//动物的进价
 		Double price = property.getPrice();
+		BigDecimal p=new BigDecimal(price.toString());
 		//计算卖价，保留两位小数
-		Double sellPrice=price*(1+profit/100);
-		BigDecimal bigDecimal = new BigDecimal(sellPrice);
-		sellPrice=bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+		BigDecimal b1 =new BigDecimal(profit.toString());
+		BigDecimal b2 =new BigDecimal(95D);
+		BigDecimal b3 =new BigDecimal(100D);
+		Double sellPrice=p.multiply(b1.add(b2)).divide(b3, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		//往配对表中添加数据
 		Match match = new Match();
 		match.setOrderId(orderId);
 		match.setPropertyId(propertyId);
-		match.setPrice(price);
-		add(match);
-		//添加成功后更改订单表和资产表状态
-		orderService.updateState(orderId);
-		propertyService.updateState(propertyId);	
-		//TODO 给双方发送推送消息
+		match.setPrice(sellPrice);
+		match.setBuyerConfirm(0);
+		match.setSellerConfirm(0);
+		Integer i = add(match);
+		//匹配成功
+		if(i>0) {
+			//添加成功后更改订单表和资产表状态
+			orderService.updateState(orderId);
+			Property property2 = new Property();
+			property2.setId(propertyId);
+			property2.setIsSold(1);
+			propertyService.updateState(property2);	
+			// 查找双方的cid
+			String buyerCid = userDao.queryById(buyerId).getCid();
+			String sellerCid = userDao.queryById(sellerId).getCid();
+			//给双方发推送
+			appPushUtil.pushMsg(buyerCid, title, content2);
+			appPushUtil.pushMsg(sellerCid, title, content1);
 		}
+	}
+	
 	@Override
 	public Integer add(Match match) {
 		return matchDao.add(match);
 	}
-	
 	
 	/**
 	 * 领养中：详情列表
@@ -123,7 +163,7 @@ public class MatchServiceImpl implements MatchService{
 				map.put("startTime", property.getBuyTime());
 				map.put("animalId", animalId);
 				String lastTime=orderTimeDao.queryLastTime(map);
-				buyingDetail.setLastPayTime(nowDate+lastTime);
+				buyingDetail.setLastPayTime(nowDate+":"+lastTime);
 				list.add(buyingDetail);
 			}
 		}
@@ -160,7 +200,7 @@ public class MatchServiceImpl implements MatchService{
 					feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit()-5)+"%");
 					feedingDetail.setProfit("价值*"+animal.getProfit());
 					//转让出栏时间
-					String buyTime = property.getBuyTime();//买入时间
+					String buyTime = property.getBuyDate();//买入时间
 					Integer days=animal.getCycle();//喂养天数
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					Date buyDate = simpleDateFormat.parse(buyTime);
@@ -203,7 +243,70 @@ public class MatchServiceImpl implements MatchService{
 	public Match queryByPropertyId(HashMap<String, Object> map) {
 		return matchDao.queryByPropertyId(map);
 	}
+	
+	
+	/**
+	 * 买家付款页
+	 */
+	@Override
+	public PayInfo buyerToPay(Integer matchId) {
+		//匹配信息
+		Match match = matchDao.queryById(matchId);
+		//根据匹配表得到资产表id
+		Integer propertyId = match.getPropertyId();
+		//根据资产表查询卖家信息
+		Property property = propertyService.queryById(propertyId);
+		Integer sellerId = property.getUserId();
+		User seller = userDao.queryById(sellerId);
+		List<AccountCard> list = accountCardDao.queryAll(sellerId);
+		PayInfo payInfo = new PayInfo();
+		payInfo.setPrice(match.getPrice());
+		payInfo.setIsConfirm(match.getBuyerConfirm());
+		payInfo.setName(seller.getUserName());
+		payInfo.setTel(seller.getTel());
+		payInfo.setAccountCardList(list);
+		return payInfo;
+	}
+	/**
+	 * 买家确认付款
+	 */
+	@Override
+	public String doPay(BuyerDoPay buyerDoPay, HttpServletRequest request) {
+		String payPic = base64ToImgUtil.base64(buyerDoPay.getPayPic());
+		if(StringUtils.isEmpty(payPic)) {
+			return "请上传付款截图";
+		}else {
+			HashMap<String, Object> hashMap = new HashMap<String, Object>();
+			
+			String secondPsw = buyerDoPay.getSecondPsw();
+			String token = request.getHeader("token");
+			String user_id = redisService.get(token);
+			Integer userId = Integer.parseInt(user_id);
+			User user = userDao.queryById(userId);
+			String secondpsw2 = user.getSecondpsw();
+			if(secondPsw.equals(secondpsw2)) {
+				//更改match_tb表状态和付款凭证
+				hashMap.put("id", buyerDoPay.getMatchId());
+				hashMap.put("payPic", payPic);
+				matchDao.updatePayPic(hashMap);
+				return "成功";
+			}else{
+				return "密码错误";
+			}
+		}
+	}
+	@Override
+	public List<Match> queryAllByBuyerConfirm() {
+		return matchDao.queryAllByBuyerConfirm();
+	}
+	@Override
+	public List<Match> queryAllBySellerConfirm() {
+		return matchDao.queryAllBySellerConfirm();
+	}
+	@Override
+	public void updateSellerConfirm(Integer id) {
+		matchDao.updateSellerConfirm(id);
+		
+	}
 
-		
-		
 }

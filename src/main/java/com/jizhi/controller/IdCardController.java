@@ -22,7 +22,7 @@ public class IdCardController {
 	public FinalResult saveIdCard(@RequestBody IdCard idCard,
 			HttpServletRequest request) {
 		String token = request.getHeader("token");
-		int i=idCardService.saveIdCard(idCard,request,token);
+		int i=idCardService.saveIdCard(idCard,token);
 		FinalResult fz = new FinalResult();
 		if(i>0) {
 			fz.setCode("100"); 
@@ -40,7 +40,7 @@ public class IdCardController {
 	public FinalResult updateIdCard(@RequestBody IdCard idCard,
 			HttpServletRequest request) {
 		String token = request.getHeader("token");
-		int i=idCardService.updateIdCard(idCard,request,token);
+		int i=idCardService.updateIdCard(idCard,token);
 		FinalResult fz = new FinalResult();
 		if(i>0) {
 			fz.setCode("100"); 

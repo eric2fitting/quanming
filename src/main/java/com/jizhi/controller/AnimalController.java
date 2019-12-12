@@ -1,5 +1,6 @@
 package com.jizhi.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.vo.ShowInfo;
 import com.jizhi.service.AnimalService;
+import com.jizhi.service.FirstPageService;
 
 @RestController
 @RequestMapping("animal")
@@ -16,7 +18,8 @@ public class AnimalController {
 	
 	@Autowired
 	private AnimalService animalService;
-	
+	@Autowired
+	private FirstPageService firstPageService;
 	
 	/**
 	 * 展示首页可预约的动物及时间列表信息
@@ -38,5 +41,17 @@ public class AnimalController {
 		return finalResult;
 	}
 	
+	/**
+	 *第一条标题
+	 * @return
+	 */
+	@RequestMapping("/firstPage")
+	public FinalResult firstPageInfo() {
+		HashMap<String, Object> map= firstPageService.queryfirstPageInfo();
+		FinalResult finalResult = new FinalResult();
+		finalResult.setCode("100");
+		finalResult.setBody(map);
+		return finalResult;
+	}
 	
 }

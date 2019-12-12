@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.FinalResult;
-import com.jizhi.pojo.Order;
+import com.jizhi.pojo.OrderTime;
+import com.jizhi.pojo.vo.AnimaInfo;
 import com.jizhi.pojo.vo.OrderDetail;
 import com.jizhi.service.OrderService;
 
@@ -20,7 +21,8 @@ import com.jizhi.service.OrderService;
 public class OrderController {
 	
 	
-	@Autowired OrderService orderService;
+	@Autowired 
+	private OrderService orderService;
 	
 	
 	
@@ -30,8 +32,11 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public FinalResult addOrder(@RequestBody Order order) {
-		int i=this.orderService.addOrder(order);
+	public FinalResult addOrder(@RequestBody OrderTime orderTime,HttpServletRequest request) {
+		//预约时间表的id
+		Integer id = orderTime.getId();
+		String token = request.getHeader("token");
+		int i=this.orderService.addOrder(id,token);
 		FinalResult finalResult = new FinalResult();
 		if(i>0) {
 			finalResult.setCode("100");
@@ -54,10 +59,10 @@ public class OrderController {
 	public FinalResult toOrder(@RequestBody Animal animal, HttpServletRequest request) {
 		Integer animalId = animal.getId();
 		String token = request.getHeader("token");
-		List<Integer> list=this.orderService.toOrder(animalId,token);
+		AnimaInfo animaInfo=this.orderService.toOrder(animalId,token);
 		FinalResult finalResult = new FinalResult();
 		finalResult.setCode("100");
-		finalResult.setBody(list);
+		finalResult.setBody(animaInfo);
 		return finalResult;
 	}
 	

@@ -15,8 +15,8 @@
 		<result column="isShow" property="isShow"/>
 	</resultMap>
 	
-	<select id="queryAll" resultMap="animal">
-		select size,minPrice,maxPrice,profit,cycle,nfc from animal where isShow=1;
+	<select id="queryAll" resultType="animal">
+		select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal where isShow=1;
 	</select>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.Animal">
@@ -24,11 +24,12 @@
 		values (#{animalType},#{size},#{minPrice},#{maxPrice},#{profit},#{cycle},#{nfc})
 	</insert>
 	
-	<select id="queryByStartTime" parameterType="java.lang.String" resultMap="animal">
-		select id,profit,cycle,nfc from animal where startTime=#{startTime} and isShow=1
+
+	<select id="queryById" parameterType="java.lang.Integer" resultMap="animal">
+		select id,animalType,size,profit,minPrice,maxPrice,nfc,cycle from animal where id=#{AnimalId}
 	</select>
 	
-	<select id="queryById" parameterType="java.lang.Integer" resultMap="animal">
-		select id,animalType,size,profit,minPrice,maxPrice,nfc from animal where id=#{AnimalId}
+	<select id="queryAnimalId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select id from animal where animalType=#{animalType} and size=#{size}
 	</select>
 </mapper>

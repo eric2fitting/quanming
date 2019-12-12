@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -15,14 +16,18 @@ import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class TestAnything {
 	public static void main(String[] args) {
+
+			//SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		/*
-		 * SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		 * Calendar calendar = Calendar.getInstance();
-		 * System.out.println(simpleDateFormat.format(calendar.getTime()));
-		 * calendar.add(Calendar.DATE, 3);
-		 * System.out.println(simpleDateFormat.format(calendar.getTime()));
+		 * Double a=0.0D; Double b=21.9D; Double c=3.26D; BigDecimal b1 = new
+		 * BigDecimal(a); BigDecimal b2 = new BigDecimal(b); BigDecimal b3 = new
+		 * BigDecimal(c); Double d=b1.add(b2).add(b3).setScale(2,
+		 * BigDecimal.ROUND_HALF_UP).doubleValue(); System.out.println(d);
 		 */
-	
+		ArrayList<String> arrayList = new ArrayList<String>();
+		System.out.println(arrayList==null);
+		System.out.println(arrayList.equals(null));
+		System.out.println(arrayList.size());
 		
 	}
 	public static void testList() {

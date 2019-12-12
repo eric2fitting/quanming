@@ -11,7 +11,15 @@ public class Match {
 	private Integer buyerConfirm;
 	private Integer sellerConfirm;
 	private Double price;
+	private String payPic;
 	
+	
+	public String getPayPic() {
+		return payPic;
+	}
+	public void setPayPic(String payPic) {
+		this.payPic = payPic;
+	}
 	public Double getPrice() {
 		return price;
 	}

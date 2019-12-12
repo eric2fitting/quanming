@@ -1,6 +1,7 @@
 package com.jizhi.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.LoginInfo;
@@ -19,4 +20,7 @@ public interface UserSevice {
 	int updatePsw(String token, PswInfo pswInfo);
 	int updateSecondPsw(String token, PswInfo pswInfo);
 	MyTeam queryMyTeam(String token);
+	String share(String token);
+	void updateIsFrozen(HashMap<String, Object> map);
+	List<User> queryAdmin();
 }

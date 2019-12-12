@@ -6,6 +6,10 @@ public interface ProfitsService {
 
 	Profits selectAllProfits(int id);
 
+	void add(Profits profits);
+
+	Double queryAllShareProfit(Integer id);
+
 
 
 }

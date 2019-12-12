@@ -13,13 +13,14 @@
 	</resultMap>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.Order">
-		insert into orders(userId,animalId,date,time)
-		 values
-		#{userId},#{animalId},#{date},#{time}
+		insert into orders(userId,animalId,date,time,state)
+		 values 
+		 (#{userId},#{animalId},#{date},#{time},#{state})
 	</insert>
 	
 	<select id="queryByUserIdAndTime" resultMap="order">
-		select userId,animalId,date,time,state from orders where userId=#{userId} and time=#{startTime}
+		select userId,animalId,date,time,state from orders 
+		where userId=#{userId} and animalId=#{animalId} and time=#{time}
 	</select>
 	
 	
@@ -34,11 +35,15 @@
 	</update>
 	
 	<select id="queryAllByUserId" parameterType="java.lang.Integer" resultMap="order">
-		select date,state animalId from orders where userId=#{userId}
+		select date,state,animalId from orders where userId=#{userId}
 	</select>
 	
 	<select id="querySuccessOrder" parameterType="java.lang.Integer" resultMap="order">
 		select id,userId,date,state animalId from orders where userId=#{userId} and state=2
+	</select>
+	
+	<select id="queryById" parameterType="java.lang.Integer" resultMap="order">
+		select * from orders where id=#{id}
 	</select>
 	
 </mapper>

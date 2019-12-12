@@ -1,7 +1,5 @@
 package com.jizhi.service.impl;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +22,9 @@ public class IdCardServiceImpl implements IdCardService{
 	/**
 	 * 保存身份证 
 	 */
-	public int saveIdCard(IdCard idCard,HttpServletRequest request,String token) {
+	public int saveIdCard(IdCard idCard,String token) {
 		//将前端传来的图片上传到本地并记录地址pic
-		String pic = base64ToImgUtil.Base64ToImg(idCard.getPic(), request);
+		String pic = base64ToImgUtil.base64(idCard.getPic());
 		
 		if(StringUtils.isEmpty(pic) || StringUtils.isEmpty(idCard.getIdNum()) 
 				|| StringUtils.isEmpty(idCard.getName())) {
@@ -42,9 +40,9 @@ public class IdCardServiceImpl implements IdCardService{
 	}
 
 	@Override
-	public int updateIdCard(IdCard idCard,HttpServletRequest request,String token) {
+	public int updateIdCard(IdCard idCard,String token) {
 		//将前端传来的图片上传到本地并记录地址pic
-		String pic = base64ToImgUtil.Base64ToImg(idCard.getPic(), request);
+		String pic = base64ToImgUtil.base64(idCard.getPic());
 		if(StringUtils.isEmpty(pic) || StringUtils.isEmpty(idCard.getIdNum()) 
 				|| StringUtils.isEmpty(idCard.getName())) {
 			return 0;

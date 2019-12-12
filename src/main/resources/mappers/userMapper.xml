@@ -15,26 +15,17 @@
 		<result column="isConfirmed" property="isConfirmed"/>	
 		<result column="secondpsw" property="secondpsw"/>
 		<result column="role" property="role"/>
+		<result column="cid" property="cid"/>
 	</resultMap>
 	
 	<select id="queryByTel" parameterType="java.lang.String" resultMap="user">
-		select id,
-			   tel,
-			   userName,
-			   state,
-			   isFrozen,
-			   password,
-			   inviteCode,
-			   invitedCode,
-			   isConfirmed,
-			   secondpsw,
-			   role from user where tel=#{tel}
+		select * from user where tel=#{tel}
 	</select>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.User">
-		insert into user(tel,password,secondpsw,invitedCode) 
-		values
-		(#{user.tel},#{user.password},#{user.secondpsw},#{user.invitedCode})
+		insert into user(tel,password,secondpsw,inviteCode,invitedCode,cid) 
+		values 
+		(#{tel},#{password},#{secondpsw},#{inviteCode},#{invitedCode},#{cid})
 	</insert>
 	
 	<!-- 修改密码 -->
@@ -65,7 +56,7 @@
 			   inviteCode,
 			   invitedCode,
 			   isConfirmed,
-			   secondpsw,role from user where id=#{id}
+			   secondpsw,role,cid from user where id=#{id}
 	</select>
 	
 	<update id="updateUserName" parameterType="java.util.Map">
@@ -76,4 +67,20 @@
 	<select id="queryByInvitedCode" parameterType="java.lang.String" resultMap="user">
 		select id,userName,tel,state from user where invitedCode=#{invitedCode}
 	</select>
+	
+	<select id="queryByInviteCode" parameterType="java.lang.String" resultType="user">
+		select id,userName,tel,state from user where inviteCode=#{inviteCode}
+	</select>
+	
+	<update id="updateIsFrozen" parameterType="java.util.HashMap">
+		update user set isFrozen=#{isFrozen} where id=#{userId}
+	</update>
+	
+	<select id="queryAdmin" resultMap="user">
+		select * from user where role=1 or role=2
+	</select>
+	
+	<update id="updateState" parameterType="java.lang.Integer">
+		update user set state="活跃" where id=#{id}
+	</update>
 </mapper>

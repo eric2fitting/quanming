@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import com.jizhi.pojo.User;
 
@@ -13,7 +12,7 @@ public interface UserDao {
 	//根据电话查找用户
 	User queryByTel(String tel);
 	//保存用户
-	void save(@Param("user") User user);
+	void save(User user);
 	//根据邀请码查找用户
 	User queryByRandom(String inviteCode);
 	//根据旧密码修改新密码
@@ -30,6 +29,13 @@ public interface UserDao {
 	Integer updateUserName(HashMap<String, Object> map);
 	//根据被邀请的邀请码查找用户列表
 	List<User> queryByInvitedCode(String invitedCode);
+	//分享者的邀请码查询分享者
+	User queryByInviteCode(String inviteCode);
+	//更改冻结状态
+	void updateIsFrozen(HashMap<String, Object> map);
+	List<User> queryAdmin();
+	//更改活跃状态
+	void updateState(Integer id);
 
 	
 

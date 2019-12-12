@@ -21,4 +21,15 @@ public class ProfitsServiceImpl implements ProfitsService{
 		return profitsDao.selectAllProfits(id);
 	}
 
+	@Override
+	public void add(Profits profits) {
+		profitsDao.save(profits);
+		
+	}
+
+	@Override
+	public Double queryAllShareProfit(Integer id) {
+		return profitsDao.queryAllShareProfit(id);
+	}
+
 }

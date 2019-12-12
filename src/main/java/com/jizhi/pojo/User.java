@@ -14,16 +14,18 @@ public class User implements Serializable{
 	private Integer isFrozen;
 	private String password;
 	private String inviteCode;
+	private String invitedCode;
+	private Integer isConfirmed;
+	private String secondpsw;
+	private Integer role;
+	private String cid;
 	public Integer getRole() {
 		return role;
 	}
 	public void setRole(Integer role) {
 		this.role = role;
 	}
-	private String invitedCode;
-	private Integer isConfirmed;
-	private String secondpsw;
-	private Integer role;
+
 	
 	public String getUserName() {
 		return userName;
@@ -84,6 +86,12 @@ public class User implements Serializable{
 	}
 	public void setIsConfirmed(Integer isConfirmed) {
 		this.isConfirmed = isConfirmed;
+	}
+	public String getCid() {
+		return cid;
+	}
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	

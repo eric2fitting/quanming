@@ -16,7 +16,6 @@ import com.jizhi.util.RedisService;
 import net.sf.json.JSONObject;
 
 public class OrderInterceptor implements HandlerInterceptor{
-	
 	@Autowired
 	private RedisService redisService;
 	
@@ -32,6 +31,7 @@ public class OrderInterceptor implements HandlerInterceptor{
 		Integer id=Integer.parseInt(userId);
 		User user=this.userDao.queryById(id);
 		Integer isConfirmed = user.getIsConfirmed();
+		Integer isFrozen = user.getIsFrozen();
 		if(isConfirmed==0) {
 			//表示还没有认证身份和银行信息
 			response.setCharacterEncoding("UTF-8");
@@ -42,6 +42,17 @@ public class OrderInterceptor implements HandlerInterceptor{
 			res.put("msg", "身份证银行卡未绑定或未认证成功");
 			out.append(res.toString());
 			return false;
+			//表示被冻结了
+		}else if(isFrozen==1) {
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json; charset=utf-8");
+			PrintWriter out = response.getWriter();
+			JSONObject res = new JSONObject();
+			res.put("code", "104");
+			res.put("msg", "您已被冻结");
+			out.append(res.toString());
+			return false;
+			//表示被冻结了
 		}
 		return true;
 	}
@@ -49,14 +60,12 @@ public class OrderInterceptor implements HandlerInterceptor{
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 

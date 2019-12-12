@@ -19,15 +19,20 @@
 		animalId=#{animalId},buyDate=#{buyDate},buyTime=#{buyTime}
 	</select>
 	
-	<update id="updateState" parameterType="java.lang.Integer">
-		update property set isSold=1 where id=#{id}
+	<update id="updateToSold" parameterType="java.lang.Integer">
+		update property set isSold=2 where id=#{id}
 	</update>
+	
+	<update id="updateState" parameterType="com.jizhi.pojo.Property">
+		update property set isSold=#{isSold} where id=#{id}
+	</update>
+	
 	<select id="queryTotalMonet" parameterType="java.lang.Integer" resultType="java.lang.Double">
 		select sum(price) from property where userId=#{userId} and (isSold=0 or isSold=1)
 	</select>
 	
-	<select id="queryById" parameterType="java.lang.Integer">
-		select userId,animalId,buyDate,buyDatec 
+	<select id="queryById" parameterType="java.lang.Integer" resultMap="property">
+		select userId,animalId,buyDate,buyTime,price 
 		from property 
 		where id=#{id}
 	</select>
@@ -35,7 +40,7 @@
 	<select id="queryByUserId" parameterType="java.lang.Integer" resultMap="property">
 		select id,userId,animalId,price,buyDate,buyTime,isSold 
 		from property 
-		where userId=#{userId} and (isSold=0 or isSold=1)
+		where userId=#{userId}
 	</select>
 	
 	<select id="queryIsSelling" parameterType="java.util.Map" resultMap="property">
@@ -43,4 +48,9 @@
 		from property 
 		where userId=#{userId} and isSold=#{isSold}
 	</select>
+	
+	<insert id="add" parameterType="com.jizhi.pojo.Property">
+		insert into property(userId,animalId,price,buyDate,buyTime,isSold) 
+		values(#{userId},#{animalId},#{price},#{buyDate},#{buyTime},#{isSold})
+	</insert>
 </mapper>

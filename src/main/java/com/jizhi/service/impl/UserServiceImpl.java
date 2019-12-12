@@ -1,5 +1,6 @@
 package com.jizhi.service.impl;
                 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,6 @@ import com.jizhi.service.PropertyService;
 import com.jizhi.service.UserSevice;
 import com.jizhi.util.RedisService;
 import com.jizhi.util.SMS;
-import com.sun.glass.ui.Size;
 
 @Service
 public class UserServiceImpl implements UserSevice{
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserSevice{
 				//登陆成功生成token存在redis中并返回给前端
 				key=UUID.randomUUID().toString();
 				value=record.getId()+"";
-				redisService.set(key, value,60*60*24*30);
+				redisService.set(key, value,60*60*24*7);
 				map.put("token", key);
 				map.put("user", record);
 				return map;
@@ -196,11 +196,19 @@ public class UserServiceImpl implements UserSevice{
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUserName(user.getUserName());
 		userInfo.setTel(user.getTel());
-		userInfo.setTotalMoney(totalMoney);
+		if(totalMoney==null) {
+			userInfo.setTotalMoney(0D);
+		}else {
+			userInfo.setTotalMoney(totalMoney);
+		}
 		if(profits!=null) {
 			userInfo.setAnimalProfit(profits.getAnimalProfit());
 			userInfo.setShareProfit(profits.getShareProfit());
 			userInfo.setNFC(profits.getNFC());
+		}else {
+			userInfo.setAnimalProfit(0D);
+			userInfo.setShareProfit(0D);
+			userInfo.setNFC(0);
 		}
 		return userInfo;
 	}
@@ -246,11 +254,11 @@ public class UserServiceImpl implements UserSevice{
 		String invitedCode = record.getInviteCode();
 		List<User> users=userDao.queryByInvitedCode(invitedCode);
 		ArrayList<TeamMate> teamMates = new ArrayList<TeamMate>();
-		Double teamProfit=0.00;
+		Double teamProfit=0.00D;//用户总的分享收益
+		
 		Integer activedNum=0;
 		Integer activeNum=0;
 		Integer unActiveNum=0;
-		int numbers=users.size();
 		for(User user:users) {
 			TeamMate mate = new TeamMate();
 			mate.setName(user.getUserName());//设置团员名字
@@ -258,10 +266,12 @@ public class UserServiceImpl implements UserSevice{
 			mate.setState(state);//设置团员活跃状态
 			mate.setID("ID:"+user.getTel());//设置团员ID
 			Integer userId=user.getId();
-			Double totalMoney = propertyService.queryTotalMonet(userId);
-			//查找该团员所有交易得到分享
-			
-			teamProfit=teamProfit+totalMoney;
+			//查找该团员给用户带来的分享收益
+			Double shareMoney=profitsService.queryAllShareProfit(userId);
+			mate.setShareMoney(shareMoney);
+			BigDecimal b1 = new BigDecimal(teamProfit);
+			BigDecimal b2 = new BigDecimal(shareMoney);
+			teamProfit=b1.add(b2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 			if(state=="已激活") {
 				activeNum++;
 			}else if (state=="活跃") {
@@ -278,6 +288,33 @@ public class UserServiceImpl implements UserSevice{
 		myTeam.setTeamMates(teamMates);
 		myTeam.setTeamProfit(teamProfit);
 		return myTeam;
+	}
+
+	/**
+	 * 分享，返回邀请码
+	 */
+	@Override
+	public String share(String token) {
+		int id = Integer.parseInt(redisService.get(token));
+		User user = userDao.queryById(id);
+		return user.getInviteCode();
+	}
+	
+	/**
+	 *更改冻结状态
+	 */
+	@Override
+	public void updateIsFrozen(HashMap<String, Object> map) {
+		userDao.updateIsFrozen(map);
+	}
+
+	
+	/**
+	 * 查找管理员
+	 */
+	@Override
+	public List<User> queryAdmin() {
+		return userDao.queryAdmin();
 	}
 
 

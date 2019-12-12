@@ -10,25 +10,45 @@
 		<result column="price" property="price"/>
 		<result column="buyerConfirm" property="buyerConfirm"/>
 		<result column="sellerConfirm" property="sellerConfirm"/>
+		<result column="payPic" property="payPic"/>
 	</resultMap>
 	
 	<insert id="add" parameterType="com.jizhi.pojo.Match">
-		insert into match(orderId,propertyId,price,buyerConfirm,sellerConfirm) 
+		insert into match_tb(orderId,propertyId,price,buyerConfirm,sellerConfirm) 
 		values 
 		(#{orderId},#{propertyId},#{price},#{buyerConfirm},#{sellerConfirm})
 	</insert>
 	
 	
 	<select id="queryByOrderId" parameterType="java.lang.Integer" resultType="match">
-		select id,orderId,propertyId,price,buyerConfirm 
-		from match 
+		select id,orderId,propertyId,price,buyerConfirm,payPic 
+		from match_tb 
 		where orderId=#{orderId} and sellerConfirm=0
 	</select>
 	
 	<select id="queryByPropertyId" parameterType="java.util.HashMap" resultType="match">
-		select * from match 
+		select * from match_tb 
 		where 
-		propertyId=#{propertyId}，sellerConfirm=#{sellerConfirm} and buyerConfirm=#{buyerConfirm}
+		propertyId=#{propertyId} and sellerConfirm=#{sellerConfirm} and buyerConfirm=#{buyerConfirm}
 	</select>
 	
+	<select id="queryById" parameterType="java.lang.Integer" resultType="match">
+		select * from match_tb where id=#{id}
+	</select>
+	
+	<update id="updatePayPic" parameterType="java.util.HashMap">
+		update match_tb set payPic=#{payPic},buyerConfirm=1 where id=#{id}
+	</update>
+	
+	<update id="updateSellerConfirm" parameterType="java.lang.Integer">
+		update match_tb set sellerConfirm=1 where id=#{id}
+	</update>
+	
+	<select id="queryAllByBuyerConfirm" resultMap="match">
+		select id,orderId,propertyId,price from match_tb where buyerConfirm=0 and sellerConfirm=0
+	</select>
+	
+	<select id="queryAllBySellerConfirm" resultMap="match">
+		select id,orderId,propertyId,price from match_tb where buyerConfirm=1 and sellerConfirm=0
+	</select>
 </mapper>

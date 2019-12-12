@@ -13,7 +13,7 @@ public interface OrderDao {
 	int save(Order order);
 
 
-	Order queryByUserIdAndTime(Integer userId, String startTime);
+	Order queryByUserIdAndTime(Order order);
 
 	
 	List<Order> queryAll(HashMap<String, Object> map);
@@ -26,6 +26,9 @@ public interface OrderDao {
 
 
 	List<Order> querySuccessOrder(Integer userId);
+
+
+	Order queryById(Integer id);
 
 
 

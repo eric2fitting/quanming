@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.jizhi.pojo.Order;
+import com.jizhi.pojo.vo.AnimaInfo;
 import com.jizhi.pojo.vo.OrderDetail;
 
 public interface OrderService{
 
-	int addOrder(Order order);
+	int addOrder(Integer id,String token);
 
-	List<Integer> toOrder(Integer animalId, String token);
+	AnimaInfo toOrder(Integer animalId, String token);
 
 	List<Order> queryAll(HashMap<String, Object> map);
 
@@ -19,5 +20,8 @@ public interface OrderService{
 	List<OrderDetail> queryAllByUserId(String token);
 	
 	List<Order> querySuccessOrder(Integer buyerId);
+
+	Order queryByOrderId(Integer orderId);
+	
 
 }

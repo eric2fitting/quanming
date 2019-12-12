@@ -2,10 +2,11 @@ package com.jizhi.pojo;
 
 public class Profits {
 	private Integer id;
-	private Integer userId;
+	private Integer userId;//卖家id
 	private Double animalProfit;
 	private Double shareProfit;
 	private Integer NFC;
+	private Integer sharerId;//分享给卖家的人的id
 	
 	public Integer getId() {
 		return id;
@@ -36,6 +37,12 @@ public class Profits {
 	}
 	public void setNFC(Integer nFC) {
 		NFC = nFC;
+	}
+	public Integer getSharerId() {
+		return sharerId;
+	}
+	public void setSharerId(Integer sharerId) {
+		this.sharerId = sharerId;
 	}
 
 }

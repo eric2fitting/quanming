@@ -11,15 +11,24 @@
 	</resultMap>
 
 	<select id="queryByAnimalId" parameterType="java.lang.Integer" resultMap="orderTime">
-		select animalId, startTime,endTime from order_time where animalId=#{animalId}
-	</select>
-	<select id="queryStartTimeByAnimalId" resultType="java.lang.String">
-		select startTime from order_time where animalId=#{animalId}
+		select id, animalId, startTime,endTime from order_time where animalId=#{animalId}
 	</select>
 	
-	<select id="orderTimeDao" parameterType="java.util.Map" resultType="java.lang.String">
+	<select id="queryLastTime" parameterType="java.util.Map" resultType="java.lang.String">
 		select endTime from order_time 
 		where 
-		animalId=#{map.animalId} and startTime=#{map.startTime}
+		animalId=#{animalId} and startTime=#{startTime}
+	</select>
+	
+	<select id="queryById" parameterType="java.lang.Integer" resultMap="orderTime">
+		select * from order_time where id=#{id}
+	</select>
+	
+	<select id="queryByStartTime" parameterType="java.lang.Integer" resultMap="orderTime">
+		select * from order_time where startTime=#{startTime}
+	</select>
+	
+	<select id="queryByEndTime" parameterType="java.lang.Integer" resultMap="orderTime">
+		select * from order_time where endTime=#{endTime}
 	</select>
 </mapper>

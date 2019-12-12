@@ -9,4 +9,8 @@ public interface ProfitsDao {
 
 	Profits selectAllProfits(int userId);
 
+	void save(Profits profits);
+
+	Double queryAllShareProfit(Integer id);
+
 }

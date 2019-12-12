@@ -1,5 +1,6 @@
 package com.jizhi.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -12,7 +13,8 @@ public interface AnimalDao {
 
 	List<Animal> queryAll();
 
-	List<Animal> queryByStartTime(String startTime);
-
 	Animal queryById(Integer animalId);
+
+	Integer queryAnimalId(HashMap<String, Object> map);
+
 }

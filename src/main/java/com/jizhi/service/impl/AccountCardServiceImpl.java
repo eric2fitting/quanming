@@ -2,8 +2,6 @@ package com.jizhi.service.impl;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +24,9 @@ public class AccountCardServiceImpl implements AccountCardService{
 
 	
 	@Override
-	public int save(AccountCard accountCard, HttpServletRequest request,String token) {
+	public int save(AccountCard accountCard,String token) {
 		//将前端传来的图片上传到本地并记录地址pic
-		String pic = base64ToImgUtil.Base64ToImg(accountCard.getPic(), request);
+		String pic = base64ToImgUtil.base64(accountCard.getPic());
 		//根据token得到userId
 		String userId = this.redisService.get(token);
 		accountCard.setUserId(Integer.valueOf(userId));
@@ -54,9 +52,9 @@ public class AccountCardServiceImpl implements AccountCardService{
 		return i;
 	}
 	@Override
-	public int updateIdCard(AccountCard accountCard, HttpServletRequest request,String token) {
+	public int updateIdCard(AccountCard accountCard,String token) {
 		//将前端传来的图片上传到本地并记录地址pic
-		String pic = base64ToImgUtil.Base64ToImg(accountCard.getPic(), request);
+		String pic = base64ToImgUtil.base64(accountCard.getPic());
 		accountCard.setPic(pic);
 		//根据token得到userId
 		String userId = this.redisService.get(token);

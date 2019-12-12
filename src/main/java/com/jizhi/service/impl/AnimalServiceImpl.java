@@ -1,6 +1,7 @@
 package com.jizhi.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class AnimalServiceImpl implements AnimalService{
 	private AnimalDao animalDao;
 	@Autowired
 	private OrderTimeDao orderTimeDao;
+	
 	@Override
 	public List<ShowInfo> queryAnimalList() {
 		//查询所有动物列表
@@ -40,7 +42,13 @@ public class AnimalServiceImpl implements AnimalService{
 
 	@Override
 	public List<Animal> queryByStartTime(String startTime) {
-		List<Animal>animals=animalDao.queryByStartTime(startTime);
+		ArrayList<Animal> animals = new ArrayList<Animal>();
+		List<OrderTime> orderTimes=orderTimeDao.queryByStartTime(startTime);
+		for(OrderTime orderTime:orderTimes) {
+			Integer animalId = orderTime.getAnimalId();
+			Animal animal = animalDao.queryById(animalId);
+			animals.add(animal);
+		}
 		return animals;
 	}
 	
@@ -49,5 +57,26 @@ public class AnimalServiceImpl implements AnimalService{
 	public Animal queryById(Integer animalId) {
 		return animalDao.queryById(animalId);
 	}
+
+	@Override
+	public List<Animal> queryByEndTime(String endTime) {
+		ArrayList<Animal> animals = new ArrayList<Animal>();
+		List<OrderTime> orderTimes=orderTimeDao.queryByEndTime(endTime);
+		for(OrderTime orderTime:orderTimes) {
+			Integer animalId = orderTime.getAnimalId();
+			Animal animal = animalDao.queryById(animalId);
+			animals.add(animal);
+		}
+		return animals;
+	}
+	
+	/**
+	 * 根据动物类型大小查找动物id
+	 */
+	@Override
+	public Integer queryAnimalId(HashMap<String, Object> map) {
+		return animalDao.queryAnimalId(map);
+	}
+	
 
 }
