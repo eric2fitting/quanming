@@ -1,7 +1,5 @@
 package com.jizhi.util;
 
-import org.springframework.stereotype.Component;
-
 import com.gexin.rp.sdk.base.IPushResult;
 import com.gexin.rp.sdk.base.impl.SingleMessage;
 import com.gexin.rp.sdk.base.impl.Target;
@@ -9,14 +7,15 @@ import com.gexin.rp.sdk.exceptions.RequestException;
 import com.gexin.rp.sdk.http.IGtPush;
 import com.gexin.rp.sdk.template.LinkTemplate;
 import com.gexin.rp.sdk.template.style.Style0;
+import org.springframework.stereotype.Component;
 
 
 @Component
 public class AppPushUtil {
 	
-	private static String appId ="hh9JWYDfMb9XiNsD5eKTP5";
-    private static String appKey ="9xy0Aqddmx6G3EcIT9Xky9";
-    private static String masterSecret ="xv30n8NsBZ5a0rk2qJqnm";
+	private static String appId ="TldvlUfij37JmGB7OqK6w5";
+    private static String appKey ="Oo4YVrGWg672Nppw4HUZi3";
+    private static String masterSecret ="JaD0hR0m1e8EPLpSh6aVz5";
     //别名推送方式
     static String host = "http://sdk.open.api.igexin.com/apiex.htm";
     //主函数  入口

@@ -1,27 +1,27 @@
 	package com.jizhi.service.impl;
 
+    import com.jizhi.dao.OrderDao;
+    import com.jizhi.dao.OrderTimeDao;
+    import com.jizhi.pojo.Animal;
+    import com.jizhi.pojo.Order;
+    import com.jizhi.pojo.OrderTime;
+    import com.jizhi.pojo.vo.AnimaInfo;
+    import com.jizhi.pojo.vo.IsOrderOrOverTime;
+    import com.jizhi.pojo.vo.OrderDetail;
+    import com.jizhi.service.AnimalService;
+    import com.jizhi.service.OrderService;
+    import com.jizhi.util.RedisService;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.jizhi.dao.OrderDao;
-import com.jizhi.dao.OrderTimeDao;
-import com.jizhi.pojo.Animal;
-import com.jizhi.pojo.Order;
-import com.jizhi.pojo.OrderTime;
-import com.jizhi.pojo.vo.AnimaInfo;
-import com.jizhi.pojo.vo.IsOrderOrOverTime;
-import com.jizhi.pojo.vo.OrderDetail;
-import com.jizhi.service.AnimalService;
-import com.jizhi.service.OrderService;
-import com.jizhi.util.RedisService;
-
+    import java.text.SimpleDateFormat;
+    import java.util.ArrayList;
+    import java.util.Date;
+    import java.util.HashMap;
+    import java.util.List;
+    @Transactional(rollbackFor = Exception.class)
 @Service
 public class OrderServiceImpl implements OrderService{
 	
@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService{
 		order.setDate(simpleDateFormat.format(new Date()));//设置订单的日期
 		order.setAnimalId(orderTime.getAnimalId());//设置订单的animalId
 		order.setState(1);//设置订单状态为正在预约
-		
+		order.setRole(0);
 		return orderDao.save(order);
 	}
 	
@@ -142,16 +142,24 @@ public class OrderServiceImpl implements OrderService{
 		Integer userId=Integer.parseInt(string);
 		List<Order> orders=orderDao.queryAllByUserId(userId);
 		List<OrderDetail> list=new ArrayList<OrderDetail>();
-		for(Order order:orders) {
-			//根据动物id查询动物种类大小
-			Animal animal = animalService.queryById(order.getAnimalId());
-			//将预约详情封装到OrderDetail中
-			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setAnimalType(animal.getAnimalType());
-			orderDetail.setDate(order.getDate());
-			orderDetail.setSize(animal.getSize());
-			orderDetail.setState(order.getState());
-			list.add(orderDetail);
+		if(orders.size()>0) {
+			for(Order order:orders) {
+				//根据动物id查询动物种类大小
+				Animal animal = animalService.queryById(order.getAnimalId());
+				//将预约详情封装到OrderDetail中
+				OrderDetail orderDetail = new OrderDetail();
+				orderDetail.setAnimalType(animal.getAnimalType());
+				//预约时间：日期加时间段
+				String startTime = order.getTime();
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("startTime", startTime);
+				map.put("animalId", order.getAnimalId());
+				String endTime = orderTimeDao.queryLastTime(map);
+				orderDetail.setDate(order.getDate()+"  "+startTime+"-"+endTime);
+				orderDetail.setSize(animal.getSize());
+				orderDetail.setState(order.getState());
+				list.add(orderDetail);
+			}
 		}
 		return list;
 	}
@@ -171,6 +179,27 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public Order queryByOrderId(Integer id) {
 		return orderDao.queryById(id);
+	}
+	
+	/**
+	 * 添加order后返回主键
+	 * @param order
+	 * @return
+	 */
+	public Integer save(Order order) {
+		return orderDao.insert(order);
+	}
+
+	@Override
+	public void updateToFail(Order order) {
+		orderDao.updateToFail(order);
+		
+	}
+
+	@Override
+	public void deleteAll() {
+		orderDao.deleteAll();
+		
 	}
 
 	

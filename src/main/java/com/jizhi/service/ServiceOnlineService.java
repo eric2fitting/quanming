@@ -1,8 +1,9 @@
 package com.jizhi.service;
 
-import java.util.List;
-
 import com.jizhi.pojo.ServiceOnline;
+import com.jizhi.pojo.User;
+
+import java.util.List;
 
 public interface ServiceOnlineService {
 
@@ -11,5 +12,9 @@ public interface ServiceOnlineService {
 	int addMsg(ServiceOnline serviceOnline);
 
 	int addPic(ServiceOnline serviceOnline);
+
+	List<User> queryNotAnswered();
+
+	int addAnswer(ServiceOnline serviceOnline);
 
 }

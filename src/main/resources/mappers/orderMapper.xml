@@ -10,24 +10,26 @@
 		<result column="date" property="date"/>
 		<result column="time" property="time"/>
 		<result column="state" property="state"/>
+		<result column="role" property="role"/>
+		<result column="flag" property="flag"/>
 	</resultMap>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.Order">
-		insert into orders(userId,animalId,date,time,state)
+		insert into orders(userId,animalId,date,time,state,role)
 		 values 
-		 (#{userId},#{animalId},#{date},#{time},#{state})
+		 (#{userId},#{animalId},#{date},#{time},#{state},#{role})
 	</insert>
 	
 	<select id="queryByUserIdAndTime" resultMap="order">
-		select userId,animalId,date,time,state from orders 
-		where userId=#{userId} and animalId=#{animalId} and time=#{time}
+		select userId,animalId,date,time,state,role from orders 
+		where userId=#{userId} and animalId=#{animalId} and time=#{time} and flag=0
 	</select>
 	
 	
-	<select id="queryAll" parameterType="java.util.HashMap">
-		select id,userId,animalId,date,time,state from orders 
+	<select id="queryAll" parameterType="java.util.HashMap" resultMap="order">
+		select id,userId,animalId,date,time,state,role from orders 
 		where 
-		animalId=#{animalId},date=#{date},time=#{time},state=1
+		animalId=#{animalId} and date=#{date} and time=#{time} and state=1 and role=0 and flag=0
 	</select>
 	
 	<update id="updateState" parameterType="java.lang.Integer">
@@ -35,15 +37,32 @@
 	</update>
 	
 	<select id="queryAllByUserId" parameterType="java.lang.Integer" resultMap="order">
-		select date,state,animalId from orders where userId=#{userId}
+		select * from orders where userId=#{userId} and flag=0
 	</select>
 	
 	<select id="querySuccessOrder" parameterType="java.lang.Integer" resultMap="order">
-		select id,userId,date,state animalId from orders where userId=#{userId} and state=2
+		select id,userId,date,state animalId from orders where userId=#{userId} and state=2 and flag=0
 	</select>
 	
 	<select id="queryById" parameterType="java.lang.Integer" resultMap="order">
 		select * from orders where id=#{id}
 	</select>
 	
+	
+	<insert id="insert" parameterType="com.jizhi.pojo.Order">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+		 	select LAST_INSERT_ID()
+		 </selectKey>
+		insert into orders(userId,animalId,date,time,state,role)
+		 values 
+		 (#{userId},#{animalId},#{date},#{time},#{state},#{role})
+	</insert>
+	
+	<update id="updateToFail" parameterType="com.jizhi.pojo.Order">
+		update orders set state=#{state} where date=#{date} and time=#{time} and animalId=#{animalId} and role=#{role} and state=1
+	</update>
+	
+	<delete id="deleteAll">
+		update orders set flag=1 where flag=0
+	</delete>
 </mapper>

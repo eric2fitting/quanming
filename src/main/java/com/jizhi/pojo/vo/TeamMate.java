@@ -10,7 +10,7 @@ public class TeamMate implements Serializable{
 	private String name;
 	private Double shareMoney;
 	private String state;
-	private String ID;
+	private Integer level;
 	public String getName() {
 		return name;
 	}
@@ -29,11 +29,11 @@ public class TeamMate implements Serializable{
 	public void setState(String state) {
 		this.state = state;
 	}
-	public String getID() {
-		return ID;
+	public Integer getLevel() {
+		return level;
 	}
-	public void setID(String iD) {
-		ID = iD;
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 	
 }

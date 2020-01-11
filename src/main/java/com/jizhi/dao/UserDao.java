@@ -1,11 +1,10 @@
 package com.jizhi.dao;
 
-import java.util.HashMap;
-import java.util.List;
-
+import com.jizhi.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jizhi.pojo.User;
+import java.util.HashMap;
+import java.util.List;
 
 @Mapper
 public interface UserDao {
@@ -25,9 +24,11 @@ public interface UserDao {
 	
 	//根据id查询user
 	User queryById(int id);
+	
 	//根据id修改用户名
-	Integer updateUserName(HashMap<String, Object> map);
+	//Integer updateUserName(HashMap<String, Object> map);
 	//根据被邀请的邀请码查找用户列表
+	
 	List<User> queryByInvitedCode(String invitedCode);
 	//分享者的邀请码查询分享者
 	User queryByInviteCode(String inviteCode);
@@ -36,6 +37,10 @@ public interface UserDao {
 	List<User> queryAdmin();
 	//更改活跃状态
 	void updateState(Integer id);
+	//根据用户电话更改cid
+	void updateCid(User user);
+	//更改用户为审核中
+	void updateIsConfirmed(Integer id);
 
 	
 

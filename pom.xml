@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jizhi</groupId>
-	<artifactId>quanmingProject</artifactId>
+	<artifactId>quanming</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -38,27 +38,18 @@
 		<dependency>
 			<groupId>com.gexin.platform</groupId>
 			<artifactId>gexin-rp-fastjson</artifactId>
-			<version>1.0.0.0</version>
+			<version>1.0.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gexin.platform</groupId>
 			<artifactId>gexin-rp-sdk-base</artifactId>
-			<version>4.0.0.5</version>
+			<version>4.0.0.29</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gexin.platform</groupId>
 			<artifactId>gexin-rp-sdk-template</artifactId>
-			<version>4.0.0.8</version>
+			<version>4.0.0.23</version>
 		</dependency>
-
-		<!-- <dependency> <groupId>com.getui.base</groupId> <artifactId>example-app</artifactId> 
-			<version>1.0</version> <scope>system</scope> <systemPath>${basedir}/lib/gexin-rp-sdk-base-4.0.0.25.jar</systemPath> 
-			</dependency> <dependency> <groupId>com.getui.http</groupId> <artifactId>example-app</artifactId> 
-			<version>1.0</version> <scope>system</scope> <systemPath>${basedir}/lib/gexin-rp-sdk-http-4.1.0.0.jar</systemPath> 
-			</dependency> <dependency> <groupId>com.getui.template</groupId> <artifactId>example-app</artifactId> 
-			<version>1.0</version> <scope>system</scope> <systemPath>${basedir}/lib/gexin-rp-sdk-template-4.0.0.19 
-			(1).jar</systemPath> </dependency> -->
-
 
 		<!-- web启动依赖 -->
 		<dependency>
@@ -121,19 +112,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>UTF-8</encoding>
-					<compilerArguments>
-						<extdirs>lib</extdirs><!--指定外部lib -->
-					</compilerArguments>
-				</configuration>
-
-			</plugin>
+			<!-- <plugin> <artifactId>maven-compiler-plugin</artifactId> <configuration> 
+				<source>1.8</source> <target>1.8</target> <encoding>UTF-8</encoding> <compilerArguments> 
+				<extdirs>lib</extdirs>指定外部lib </compilerArguments> </configuration> </plugin> -->
 		</plugins>
 	</build>
 

@@ -29,4 +29,8 @@
 		select * from message where id=(select max(id) from message)
 	</select>
 	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from message where id=#{id}
+	</delete>
+	
 </mapper>

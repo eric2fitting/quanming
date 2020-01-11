@@ -10,10 +10,19 @@
 		<result column="shareProfit" property="shareProfit"/>
 		<result column="NFC" property="NFC"/>
 		<result column="sharerId" property="sharerId"/>
+		<result column="state" property="state"/>
 	</resultMap>
 	
-	<select id="selectAllProfits" parameterType="java.lang.Integer" resultMap="profits">
-		select sum(animalProfit),sum(shareProfit),sum(NFC) from profits where userId=#{userId}
+	<select id="queryAllAnimalProfits" parameterType="java.lang.Integer" resultType="java.lang.Double">
+		select sum(animalProfit) from profits where userId=#{userId}
+	</select>
+	
+	<select id="queryAllNFC" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	select sum(NFC) from profits where userId=#{userId}
+	</select>
+	
+	<select id="selectAllProfits" parameterType="java.lang.Integer" resultType="profits">
+		select sum(animalProfit),sum(NFC) from profits where userId=#{userId}
 	</select>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.Profits">
@@ -21,8 +30,11 @@
 		values(#{userId},#{animalProfit},#{shareProfit},#{NFC},#{sharerId})
 	</insert>
 	
-	<select id="queryAllShareProfit" parameterType="java.lang.Integer" resultType="java.lang.Double">
-		select sum(shareProfit) from profits where and id=#{id}
+	<select id="queryAllShareProfitToOthers" parameterType="com.jizhi.pojo.Profits" resultType="java.lang.Double">
+		select sum(shareProfit) from profits where userId=#{userId} and sharerId=#{sharerId}
 	</select>
 	
+	<select id="queryShareProfit" parameterType="java.lang.Integer" resultType="java.lang.Double">
+		select sum(shareProfit) from profits where sharerId=#{id}
+	</select>
 </mapper>

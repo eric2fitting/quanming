@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>注册</title>
+		<link rel="stylesheet" type="text/css" href="common.css" />
+		<style type="text/css">
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.set-list {
+				width: 6.9rem;
+				height: 1rem;
+				margin: 0 auto;
+			}
+			
+			.set-input {
+				height: 1rem;
+				line-height: 1rem;
+			}
+			
+			.pwd {
+				width: 2rem;
+				height: 1rem;
+				line-height: 1rem;
+			}
+			
+			.user-btn {
+				width: 5.6rem;
+				height: 0.8rem;
+				border-radius: 0.4rem;
+				line-height: 0.8rem;
+				margin: 0.8rem auto 0.2rem;
+			}
+			
+			.login-code {
+				width: 2.5rem;
+				height: 0.6rem;
+				line-height: 0.6rem;
+				border-radius: 0.3rem;
+			}
+			
+			.codeNum {
+				width: 2.4rem;
+				height: 1rem;
+				line-height: 1rem;
+			}
+			
+			.operator-check {
+				padding-right: 0.18rem;
+			}
+			
+			.login-ban-click {
+				pointer-events: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="instruct">
+			<div id="header" class="flex row cont-center yh_bd_bottom col-333">
+				<div id="back" class="left font-46 " tapmode=""></div>
+				<div class="center font-36 flex-1" id="title">用户注册</div>
+				<div class="right font-36" tapmode=""></div>
+			</div>
+			<div class="row cont-center font-28 set-list bg-fff yh_bd_bottom pd_t_60">
+				<div class="col-333 pd_l_20 pwd">手机号码</div>
+				<input type="number" class="flex-1 set-input col-666" id="phone-num" maxlength="11" value="" placeholder="请输入手机号码" />
+			</div>
+			<div class="row cont-center font-28 set-list bg-fff yh_bd_bottom">
+				<div class="col-333 pd_l_20 flex-1">短信验证码</div>
+				<input type="number" class="codeNum col-666" id="code" value="" placeholder="请输入验证码" />
+				<div id="validate-code" class="login-code bg-2E7E41 font-28 col-fff text-cent" @click="getCode">获取验证码</div>
+			</div>
+			<div class="row cont-center font-28 set-list bg-fff yh_bd_bottom">
+				<div class="col-333 pd_l_20 pwd">设定密码</div>
+				<input type="password" class="flex-1 set-input col-666" id="change-password" value="" placeholder="密码至少六位数字加字母" />
+			</div>
+			<div class="row cont-center font-28 set-list bg-fff yh_bd_bottom">
+				<div class="col-333 pd_l_20 pwd">确定密码</div>
+				<input type="password" class="flex-1 set-input col-666" id="que-password" value="" placeholder="请确认您的密码" />
+			</div>
+			<div class="row cont-center font-28 set-list bg-fff yh_bd_bottom">
+				<div class="col-333 pd_l_20 pwd">设置二级密码</div>
+				<input type="password" class="flex-1 set-input col-666" id="pay-pwd" value="" placeholder="请确认您的二级密码" />
+			</div>
+			<div class="row cont-center font-30 set-list bg-fff yh_bd_bottom">
+				<div class="col-333 pd_l_20 pwd">邀请码</div>
+				<input type="number" class="flex-1 set-input col-666" id="invite" value="" placeholder="请输入您的邀请码" />
+			</div>
+			<div id="login-btn-bg" class="user-btn text-cent col-fff font-32 bg-2E7E41" @click="register">注册</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="flexible.js"></script>
+	<script type="text/javascript" src="jquery-2.1.0.js"></script>
+	<script src="vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<!-- text/javascript -->
+	<script type="text/javascript">
+		var app = new Vue({ //创建vue
+			el: '#instruct',
+			data: {},
+			methods: {
+				getCode: function() {
+					//验证手机号
+					var phone = $('#phone-num').val();
+					if (!phone) {
+						alert("输入手机号");
+					}
+					$.ajax({
+						type: 'post',
+						url: 'http://45.131.156.218:8090/qm/code',
+						data: JSON.stringify({
+							"tel": $('#phone-num').val()
+						}),
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json',
+						timeout: 5000,
+						success: function(ret) {
+							if(ret.code == 100){
+								alert ('验证码已发送');
+								time(document.getElementById("validate-code"));
+							}else{
+								alert(ret.msg)
+							}
+						}
+					})
+			},
+			register: function() {
+				var basePassword = $('#change-password').val();
+				var password2 = $('#que-password').val();
+				var payPwd = $('#pay-pwd').val();
+				var invite = $('#invite').val();
+				var code = $('#code').val();
+				var basePhone = $('#phone-num').val();
+				if(!basePassword) {
+					alert('请输入密码');
+					return false;
+				}
+				if(basePassword != password2) {
+					alert('两次的密码不相同');
+					return false;
+				}
+				if(!payPwd) {
+					alert('请输入二级密码');
+					return false;
+				}
+				$('#login-btn-bg').addClass('login-ban-click');
+				setTimeout(function() {
+					$('#login-btn-bg').removeClass('login-ban-click');
+				}, 3000)
+				$.ajax({
+					type: 'post',
+					url: 'http://45.131.156.218:8090/qm/register',
+					data: JSON.stringify({
+						"tel": basePhone,
+						"code": code,
+						"password": basePassword,
+						"secondPassword": payPwd,
+						"invitedCode": invite
+					}),
+					contentType: "application/json;charset=UTF-8",
+					dataType: 'json',
+					timeout: 5000,
+					success: function(ret) {
+						if(ret.code == 100){
+							alert('注册成功');
+							setTimeout(function() {
+								window.location.href="do.html"; 
+							}, 500)
+						}else{
+							alert(ret.msg)
+						}
+					}
+				})
+			}
+		}
+		});
+
+		/**
+		 * @description 获取验证码倒计时
+		 * @param
+		 * @return
+		 * @author xiaoyao
+		 */
+		var wait = 60;
+
+		function time(o) {
+			if(wait == 0) {
+				$(o).removeClass('login-ban-click');
+				$(o).text("获取验证码");
+				wait = 60;
+			} else {
+				$(o).addClass('login-ban-click');
+				o.value = wait + "s后重发送";
+				$(o).text(wait + "s后重发送")
+				wait--;
+				setTimeout(function() {
+					time(o)
+				}, 1000)
+			}
+		}
+
+	</script>
+
+</html>

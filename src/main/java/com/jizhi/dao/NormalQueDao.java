@@ -1,10 +1,9 @@
 package com.jizhi.dao;
 
-import java.util.List;
-
+import com.jizhi.pojo.NormalQue;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jizhi.pojo.NormalQue;
+import java.util.List;
 
 @Mapper
 public interface NormalQueDao {
@@ -12,5 +11,10 @@ public interface NormalQueDao {
 	Integer add(NormalQue normalQue);
 
 	List<NormalQue> queryAll();
+
+	int delete(Integer id);
+
+	int update(NormalQue normalQue);
+	
 
 }

@@ -1,10 +1,10 @@
 package com.jizhi.service;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.vo.ShowInfo;
+
+import java.util.HashMap;
+import java.util.List;
 
 public interface AnimalService {
 	//查找首页所有需要展示的信息。包含动物信息及预约时间

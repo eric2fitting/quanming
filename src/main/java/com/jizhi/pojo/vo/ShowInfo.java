@@ -1,10 +1,10 @@
 package com.jizhi.pojo.vo;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.OrderTime;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class ShowInfo implements Serializable{
 	

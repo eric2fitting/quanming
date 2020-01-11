@@ -51,4 +51,18 @@
 	<select id="queryAllBySellerConfirm" resultMap="match">
 		select id,orderId,propertyId,price from match_tb where buyerConfirm=1 and sellerConfirm=0
 	</select>
+	
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from match_tb where id=#{id}
+	</delete>
+	
+	
+	<select id="queryOnlyByPropertyId" parameterType="java.lang.Integer" resultMap="match">
+		select * from match_tb where propertyId=#{propertyId}
+	</select>
+	
+	<update id="cancelSell" parameterType="java.lang.Integer">
+		update match_tb set buyerConfirm=0 where id=#{id}
+	</update>
+	
 </mapper>

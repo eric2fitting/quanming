@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import com.jizhi.pojo.vo.PswInfo;
 import com.jizhi.pojo.vo.UserInfo;
 import com.jizhi.service.UserSevice;
 
+@CrossOrigin
 @RestController
 @RequestMapping("qm")
 public class UserController {
@@ -31,7 +33,7 @@ public class UserController {
 		FinalResult finalResult = new FinalResult();
 		if(map==null) {
 			finalResult.setCode("102");
-			finalResult.setMsg("账号或密码错误");
+			finalResult.setMsg("未注册或账号密码错误");
 		}else {
 			finalResult.setCode("100");
 			finalResult.setMsg("登陆成功");
@@ -39,6 +41,7 @@ public class UserController {
 		}
 		return finalResult;
 	}
+
 	/**
 	 * 注册
 	 * @param info
@@ -107,7 +110,7 @@ public class UserController {
 	 * @throws Exception 
 	 */
 	@RequestMapping("/code")
-	public FinalResult sendMsgCode(@RequestBody User user) throws Exception {
+	public FinalResult sendMsgCode(@RequestBody User user ) throws Exception {
 		String tel=user.getTel();
 		boolean  bool=this.userSevice.sendMsgCode(tel);
 		FinalResult finalResult=new FinalResult();
@@ -144,21 +147,21 @@ public class UserController {
 	/*
 	 *修改用户名
 	 */
-	@RequestMapping("/updateUserName")
-	public FinalResult updateUserName(@RequestBody User user,HttpServletRequest request) {
-		String userName=user.getUserName();
-		String token = request.getHeader("token");
-		Integer i=this.userSevice.updateUserName(userName,token);
-		FinalResult finalResult=new FinalResult();
-		if(i>0) {
-			finalResult.setCode("100");
-			finalResult.setMsg("用户名修改成功");
-		}else {
-			finalResult.setCode("104");
-			finalResult.setMsg("用户名修改失败");
-		}
-		return finalResult;
-	}
+//	@RequestMapping("/updateUserName")
+//	public FinalResult updateUserName(@RequestBody User user,HttpServletRequest request) {
+//		String userName=user.getUserName();
+//		String token = request.getHeader("token");
+//		Integer i=this.userSevice.updateUserName(userName,token);
+//		FinalResult finalResult=new FinalResult();
+//		if(i>0) {
+//			finalResult.setCode("100");
+//			finalResult.setMsg("用户名修改成功");
+//		}else {
+//			finalResult.setCode("104");
+//			finalResult.setMsg("用户名修改失败");
+//		}
+//		return finalResult;
+//	}
 	
 	
 	@RequestMapping("/userInfo")
@@ -195,5 +198,19 @@ public class UserController {
 		finalResult.setCode("100");
 		finalResult.setBody(inviteCode);
 		return finalResult;
+	}
+	
+	@RequestMapping("/quit")
+	public FinalResult quit(HttpServletRequest request) {
+		String token = request.getHeader("token");
+		Integer integer=userSevice.quit(token);
+		FinalResult finalResult = new FinalResult();
+		if(integer>0) {
+			finalResult.setCode("100");
+		}else {
+			finalResult.setCode("104");
+		}
+		return finalResult;
+		
 	}
 }

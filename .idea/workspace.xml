@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f374d965-b701-42f5-9cb3-4934a8b98bc6" name="默认更改列表" comment="">
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/gexin-rp-sdk-base-4.0.0.25.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/gexin-rp-sdk-http-4.1.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/gexin-rp-sdk-template-4.0.0.19 (1).jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/TestAnything.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/TestAnything.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/config/MyWebMvcCfg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/config/MyWebMvcCfg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/AccountCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/AccountCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/AnimalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/IdCardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/IdCardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/MatchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/MatchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/MessageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/NormalQueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/NormalQueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/PropertyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/PropertyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/ServiceOnlineController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/ServiceOnlineController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/AccountCardDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/AccountCardDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/AnimalDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/AnimalDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/FirstPageDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/FirstPageDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/IdCardDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/IdCardDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/MatchDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/MatchDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/MessageDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/MessageDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/NormalQueDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/NormalQueDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/OrderDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/OrderDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/OrderTimeDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/OrderTimeDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/ProfitsDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/ProfitsDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/PropertyDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/PropertyDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/ServiceOnlineDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/ServiceOnlineDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/UserDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/dao/UserDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/interceptor/LoginInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/interceptor/LoginInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/interceptor/OrderInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/interceptor/OrderInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/NormalQue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/NormalQue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/Property.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/vo/PayInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/vo/PayInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/vo/ShowInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/pojo/vo/ShowInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/AccountCardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/AccountCardService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/AnimalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/AnimalService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/MatchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/MatchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/MessageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/NormalQueService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/NormalQueService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/ProfitsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/ProfitsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/PropertyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/PropertyService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/ServiceOnlineService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/ServiceOnlineService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/UserSevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/UserSevice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/AccountCardServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/AccountCardServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/AnimalServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/AnimalServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/AutomaticService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/AutomaticService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/FirstPageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/FirstPageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/IdCardServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/IdCardServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/MatchServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/MatchServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/MessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/MessageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/NormalQueServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/NormalQueServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/ProfitsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/ProfitsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/PropertyServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/PropertyServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/ServiceOnlineServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/ServiceOnlineServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/util/AppPushUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/util/AppPushUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/util/Base64ToImgUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/util/Base64ToImgUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/util/RedisService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/util/RedisService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jizhi/util/SMS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jizhi/util/SMS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/animalMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/animalMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/matchMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/matchMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/messageMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/messageMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/normalQueMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/normalQueMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/orderMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/orderMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/profitsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/profitsMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/propertyMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/propertyMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/serviceOnlineMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/serviceOnlineMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mappers/userMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mappers/userMapper.xml" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <ignored path="$PROJECT_DIR$/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/MatchServiceImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="203">
+              <caret line="295" column="30" lean-forward="true" selection-start-line="295" selection-start-column="30" selection-end-line="295" selection-end-column="30" />
+              <folding>
+                <element signature="method#doMatch#0;class#MatchServiceImpl#0" expanded="true" />
+                <element signature="e#9503#9504#0" expanded="true" />
+                <element signature="e#9551#9552#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>成功</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/java/com/jizhi/TestAnything.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/resources/logback-spring.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/MatchServiceImpl.java" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="D:/Program Files/apache-maven-3.5.4" />
+        <option name="userSettingsFile" value="D:\java\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="quanmingProject" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="quanmingProject" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-10" />
+    <option name="y" value="-10" />
+    <option name="width" value="1940" />
+    <option name="height" value="1050" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="quanmingProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="quanmingProject" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="quanmingProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="quanmingProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="quanmingProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="quanmingProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="quanmingProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="quanmingProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="quanmingProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="quanmingProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="jizhi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="quanmingProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="quanmingProject" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="D:/YHgit" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.7086247" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\xy\quanmingProject\quanmingProject\src\main\resources" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="QMprojectApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="quanmingProject" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.jizhi.QMprojectApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f374d965-b701-42f5-9cb3-4934a8b98bc6" name="默认更改列表" comment="" />
+      <created>1576633163050</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1576633163050</updated>
+      <workItem from="1576633164368" duration="686000" />
+      <workItem from="1576633929695" duration="108000" />
+      <workItem from="1576634205806" duration="1387000" />
+      <workItem from="1576635648203" duration="873000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3054000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1552" height="840" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25970548" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Web" order="2" side_tool="true" />
+      <window_info id="设计器" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32768363" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Spring" order="9" />
+      <window_info anchor="bottom" id="Database Changes" order="10" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32768363" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="调试" order="13" />
+      <window_info anchor="bottom" id="Java Enterprise" order="14" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.32931727" />
+      <window_info anchor="right" id="Bean Validation" order="5" />
+      <window_info anchor="right" id="调色板" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25670242" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Web" order="2" side_tool="true" />
+      <window_info id="设计器" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Spring" order="9" />
+      <window_info anchor="bottom" id="Database Changes" order="10" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="调试" order="13" />
+      <window_info anchor="bottom" id="Java Enterprise" order="14" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="right" id="Maven" order="4" visible="true" weight="0.3297587" />
+      <window_info anchor="right" id="Bean Validation" order="5" />
+      <window_info anchor="right" id="调色板" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jizhi/QMprojectApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/main.iml" />
+    <entry file="file://$PROJECT_DIR$/quanmingProject.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jizhi/TestAnything.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="23" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/java/maven_repository/com/gexin/platform/gexin-rp-sdk-base/4.0.0.5/gexin-rp-sdk-base-4.0.0.5.jar!/com/gexin/rp/sdk/base/IPushResult.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/java/maven_repository/com/gexin/platform/gexin-rp-sdk-http/4.0.1.9/gexin-rp-sdk-http-4.0.1.9.jar!/com/gexin/rp/sdk/http/GtPush.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1">
+          <caret line="212" column="23" selection-start-line="212" selection-start-column="23" selection-end-line="212" selection-end-column="23" />
+          <folding>
+            <element signature="e#7321#7477#0" expanded="true" />
+            <element signature="e#8247#8822#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/java/maven_repository/com/gexin/platform/gexin-rp-sdk-http/4.0.1.9/gexin-rp-sdk-http-4.0.1.9.jar!/com/gexin/rp/sdk/http/IGtPush.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="68" column="40" lean-forward="true" selection-start-line="68" selection-start-column="40" selection-end-line="68" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="50" column="29" selection-start-line="50" selection-start-column="29" selection-end-line="50" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/logback-spring.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1144">
+          <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jizhi/util/AppPushUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="29" column="21" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#pushMsg#0;class#AppPushUtil#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jizhi/service/impl/MatchServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="295" column="30" lean-forward="true" selection-start-line="295" selection-start-column="30" selection-end-line="295" selection-end-column="30" />
+          <folding>
+            <element signature="method#doMatch#0;class#MatchServiceImpl#0" expanded="true" />
+            <element signature="e#9503#9504#0" expanded="true" />
+            <element signature="e#9551#9552#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.4020979" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Spring</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.4020979" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.4020979" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.4020979" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>quanmingProject</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: com.gexin.platform:gexin-rp-sdk-http:4.0.1.9</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.7086247" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

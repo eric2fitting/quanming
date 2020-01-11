@@ -1,19 +1,19 @@
 package com.jizhi.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.jizhi.dao.AnimalDao;
 import com.jizhi.dao.OrderTimeDao;
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.OrderTime;
 import com.jizhi.pojo.vo.ShowInfo;
 import com.jizhi.service.AnimalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class AnimalServiceImpl implements AnimalService{
 	@Autowired
@@ -37,7 +37,7 @@ public class AnimalServiceImpl implements AnimalService{
 		}
 		return result;
 	}
-	
+
 	//根据开始预约时间查询可预约的动物
 
 	@Override

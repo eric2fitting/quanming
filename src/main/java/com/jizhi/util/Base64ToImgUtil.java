@@ -1,11 +1,12 @@
 package com.jizhi.util;
 
-/**
- * 图片的上传工具
- */
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
+
+/**
+ * 图片的上传工具
+ */
 
 import org.springframework.stereotype.Component;
 
@@ -56,15 +57,18 @@ public class Base64ToImgUtil {
        try {
            int length = imageByte.length;
            //追加文件夹
-           File file = new File("E:/Ericcccccccccccccccccccccc/pics");
+           //File file = new File("E:/Ericcccccccccccccccccccccc/pics/");
+           File file = new File("D:/pics/");
            if(!file.exists()){
                file.mkdirs();
            }
-           path = "E:/Ericcccccccccccccccccccccc/pics/"+UUID.randomUUID()+ "." + type;
+           //path = "E:/Ericcccccccccccccccccccccc/pics/"+UUID.randomUUID()+ "." + type;
+           path = "D:/pics/"+UUID.randomUUID()+ "." + type;
            FileOutputStream fos = new FileOutputStream(path);//isAppend如果为true，为追加写入，否则为覆盖写入
            fos.write(imageByte,0,length);
            fos.close();
-           path = path.replaceAll("E:/Ericcccccccccccccccccccccc/pics/","/pics/");
+           //path = path.replaceAll("E:/Ericcccccccccccccccccccccc/pics/","/pics/");
+           path = path.replaceAll("D:/pics/","/pics/");
        }catch (Exception e){
            e.printStackTrace();
        }

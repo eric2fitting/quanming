@@ -17,16 +17,16 @@ public class MyWebMvcCfg extends WebMvcConfigurerAdapter{
 	
 	  @Override 
 	  public void addInterceptors(InterceptorRegistry registry) {
-		  registry.addInterceptor(getLoginInterceptor()) .addPathPatterns("/**").excludePathPatterns("/qm/login","/qm/register", "/qm/code","/qm/renamePsw");
-		  
-		  registry.addInterceptor(getOrderInterceptor()) .addPathPatterns("/order/*");
+		  registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**")
+		  .excludePathPatterns("/qm/login","/qm/register", "/qm/code","/qm/renamePsw","/message/*","/que/*","/serviceOnline/*");
+		  registry.addInterceptor(getOrderInterceptor()).addPathPatterns("/order/try");
 	  }
 	  
 	  
 	  @Override 
 	  public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		  registry.addResourceHandler("/pics/**").addResourceLocations(
-				  "file:E:/Ericcccccccccccccccccccccc/pics/");
+				  "file:D:/pics/");
 	  }
 
 	

@@ -16,6 +16,6 @@
 	</insert>
 	
 	<update id="update" parameterType="com.jizhi.pojo.IdCard">
-		update idCard set user_id=#{userId},name=#{name},pic=#{pic},idNum=#{idNum}
+		update idCard set user_id=#{userId},name=#{name},pic=#{pic},idNum=#{idNum} where user_id=#{userId}
 	</update>
 </mapper>

@@ -1,16 +1,15 @@
 package com.jizhi.dao;
 
-import java.util.List;
-
+import com.jizhi.pojo.AccountCard;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jizhi.pojo.AccountCard;
+import java.util.List;
 
 @Mapper
 public interface AccountCardDao {
 	int save(AccountCard accountCard);
 
-	int del(Integer userId);
+	int del(Integer id);
 
 	int update(AccountCard accountCard);
 

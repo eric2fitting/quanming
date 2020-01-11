@@ -11,6 +11,8 @@ public class Order {
 	private String date;
 	private String time;
 	private Integer state;//预约状态，0失败，1预约中，2成功
+	private Integer role;//1表示是管理员的，0表示普通玩家
+	private Integer flag;//0表示未删除，1表示已删除
 	
 	public Integer getState() {
 		return state;
@@ -47,6 +49,18 @@ public class Order {
 	}
 	public void setTime(String time) {
 		this.time = time;
+	}
+	public Integer getRole() {
+		return role;
+	}
+	public void setRole(Integer role) {
+		this.role = role;
+	}
+	public Integer getFlag() {
+		return flag;
+	}
+	public void setFlag(Integer flag) {
+		this.flag = flag;
 	}
 
 }

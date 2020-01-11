@@ -1,0 +1,70 @@
+@charset "utf-8";
+html{width:100%;height:100%;}
+body{ width:100%;height:100%;color:#333333;background-color:#ffffff; font-family: '微软雅黑';
+   margin: 0 auto; -webkit-tap-highlight-color:transparents; font-size: 14px;}
+*{ margin:0px; padding:0px; list-style:none; outline:none;}
+img{ border:0; vertical-align: middle;}
+a{ color:#333; text-decoration:none;}
+a:hover{ text-decoration:none;}
+input{ font-family: '微软雅黑'; }
+button{ font-family: '微软雅黑'; -webkit-appearance:none;}
+textarea{font-family: '微软雅黑'; -webkit-appearance:none;}
+select{ font-family: '微软雅黑'; -webkit-appearance:none;}
+.fl{ float: left;}
+.fr{ float: right;}
+.clear{ clear: both;}
+
+.ellipsis1{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+.ellipsis2{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.appHeader{
+  height: 40px;
+  padding: 0 15px;
+  background-color: #fff;
+  position: relative;
+  color: #333;
+  border-bottom: 1px solid #e2e2e2;
+}
+.appHeader .back{
+  width: 50px;
+  height: 40px;
+  position: absolute;
+  left: 15px;
+  bottom: 0;
+}
+.appHeader .back img{
+  float: left;
+  margin: 12px 0 0 0;
+}
+.appHeader .tit{
+  text-align: center;
+  line-height: 40px;
+  color: #333;
+  width: 100px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  margin-left: -50px;
+  bottom: 0;
+}
+.appHeader .btnmore{
+  width: 50px;
+  height: 40px;
+  position: absolute;
+  right: 15px;
+  bottom: 0;
+}
+.appHeader .btnmore img{
+  float: right;
+  margin: 12px 0 0 0;
+}

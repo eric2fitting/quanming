@@ -31,6 +31,15 @@ public interface OrderDao {
 	Order queryById(Integer id);
 
 
+	Integer insert(Order order);
+
+
+	void updateToFail(Order order);
+
+
+	void deleteAll();
+
+
 
 
 }

@@ -33,4 +33,7 @@ public interface MatchService {
 	List<Match> queryAllBySellerConfirm();
 	//根据id更改买家确认状态
 	void updateSellerConfirm(Integer id);
+	//删除匹配信息。
+	void deleteById(Integer id);
+	Integer cancelSell(Integer id);
 }

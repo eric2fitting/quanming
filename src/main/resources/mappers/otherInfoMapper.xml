@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.OtherInfoDao">
+	<resultMap type="com.jizhi.pojo.OtherInfo" id="otherInfo">
+		<result column="qq" property="qq"/>
+		<result column="weChat" property="weChat"/>
+		<result column="earnMoney" property="earnMoney"/>
+	</resultMap>
+	
+	<select id="query" resultMap="otherInfo">
+		select * from other_info
+	</select>
+
+</mapper>

@@ -1,8 +1,8 @@
 package com.jizhi.service;
 
-import java.util.List;
-
 import com.jizhi.pojo.AccountCard;
+
+import java.util.List;
 
 public interface AccountCardService {
 	/**
@@ -18,7 +18,7 @@ public interface AccountCardService {
 	 * @param token
 	 * @return
 	 */
-	int delIdCard(String token);
+	int delIdCard(Integer id);
 
 	/**
 	 * 更新账户卡
@@ -26,7 +26,7 @@ public interface AccountCardService {
 	 * @param token
 	 * @return
 	 */
-	int updateIdCard(AccountCard accountCard,String token);
+	int updateCard(AccountCard accountCard,String token);
 	
 	//银行卡或支付宝微信等收款方式列表
 	List<AccountCard> queryAll(String token);

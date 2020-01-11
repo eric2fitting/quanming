@@ -14,11 +14,15 @@
 	</insert>
 	
 	<select id="queryAll" resultMap="normalQue">
-		select title,content from normalque
+		select id,title,content from normalque
 	</select>
 	
 	<delete id="delete" parameterType="java.lang.Integer">
 		delete from normalque where id=#{id}
 	</delete>
+	
+	<update id="update" parameterType="com.jizhi.pojo.NormalQue">
+		update normalque set title=#{title},content=#{content} where id=#{id}
+	</update>
 	
 </mapper>

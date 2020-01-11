@@ -12,6 +12,8 @@ public class Property {
 	private String buyDate;
 	private String buyTime;
 	private Integer isSold;//0表示没有，1正在出售，2表示已经出售
+	private Integer role;//0表示是普通玩家的，1表示是管理员的。
+	private String code;//区块编号
 	
 	public Integer getId() {
 		return id;
@@ -54,6 +56,18 @@ public class Property {
 	}
 	public void setIsSold(Integer isSold) {
 		this.isSold = isSold;
+	}
+	public Integer getRole() {
+		return role;
+	}
+	public void setRole(Integer role) {
+		this.role = role;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

@@ -1,17 +1,15 @@
 package com.jizhi.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.jizhi.pojo.AccountCard;
+import com.jizhi.pojo.FinalResult;
+import com.jizhi.service.AccountCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jizhi.pojo.AccountCard;
-import com.jizhi.pojo.FinalResult;
-import com.jizhi.service.AccountCardService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @RestController
@@ -38,10 +36,9 @@ public class AccountCardController {
 	
 	
 	@RequestMapping("/del")
-	public FinalResult delIdCard(HttpServletRequest request) {
-		String token = request.getHeader("token");
+	public FinalResult delIdCard(@RequestBody AccountCard accountCard) {
 		FinalResult finalResult = new FinalResult();
-		int i=this.accountCardService.delIdCard(token);
+		int i=this.accountCardService.delIdCard(accountCard.getId());
 		if(i>0) {
 			finalResult.setCode("100");
 			finalResult.setMsg("删除成功");
@@ -52,20 +49,21 @@ public class AccountCardController {
 		return finalResult;
 	}
 	
-	@RequestMapping("/update")
-	public FinalResult updateIdCard(@RequestBody AccountCard accountCard,HttpServletRequest request) {
-		FinalResult finalResult = new FinalResult();
-		String token = request.getHeader("token");
-		int i=this.accountCardService.updateIdCard(accountCard,token);
-		if(i>0) {
-			finalResult.setCode("100");
-			finalResult.setMsg("更新成功");
-		}else {
-			finalResult.setCode("104");
-			finalResult.setMsg("更新失败");
-		}
-		return finalResult;
-	}
+//	@RequestMapping("/update")
+//	public FinalResult updateIdCard(@RequestBody AccountCard accountCard,HttpServletRequest request) {
+//		FinalResult finalResult = new FinalResult();
+//		String token = request.getHeader("token");
+//		int i=this.accountCardService.updateCard(accountCard,token);
+//		if(i>0) {
+//			finalResult.setCode("100");
+//			finalResult.setMsg("更新成功");
+//		}else {
+//			finalResult.setCode("104");
+//			finalResult.setMsg("更新失败");
+//		}
+//		return finalResult;
+//	}
+	
 	@RequestMapping("/queryAll")
 	public FinalResult queryAll(HttpServletRequest request) {
 		String token = request.getHeader("token");

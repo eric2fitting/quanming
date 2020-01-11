@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.Match;
 import com.jizhi.pojo.vo.FeedingDetail;
+import com.jizhi.pojo.vo.Sell;
 import com.jizhi.pojo.vo.SellInfo;
 import com.jizhi.service.PropertyService;
 
@@ -89,13 +90,39 @@ public class PropertyController {
 	 * @return
 	 */
 	@RequestMapping("/doSell")
-	public FinalResult doSell(@RequestBody Match  match) {
-		propertyService.doSell(match.getId());
+	public FinalResult doSell(@RequestBody	Sell sell) {
+		Integer i = propertyService.doSell(sell);
 		FinalResult finalResult = new FinalResult();
-		finalResult.setCode("100");
-		finalResult.setMsg("转让成功");
+		if(i>0) {
+			finalResult.setCode("100");
+			finalResult.setMsg("转让成功");
+		}else {
+			finalResult.setCode("104");
+			finalResult.setMsg("二级密码错误");
+		}
 		return finalResult;
-		
+	}
+	
+	/**
+	 * 确认转让
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/cancelSell")
+	public FinalResult cancelSell(@RequestBody	Sell sell) {
+		Integer i = propertyService.cancelSell(sell);
+		FinalResult finalResult = new FinalResult();
+		if(i==1) {
+			finalResult.setCode("100");
+			finalResult.setMsg("驳回成功");
+		}else if(i==2){
+			finalResult.setCode("104");
+			finalResult.setMsg("二级密码错误");
+		}else {
+			finalResult.setCode("104");
+			finalResult.setMsg("驳回失败");
+		}
+		return finalResult;
 	}
 	
 }

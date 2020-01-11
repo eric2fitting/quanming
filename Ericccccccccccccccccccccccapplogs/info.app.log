@@ -1,0 +1,297 @@
+2020-01-11 13:30:22,957 [main] INFO  com.jizhi.QMApplication 48 - Starting QMApplication on SC-201804072133 with PID 17284 (E:\Ericcccccccccccccccccccccc\QMproject\quanming\target\classes started by Administrator in E:\Ericcccccccccccccccccccccc\QMproject\quanming)
+2020-01-11 13:30:22,965 [main] DEBUG com.jizhi.QMApplication 51 - Running with Spring Boot v1.5.3.RELEASE, Spring v4.3.8.RELEASE
+2020-01-11 13:30:22,966 [main] INFO  com.jizhi.QMApplication 637 - No active profile set, falling back to default profiles: default
+2020-01-11 13:30:23,048 [main] INFO  o.s.b.c.e.AnnotationConfigEmbeddedWebApplicationContext 582 - Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@233fe9b6: startup date [Sat Jan 11 13:30:23 CST 2020]; root of context hierarchy
+2020-01-11 13:30:23,669 [background-preinit] INFO  o.h.validator.internal.util.Version 30 - HV000001: Hibernate Validator 5.3.5.Final
+2020-01-11 13:30:24,530 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 165 - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-11 13:30:26,453 [main] INFO  o.s.b.c.e.t.TomcatEmbeddedServletContainer 89 - Tomcat initialized with port(s): 8090 (http)
+2020-01-11 13:30:26,470 [main] INFO  o.a.catalina.core.StandardService 179 - Starting service Tomcat
+2020-01-11 13:30:26,472 [main] INFO  o.a.catalina.core.StandardEngine 179 - Starting Servlet Engine: Apache Tomcat/8.5.14
+2020-01-11 13:30:26,636 [localhost-startStop-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] 179 - Initializing Spring embedded WebApplicationContext
+2020-01-11 13:30:26,636 [localhost-startStop-1] INFO  o.s.web.context.ContextLoader 276 - Root WebApplicationContext: initialization completed in 3588 ms
+2020-01-11 13:30:26,837 [localhost-startStop-1] INFO  o.s.b.w.s.ServletRegistrationBean 190 - Mapping servlet: 'dispatcherServlet' to [/]
+2020-01-11 13:30:26,841 [localhost-startStop-1] INFO  o.s.b.w.s.FilterRegistrationBean 258 - Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-11 13:30:26,842 [localhost-startStop-1] INFO  o.s.b.w.s.FilterRegistrationBean 258 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-11 13:30:26,842 [localhost-startStop-1] INFO  o.s.b.w.s.FilterRegistrationBean 258 - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-11 13:30:26,842 [localhost-startStop-1] INFO  o.s.b.w.s.FilterRegistrationBean 258 - Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-11 13:30:28,448 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerAdapter 534 - Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@233fe9b6: startup date [Sat Jan 11 13:30:23 CST 2020]; root of context hierarchy
+2020-01-11 13:30:28,522 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/accountCard/del]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.AccountCardController.delIdCard(com.jizhi.pojo.AccountCard)
+2020-01-11 13:30:28,523 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/accountCard/save]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.AccountCardController.saveIdCard(com.jizhi.pojo.AccountCard,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,523 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/accountCard/queryAll]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.AccountCardController.queryAll(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,524 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/animal/all]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.AnimalController.queryAnimalList()
+2020-01-11 13:30:28,524 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/animal/firstPage]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.AnimalController.firstPageInfo()
+2020-01-11 13:30:28,525 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/idCard/save]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.IdCardController.saveIdCard(com.jizhi.pojo.IdCard,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,525 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/idCard/isConfirmed]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.IdCardController.isConfirmed(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,525 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/idCard/update]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.IdCardController.updateIdCard(com.jizhi.pojo.IdCard,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,526 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/user/allFeeding]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MatchController.showAllFeeding(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,527 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/user/allBuying]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MatchController.showAllBuying(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,527 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/user/buyerToPay]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MatchController.buyerToPay(com.jizhi.pojo.Match)
+2020-01-11 13:30:28,527 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/user/doPay]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MatchController.doPay(com.jizhi.pojo.vo.BuyerDoPay,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,531 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/message/save]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MessageController.addMessage(com.jizhi.pojo.Message)
+2020-01-11 13:30:28,531 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/message/part]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MessageController.showMessage(com.jizhi.pojo.Message)
+2020-01-11 13:30:28,531 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/message/all]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MessageController.showAllMessage()
+2020-01-11 13:30:28,532 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/message/delete]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.MessageController.deleteMsg(com.jizhi.pojo.Message)
+2020-01-11 13:30:28,533 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/que/update]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.NormalQueController.update(com.jizhi.pojo.NormalQue)
+2020-01-11 13:30:28,533 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/que/delete]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.NormalQueController.delete(com.jizhi.pojo.NormalQue)
+2020-01-11 13:30:28,534 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/que/queryAll]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.NormalQueController.queryAllQue()
+2020-01-11 13:30:28,534 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/que/add]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.NormalQueController.addQue(com.jizhi.pojo.NormalQue)
+2020-01-11 13:30:28,535 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/order/allOrder]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.OrderController.queryAllByUserId(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,535 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/order/add]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.OrderController.addOrder(com.jizhi.pojo.OrderTime,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,535 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/order/try]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.OrderController.toOrder(com.jizhi.pojo.Animal,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,536 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/otherInfo/query]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.OtherInfoController.query()
+2020-01-11 13:30:28,536 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/profits/update]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.ProfitsController.updateShareProfit(javax.servlet.http.HttpServletRequest,com.jizhi.pojo.vo.UserInfo)
+2020-01-11 13:30:28,537 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/property/waitSellList]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.PropertyController.waitSell(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,537 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/property/isSoldList]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.PropertyController.isSold(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,538 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/property/toSell]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.PropertyController.toSell(com.jizhi.pojo.Match)
+2020-01-11 13:30:28,538 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/property/doSell]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.PropertyController.doSell(com.jizhi.pojo.vo.Sell)
+2020-01-11 13:30:28,538 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/property/isSellingList]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.PropertyController.isSelling(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,538 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/property/cancelSell]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.PropertyController.cancelSell(com.jizhi.pojo.vo.Sell)
+2020-01-11 13:30:28,539 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/serviceOnline/query]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.ServiceOnlineController.query(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,539 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/serviceOnline/queryQue]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.ServiceOnlineController.queryQue(com.jizhi.pojo.User)
+2020-01-11 13:30:28,540 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/serviceOnline/answer]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.ServiceOnlineController.answer(com.jizhi.pojo.ServiceOnline)
+2020-01-11 13:30:28,540 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/serviceOnline/sendPic]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.ServiceOnlineController.addPic(javax.servlet.http.HttpServletRequest,com.jizhi.pojo.ServiceOnline)
+2020-01-11 13:30:28,540 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/serviceOnline/allNotAnswered]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.ServiceOnlineController.queryNotAnswered()
+2020-01-11 13:30:28,540 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/serviceOnline/sendMsg]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.ServiceOnlineController.addMsg(javax.servlet.http.HttpServletRequest,com.jizhi.pojo.ServiceOnline)
+2020-01-11 13:30:28,542 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/register]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.register(com.jizhi.pojo.vo.LoginInfo)
+2020-01-11 13:30:28,543 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/quit]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.quit(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,544 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/login]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.login(com.jizhi.pojo.User)
+2020-01-11 13:30:28,544 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/updatePsw]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.updatePsw(com.jizhi.pojo.vo.PswInfo,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,544 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/updateSecondPsw]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.updateSecondPsw(com.jizhi.pojo.vo.PswInfo,javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,544 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/share]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.share(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,545 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/userInfo]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.queryUserInfo(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,545 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/myTeam]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.queryMyTeam(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,545 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/renamePsw]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.forgetPsw(com.jizhi.pojo.vo.LoginInfo)
+2020-01-11 13:30:28,545 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/qm/code]}" onto public com.jizhi.pojo.FinalResult com.jizhi.controller.UserController.sendMsgCode(com.jizhi.pojo.User) throws java.lang.Exception
+2020-01-11 13:30:28,547 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2020-01-11 13:30:28,547 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping 543 - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2020-01-11 13:30:28,572 [main] INFO  o.s.w.s.h.SimpleUrlHandlerMapping 362 - Mapped URL path [/pics/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2020-01-11 13:30:28,573 [main] INFO  o.s.w.s.h.SimpleUrlHandlerMapping 362 - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2020-01-11 13:30:28,573 [main] INFO  o.s.w.s.h.SimpleUrlHandlerMapping 362 - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2020-01-11 13:30:28,608 [main] INFO  o.s.w.s.h.SimpleUrlHandlerMapping 362 - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2020-01-11 13:30:28,881 [main] INFO  o.s.j.e.a.AnnotationMBeanExporter 431 - Registering beans for JMX exposure on startup
+2020-01-11 13:30:28,893 [main] INFO  o.s.s.a.ScheduledAnnotationBeanPostProcessor 260 - No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-11 13:30:28,907 [main] INFO  o.a.coyote.http11.Http11NioProtocol 179 - Initializing ProtocolHandler ["http-nio-8090"]
+2020-01-11 13:30:28,926 [main] INFO  o.a.coyote.http11.Http11NioProtocol 179 - Starting ProtocolHandler ["http-nio-8090"]
+2020-01-11 13:30:28,931 [pool-2-thread-1] WARN  o.a.tomcat.jdbc.pool.ConnectionPool 179 - maxIdle is larger than maxActive, setting maxIdle to: 20
+2020-01-11 13:30:28,981 [main] INFO  o.a.tomcat.util.net.NioSelectorPool 179 - Using a shared selector for servlet write/read
+2020-01-11 13:30:29,067 [main] INFO  o.s.b.c.e.t.TomcatEmbeddedServletContainer 198 - Tomcat started on port(s): 8090 (http)
+2020-01-11 13:30:29,078 [main] INFO  com.jizhi.QMApplication 57 - Started QMApplication in 6.548 seconds (JVM running for 7.068)
+2020-01-11 13:30:29,405 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:30:29,453 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:30:29,471 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:30:29,473 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:30:29,473 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:30:29,475 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:30:29,476 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:30:29,476 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:30:29,478 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:30:29,485 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:30:29,486 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:30:29,488 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:30:29,489 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:30:29,490 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:30:29,491 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:30:29,492 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:30:29,493 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:30:29,495 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:30:29,500 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:30:29,501 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 1(Integer), 0(Integer)
+2020-01-11 13:30:29,503 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:30:29,505 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:30:29,507 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 2(Integer), 0(Integer)
+2020-01-11 13:30:29,510 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:30:29,514 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=0 and sellerConfirm=0 
+2020-01-11 13:30:29,515 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==> Parameters: 
+2020-01-11 13:30:29,518 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - <==      Total: 0
+2020-01-11 13:30:29,523 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=1 and sellerConfirm=0 
+2020-01-11 13:30:29,524 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==> Parameters: 
+2020-01-11 13:30:29,525 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - <==      Total: 0
+2020-01-11 13:32:50,795 [http-nio-8090-exec-3] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] 179 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+2020-01-11 13:32:50,795 [http-nio-8090-exec-3] INFO  o.s.web.servlet.DispatcherServlet 489 - FrameworkServlet 'dispatcherServlet': initialization started
+2020-01-11 13:32:50,814 [http-nio-8090-exec-3] INFO  o.s.web.servlet.DispatcherServlet 508 - FrameworkServlet 'dispatcherServlet': initialization completed in 19 ms
+2020-01-11 13:32:50,917 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.UserDao.queryByTel 159 - ==>  Preparing: select * from user where tel=? 
+2020-01-11 13:32:50,917 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.UserDao.queryByTel 159 - ==> Parameters: 18580938797(String)
+2020-01-11 13:32:50,919 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.UserDao.queryByTel 159 - <==      Total: 1
+2020-01-11 13:32:50,978 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.UserDao.updateCid 159 - ==>  Preparing: update user set cid=? where tel=? 
+2020-01-11 13:32:50,979 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.UserDao.updateCid 159 - ==> Parameters: null, 18580938797(String)
+2020-01-11 13:32:50,980 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.UserDao.updateCid 159 - <==    Updates: 1
+2020-01-11 13:33:28,903 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:33:28,905 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:33:28,909 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:33:28,912 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:33:28,912 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:33:28,915 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:33:28,916 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:33:28,917 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:33:28,920 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:33:28,927 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:33:28,930 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:33:28,934 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:33:28,934 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:33:28,935 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:33:28,936 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:33:28,937 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:33:28,937 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:33:28,940 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:33:28,942 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:33:28,943 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 1(Integer), 0(Integer)
+2020-01-11 13:33:28,945 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:33:28,946 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:33:28,947 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 2(Integer), 0(Integer)
+2020-01-11 13:33:28,948 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:33:28,950 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=0 and sellerConfirm=0 
+2020-01-11 13:33:28,951 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==> Parameters: 
+2020-01-11 13:33:28,952 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - <==      Total: 0
+2020-01-11 13:33:28,955 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=1 and sellerConfirm=0 
+2020-01-11 13:33:28,956 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==> Parameters: 
+2020-01-11 13:33:28,957 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - <==      Total: 0
+2020-01-11 13:33:49,620 [http-nio-8090-exec-1] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:33:49,621 [http-nio-8090-exec-1] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:33:49,622 [http-nio-8090-exec-1] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:33:49,623 [http-nio-8090-exec-1] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:33:49,623 [http-nio-8090-exec-1] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:33:49,625 [http-nio-8090-exec-1] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 1
+2020-01-11 13:34:57,273 [http-nio-8090-exec-6] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:34:57,273 [http-nio-8090-exec-6] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:34:57,274 [http-nio-8090-exec-6] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:34:57,275 [http-nio-8090-exec-6] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:34:57,275 [http-nio-8090-exec-6] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:34:57,276 [http-nio-8090-exec-6] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:34:58,623 [http-nio-8090-exec-7] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:34:58,624 [http-nio-8090-exec-7] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:34:58,624 [http-nio-8090-exec-7] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:34:58,625 [http-nio-8090-exec-7] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:34:58,625 [http-nio-8090-exec-7] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:34:58,626 [http-nio-8090-exec-7] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:34:59,449 [http-nio-8090-exec-8] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:34:59,450 [http-nio-8090-exec-8] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:34:59,451 [http-nio-8090-exec-8] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:34:59,452 [http-nio-8090-exec-8] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:34:59,452 [http-nio-8090-exec-8] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:34:59,453 [http-nio-8090-exec-8] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:00,055 [http-nio-8090-exec-9] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:00,056 [http-nio-8090-exec-9] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:00,057 [http-nio-8090-exec-9] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:00,058 [http-nio-8090-exec-9] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:00,058 [http-nio-8090-exec-9] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:00,059 [http-nio-8090-exec-9] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:18,604 [http-nio-8090-exec-10] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:18,605 [http-nio-8090-exec-10] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:18,606 [http-nio-8090-exec-10] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:18,606 [http-nio-8090-exec-10] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:18,606 [http-nio-8090-exec-10] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:18,607 [http-nio-8090-exec-10] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:19,902 [http-nio-8090-exec-2] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:19,903 [http-nio-8090-exec-2] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:19,904 [http-nio-8090-exec-2] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:19,904 [http-nio-8090-exec-2] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:19,905 [http-nio-8090-exec-2] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:19,906 [http-nio-8090-exec-2] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:20,202 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:20,202 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:20,203 [http-nio-8090-exec-3] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:20,204 [http-nio-8090-exec-3] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:20,205 [http-nio-8090-exec-3] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:20,205 [http-nio-8090-exec-3] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:20,660 [http-nio-8090-exec-1] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:20,661 [http-nio-8090-exec-1] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:20,662 [http-nio-8090-exec-1] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:20,662 [http-nio-8090-exec-1] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:20,663 [http-nio-8090-exec-1] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:20,664 [http-nio-8090-exec-1] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:21,041 [http-nio-8090-exec-4] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:21,041 [http-nio-8090-exec-4] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:21,042 [http-nio-8090-exec-4] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:21,043 [http-nio-8090-exec-4] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:21,044 [http-nio-8090-exec-4] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:21,044 [http-nio-8090-exec-4] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:23,507 [http-nio-8090-exec-5] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:23,508 [http-nio-8090-exec-5] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:23,509 [http-nio-8090-exec-5] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:23,509 [http-nio-8090-exec-5] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:23,510 [http-nio-8090-exec-5] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:23,510 [http-nio-8090-exec-5] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:24,060 [http-nio-8090-exec-6] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:24,060 [http-nio-8090-exec-6] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:24,061 [http-nio-8090-exec-6] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:24,062 [http-nio-8090-exec-6] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:24,062 [http-nio-8090-exec-6] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:24,063 [http-nio-8090-exec-6] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:39,379 [http-nio-8090-exec-7] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:39,380 [http-nio-8090-exec-7] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:39,380 [http-nio-8090-exec-7] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:39,381 [http-nio-8090-exec-7] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:39,381 [http-nio-8090-exec-7] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:39,382 [http-nio-8090-exec-7] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:40,573 [http-nio-8090-exec-8] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:40,573 [http-nio-8090-exec-8] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:40,574 [http-nio-8090-exec-8] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:40,575 [http-nio-8090-exec-8] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:40,576 [http-nio-8090-exec-8] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:40,576 [http-nio-8090-exec-8] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:35:40,861 [http-nio-8090-exec-9] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==>  Preparing: select * from first_page 
+2020-01-11 13:35:40,861 [http-nio-8090-exec-9] DEBUG com.jizhi.dao.FirstPageDao.query 159 - ==> Parameters: 
+2020-01-11 13:35:40,862 [http-nio-8090-exec-9] DEBUG com.jizhi.dao.FirstPageDao.query 159 - <==      Total: 1
+2020-01-11 13:35:40,863 [http-nio-8090-exec-9] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==>  Preparing: select * from message where id=(select max(id) from message) 
+2020-01-11 13:35:40,863 [http-nio-8090-exec-9] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - ==> Parameters: 
+2020-01-11 13:35:40,864 [http-nio-8090-exec-9] DEBUG c.j.dao.MessageDao.queryLatestMsg 159 - <==      Total: 0
+2020-01-11 13:36:28,904 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:36:28,904 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:36:28,906 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:36:28,906 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:36:28,906 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:36:28,907 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:36:28,908 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:36:28,908 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:36:28,909 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:36:28,911 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:36:28,911 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:36:28,912 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:36:28,913 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:36:28,913 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:36:28,914 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:36:28,915 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:36:28,915 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:36:28,917 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:36:28,919 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:36:28,919 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 1(Integer), 0(Integer)
+2020-01-11 13:36:28,920 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:36:28,921 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:36:28,922 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 2(Integer), 0(Integer)
+2020-01-11 13:36:28,923 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:36:28,924 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=0 and sellerConfirm=0 
+2020-01-11 13:36:28,925 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==> Parameters: 
+2020-01-11 13:36:28,926 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - <==      Total: 0
+2020-01-11 13:36:28,927 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=1 and sellerConfirm=0 
+2020-01-11 13:36:28,928 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==> Parameters: 
+2020-01-11 13:36:28,928 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - <==      Total: 0
+2020-01-11 13:39:28,918 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:39:28,920 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:39:28,923 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:39:28,924 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:39:28,925 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:39:28,927 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:39:28,928 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:39:28,929 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:39:28,931 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:39:28,936 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==>  Preparing: select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal 
+2020-01-11 13:39:28,936 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - ==> Parameters: 
+2020-01-11 13:39:28,940 [pool-2-thread-1] DEBUG com.jizhi.dao.AnimalDao.queryAll 159 - <==      Total: 2
+2020-01-11 13:39:28,940 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:39:28,941 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 1(Integer)
+2020-01-11 13:39:28,942 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:39:28,942 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==>  Preparing: select id, animalId, startTime,endTime from order_time where animalId=? 
+2020-01-11 13:39:28,943 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - ==> Parameters: 2(Integer)
+2020-01-11 13:39:28,944 [pool-2-thread-1] DEBUG c.j.dao.OrderTimeDao.queryByAnimalId 159 - <==      Total: 2
+2020-01-11 13:39:28,947 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:39:28,947 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 1(Integer), 0(Integer)
+2020-01-11 13:39:28,948 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:39:28,950 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==>  Preparing: update orders set state=? where date=? and time=? and animalId=? and role=? and state=1 
+2020-01-11 13:39:28,951 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - ==> Parameters: 0(Integer), 2020-01-11(String), 9:00(String), 2(Integer), 0(Integer)
+2020-01-11 13:39:28,952 [pool-2-thread-1] DEBUG com.jizhi.dao.OrderDao.updateToFail 159 - <==    Updates: 0
+2020-01-11 13:39:28,954 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=0 and sellerConfirm=0 
+2020-01-11 13:39:28,954 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - ==> Parameters: 
+2020-01-11 13:39:28,955 [pool-2-thread-1] DEBUG c.j.d.M.queryAllByBuyerConfirm 159 - <==      Total: 0
+2020-01-11 13:39:28,957 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==>  Preparing: select id,orderId,propertyId,price from match_tb where buyerConfirm=1 and sellerConfirm=0 
+2020-01-11 13:39:28,958 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - ==> Parameters: 
+2020-01-11 13:39:28,959 [pool-2-thread-1] DEBUG c.j.d.M.queryAllBySellerConfirm 159 - <==      Total: 0

@@ -1,16 +1,15 @@
 package com.jizhi.controller;
 
-import java.util.HashMap;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.vo.ShowInfo;
 import com.jizhi.service.AnimalService;
 import com.jizhi.service.FirstPageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("animal")
@@ -29,7 +28,7 @@ public class AnimalController {
 	public FinalResult queryAnimalList() {
 		List<ShowInfo> list=this.animalService.queryAnimalList();
 		FinalResult finalResult = new FinalResult();
-		if(list==null) {
+		if(list.size()==0) {
 			finalResult.setBody(null);
 			finalResult.setMsg("暂无可喂养动物");
 			finalResult.setCode("104");

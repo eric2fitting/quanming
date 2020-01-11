@@ -1,11 +1,11 @@
 package com.jizhi.service;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.vo.AnimaInfo;
 import com.jizhi.pojo.vo.OrderDetail;
+
+import java.util.HashMap;
+import java.util.List;
 
 public interface OrderService{
 
@@ -23,5 +23,15 @@ public interface OrderService{
 
 	Order queryByOrderId(Integer orderId);
 	
+	/**
+	 * 添加order后返回主键
+	 * @param order
+	 * @return
+	 */
+	Integer save(Order order);
+	//预约状态更改未失败
+	void updateToFail(Order order);
+	//删除所有定时任务
+	void deleteAll();
 
 }

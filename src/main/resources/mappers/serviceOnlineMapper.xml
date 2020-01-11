@@ -23,5 +23,16 @@
 	<insert id="addPic" parameterType="com.jizhi.pojo.ServiceOnline">
 		insert into service_online(userId,pic,isAnswered) values(#{userId},#{pic},#{isAnswered})
 	</insert>
+	<select id="queryNotAnswered" resultMap="serviceOnline">
+		select * from service_online where isAnswered=0
+	</select>
+	
+	<insert id="addAnswer" parameterType="com.jizhi.pojo.ServiceOnline">
+		insert into service_online(userId,answer,isAnswered) values(#{userId},#{answer},#{isAnswered})
+	</insert>
+	
+	<update id="updateIsAnswered" parameterType="java.lang.Integer">
+		update service_online set isAnswered=1 where userId=#{userId}
+	</update>
 
 </mapper>

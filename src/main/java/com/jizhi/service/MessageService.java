@@ -1,8 +1,8 @@
 package com.jizhi.service;
 
-import java.util.List;
-
 import com.jizhi.pojo.Message;
+
+import java.util.List;
 
 public interface MessageService {
 
@@ -13,6 +13,8 @@ public interface MessageService {
 	Integer save(Message message);
 
 	Message queryLatestMsg();
+
+	Integer delete(Integer id);
 
 
 }

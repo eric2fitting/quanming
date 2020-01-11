@@ -15,6 +15,8 @@ public interface MatchDao {
 	Match queryByOrderId(Integer id);
 	
 	Match queryByPropertyId(HashMap<String,Object> map);
+	
+	Match queryOnlyByPropertyId(Integer propertyId);
 
 	Match queryById(Integer id);
 
@@ -25,6 +27,18 @@ public interface MatchDao {
 	List<Match> queryAllByBuyerConfirm();
 
 	List<Match> queryAllBySellerConfirm();
+
+	void deleteById(Integer id);
+	
+	/**
+	 * 将交易驳回，买家的确认变为0
+	 * @param id
+	 * @return
+	 */
+	Integer cancelSell(Integer id);
+
+	
+	
 
 
 }

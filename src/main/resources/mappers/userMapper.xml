@@ -59,17 +59,14 @@
 			   secondpsw,role,cid from user where id=#{id}
 	</select>
 	
-	<update id="updateUserName" parameterType="java.util.Map">
-		update user set userName=#{userName} where id=#{userId}
-	</update>
-	
+
 	
 	<select id="queryByInvitedCode" parameterType="java.lang.String" resultMap="user">
-		select id,userName,tel,state from user where invitedCode=#{invitedCode}
+		select * from user where invitedCode=#{invitedCode}
 	</select>
 	
 	<select id="queryByInviteCode" parameterType="java.lang.String" resultType="user">
-		select id,userName,tel,state from user where inviteCode=#{inviteCode}
+		select * from user where inviteCode=#{inviteCode}
 	</select>
 	
 	<update id="updateIsFrozen" parameterType="java.util.HashMap">
@@ -77,10 +74,17 @@
 	</update>
 	
 	<select id="queryAdmin" resultMap="user">
-		select * from user where role=1 or role=2
+		select * from user where role=1
 	</select>
 	
 	<update id="updateState" parameterType="java.lang.Integer">
 		update user set state="活跃" where id=#{id}
+	</update>
+	
+	<update id="updateCid" parameterType="com.jizhi.pojo.User">
+		update user set cid=#{cid} where tel=#{tel}
+	</update>
+	<update id="updateIsConfirmed" parameterType="java.lang.Integer">
+		update user set isConfirmed=2 where id=#{id}
 	</update>
 </mapper>

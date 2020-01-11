@@ -71,7 +71,13 @@ public class MatchController {
 	public FinalResult doPay(@RequestBody BuyerDoPay buyerDoPay,HttpServletRequest request) {
 		String str=matchService.doPay(buyerDoPay,request);
 		FinalResult finalResult = new FinalResult();
-		finalResult.setCode("100");
+		
+		if(str.equals("成功")) {
+			finalResult.setCode("100");
+			
+		}else {
+			finalResult.setCode("104");
+		}
 		finalResult.setMsg(str);
 		return finalResult;
 	}

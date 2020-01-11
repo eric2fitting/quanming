@@ -1,14 +1,15 @@
 package com.jizhi.service.impl;
-                
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Profits;
@@ -23,7 +24,7 @@ import com.jizhi.service.PropertyService;
 import com.jizhi.service.UserSevice;
 import com.jizhi.util.RedisService;
 import com.jizhi.util.SMS;
-
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class UserServiceImpl implements UserSevice{
 	@Autowired
@@ -59,6 +60,8 @@ public class UserServiceImpl implements UserSevice{
 				redisService.set(key, value,60*60*24*7);
 				map.put("token", key);
 				map.put("user", record);
+				//更新用户的cid
+				userDao.updateCid(user);
 				return map;
 			}else {
 				//密码错误
@@ -75,6 +78,7 @@ public class UserServiceImpl implements UserSevice{
 	public boolean sendMsgCode(String tel) throws Exception {
 		
 		String randomNum = random();
+		System.out.println(randomNum);
 		Boolean bool = SMS.sendmsg(tel, randomNum);
 		//将手机号验证码保存在redis以便验证
 		this.redisService.set(tel, randomNum,60*3);
@@ -106,15 +110,17 @@ public class UserServiceImpl implements UserSevice{
 				//TODO 邀请码是否为空还没判断
 				user.setInvitedCode(info.getInvitedCode());
 				//随机生成6位数自己的邀请码，判断是否重复，没有则保存
-				String random;
-				while(true) {
-					random = random();
-					User u=this.userDao.queryByRandom(random);
-					if(u==null) {
-						break;
-					}
-				}
-				user.setInviteCode(random);
+//				String random;
+//				while(true) {
+//					random = random();
+//					User u=this.userDao.queryByRandom(random);
+//					if(u==null) {
+//						break;
+//					}
+//				}
+//				user.setInviteCode(random);
+				//用自己的手机号生成验证码
+				user.setInviteCode(tel);
 				this.userDao.save(user);
 				return true;
 			}
@@ -167,17 +173,17 @@ public class UserServiceImpl implements UserSevice{
 	/**
 	 * 修改用户名
 	 */
-
-	@Override
-	public Integer updateUserName(String userName, String token) {
-		String user_id = this.redisService.get(token);
-		int userId = Integer.parseInt(user_id);
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("userName", userName);
-		Integer i=userDao.updateUserName(map);
-		return i;
-	}
+//
+//	@Override
+//	public Integer updateUserName(String userName, String token) {
+//		String user_id = this.redisService.get(token);
+//		int userId = Integer.parseInt(user_id);
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//		map.put("userId", userId);
+//		map.put("userName", userName);
+//		Integer i=userDao.updateUserName(map);
+//		return i;
+//	}
 	
 	
 	/**
@@ -186,13 +192,15 @@ public class UserServiceImpl implements UserSevice{
 	@Override
 	public UserInfo queryUserInfo(String token) {
 		String user_id = this.redisService.get(token);
-		int id = Integer.parseInt(user_id);
+		Integer id = Integer.parseInt(user_id);
 		//根据userId查询user的tel和userName
 		User user=userDao.queryById(id);
 		//根据userId查询总资产
 		Double totalMoney=propertyService.queryTotalMonet(id);
-		//根据userId查询总的收益、分享收益、NFC币
-		Profits profits=profitsService.selectAllProfits(id);
+		//查询总的动物收益
+		Double allAnimalProfits=profitsService.queryAllAnimalProfits(id);
+		//查询中的NFC币
+		Integer nfcs=profitsService.queryAllNFC(id);
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUserName(user.getUserName());
 		userInfo.setTel(user.getTel());
@@ -201,14 +209,21 @@ public class UserServiceImpl implements UserSevice{
 		}else {
 			userInfo.setTotalMoney(totalMoney);
 		}
-		if(profits!=null) {
-			userInfo.setAnimalProfit(profits.getAnimalProfit());
-			userInfo.setShareProfit(profits.getShareProfit());
-			userInfo.setNFC(profits.getNFC());
+		if(allAnimalProfits!=null) {
+			userInfo.setAnimalProfit(allAnimalProfits);
 		}else {
 			userInfo.setAnimalProfit(0D);
-			userInfo.setShareProfit(0D);
+		}
+		if (nfcs!=null) {
+			userInfo.setNFC(nfcs);
+		}else {
 			userInfo.setNFC(0);
+		}
+		Double shareProfit=profitsService.queryShareProfit(id);
+		if(shareProfit==null) {
+			userInfo.setShareProfit(0D);
+		}else {
+			userInfo.setShareProfit(shareProfit);
 		}
 		return userInfo;
 	}
@@ -250,44 +265,106 @@ public class UserServiceImpl implements UserSevice{
 		String string = redisService.get(token);
 		Integer id = Integer.parseInt(string);
 		User record = userDao.queryById(id);
+		MyTeam result=new MyTeam();
 		//用户自己的邀请码也就是别人被邀请的码
 		String invitedCode = record.getInviteCode();
-		List<User> users=userDao.queryByInvitedCode(invitedCode);
-		ArrayList<TeamMate> teamMates = new ArrayList<TeamMate>();
-		Double teamProfit=0.00D;//用户总的分享收益
-		
-		Integer activedNum=0;
-		Integer activeNum=0;
-		Integer unActiveNum=0;
-		for(User user:users) {
-			TeamMate mate = new TeamMate();
-			mate.setName(user.getUserName());//设置团员名字
-			String state = user.getState();
-			mate.setState(state);//设置团员活跃状态
-			mate.setID("ID:"+user.getTel());//设置团员ID
-			Integer userId=user.getId();
-			//查找该团员给用户带来的分享收益
-			Double shareMoney=profitsService.queryAllShareProfit(userId);
-			mate.setShareMoney(shareMoney);
-			BigDecimal b1 = new BigDecimal(teamProfit);
-			BigDecimal b2 = new BigDecimal(shareMoney);
-			teamProfit=b1.add(b2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-			if(state=="已激活") {
-				activeNum++;
-			}else if (state=="活跃") {
-				activedNum++;
-			}else if (state=="未激活用户") {
-				unActiveNum++;
+		if(StringUtils.isNotEmpty(invitedCode)) {
+			List<User> users=userDao.queryByInvitedCode(invitedCode);
+			ArrayList<TeamMate> teamMates = new ArrayList<TeamMate>();
+			Double allShareProfit = profitsService.queryShareProfit(id);
+			Integer level_1_num=0; 
+			Integer level_2_num=0; 
+			Integer level_3_num=0; 
+			if(allShareProfit==null) {
+				result.setTeamProfit(0D);
+			}else {
+				result.setTeamProfit(allShareProfit);//总得分享收益
 			}
+			if(users.size()>0) {
+				for(User user:users) {
+					level_1_num++;
+					TeamMate mate = new TeamMate();
+					mate.setName(user.getUserName());//设置团员名字
+					mate.setLevel(1);//直推用户
+					mate.setState(user.getState());//设置团员活跃状态
+					//查看自己给用户带来了多少分享收益
+					Profits p=new Profits();
+					p.setUserId(user.getId());
+					p.setSharerId(id);
+					Double shareProfits_1=profitsService.queryAllShareProfitToOthers(p);
+					if(shareProfits_1==null) {
+						mate.setShareMoney(0D);
+					}else {
+						mate.setShareMoney(shareProfits_1);
+					}
+					teamMates.add(mate);//放入集合中
+					//查看是否有二代会员
+					String invitedCode_2= user.getInviteCode();
+					List<User> users_2=userDao.queryByInvitedCode(invitedCode_2);//二代会员
+					//遍历二代会员
+					if(users_2.size()>0) {
+						for(User user_2:users_2) {
+							level_2_num++;
+							TeamMate mate_2 = new TeamMate();
+							mate_2.setLevel(2);
+							mate_2.setName(user_2.getUserName());
+							mate_2.setState(user_2.getState());
+							//查看自己给用户带来了多少分享收益
+							Profits p2=new Profits();
+							p2.setUserId(user_2.getId());
+							p2.setSharerId(id);
+							Double shareProfits_2=profitsService.queryAllShareProfitToOthers(p2);
+							if(shareProfits_2==null) {
+								mate_2.setShareMoney(0D);
+							}else {
+								mate_2.setShareMoney(shareProfits_2);
+							}
+							teamMates.add(mate_2);//放入集合中
+							//查看是否有二代会员
+							String invitedCode_3= user_2.getInviteCode();
+							List<User> users_3=userDao.queryByInvitedCode(invitedCode_3);//二代会员
+							//遍历三代会员
+							if(users_2.size()>0) {
+								for(User user_3:users_3) {
+									level_3_num++;
+									TeamMate mate_3 = new TeamMate();
+									mate_3.setLevel(3);
+									mate_3.setName(user_3.getUserName());
+									mate_3.setState(user_3.getState());
+									//查看自己给用户带来了多少分享收益
+									Profits p3=new Profits();
+									p3.setUserId(user_3.getId());
+									p3.setSharerId(id);
+									Double shareProfits_3=profitsService.queryAllShareProfitToOthers(p3);
+									if(shareProfits_3==null) {
+										mate_3.setShareMoney(0D);
+									}else {
+										mate_3.setShareMoney(shareProfits_3);
+									}
+									teamMates.add(mate_3);//放入集合中
+								}
+							}
+						}
+					}
+				}
+				result.setLevel_1_num(level_1_num);
+				result.setLevel_2_num(level_2_num);
+				result.setLevel_3_num(level_3_num);
+				result.setTeamMates(teamMates);
+				result.setTeamNum(level_1_num+level_2_num+level_3_num);
+			}else {
+				result.setLevel_1_num(0);
+				result.setLevel_2_num(0);
+				result.setLevel_3_num(0);
+				result.setTeamMates(null);
+				result.setTeamNum(0);
+				result.setTeamProfit(0D);
+			}
+		}else {
+			result=null;
+			
 		}
-		MyTeam myTeam = new MyTeam();
-		myTeam.setActivedNum(activedNum);
-		myTeam.setActiveNum(activeNum);
-		myTeam.setTeamNum(teamMates.size());
-		myTeam.setUnActiveNum(unActiveNum);
-		myTeam.setTeamMates(teamMates);
-		myTeam.setTeamProfit(teamProfit);
-		return myTeam;
+		return result;
 	}
 
 	/**
@@ -317,6 +394,27 @@ public class UserServiceImpl implements UserSevice{
 		return userDao.queryAdmin();
 	}
 
+	
+	/**
+	 * 退出，删除token
+	 */
+	@Override
+	public Integer quit(String token) {
+		try {
+			redisService.delete(token);
+			return 1;
+		} catch (Exception e) {
+		}
+		
+		return 0;
+	}
 
+
+	@Override
+	public void updateIsConfirmed(Integer id) {
+		userDao.updateIsConfirmed(id);
+		
+	}
+	
 	
 }

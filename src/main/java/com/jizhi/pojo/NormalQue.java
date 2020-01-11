@@ -8,6 +8,8 @@ public class NormalQue implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
+	private String title;
+	private String content;
 	public Integer getId() {
 		return id;
 	}
@@ -26,7 +28,6 @@ public class NormalQue implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	private String title;
-	private String content;
+
 	
 }

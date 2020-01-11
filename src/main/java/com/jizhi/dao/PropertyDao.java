@@ -1,11 +1,10 @@
 package com.jizhi.dao;
 
-import java.util.HashMap;
-import java.util.List;
-
+import com.jizhi.pojo.Property;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jizhi.pojo.Property;
+import java.util.HashMap;
+import java.util.List;
 
 @Mapper
 public interface PropertyDao {
@@ -31,6 +30,12 @@ public interface PropertyDao {
 	
 	//更改为已售
 	void updateToSold(Integer id);
+
+
+	List<Property> queryNotMatched(Integer userId);
+
+
+	void updateBuyDateTime(HashMap<String, Object> map);
 
 	
 

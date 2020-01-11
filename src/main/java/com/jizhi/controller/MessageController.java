@@ -1,15 +1,14 @@
 package com.jizhi.controller;
 
-import java.util.List;
-
+import com.jizhi.pojo.FinalResult;
+import com.jizhi.pojo.Message;
+import com.jizhi.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jizhi.pojo.FinalResult;
-import com.jizhi.pojo.Message;
-import com.jizhi.service.MessageService;
+import java.util.List;
 
 @RequestMapping("message")
 @RestController
@@ -49,4 +48,20 @@ public class MessageController {
 		}
 		return finalResult;
 	}
+	
+	
+	@RequestMapping("/delete")
+	public  FinalResult deleteMsg(@RequestBody Message message) {
+		Integer i=this.messageService.delete(message.getId());
+		FinalResult finalResult = new FinalResult();
+		if(i>0) {
+			finalResult.setCode("100");
+			finalResult.setMsg("删除成功");
+		}else {
+			finalResult.setCode("104");
+			finalResult.setMsg("删除失败");
+		}
+		return finalResult;
+	}
+	
 }

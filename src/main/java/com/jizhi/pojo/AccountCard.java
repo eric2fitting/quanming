@@ -15,10 +15,10 @@ public class AccountCard implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer userId;
-	private String type;
-	private String accountName;//身份证照片
-	private String accountNum;
-	private String pic;
+	private String type;//
+	private String accountName;//现在没用了不管
+	private String accountNum;//账户名
+	private String pic;//照片
 	
 
 	public Integer getId() {

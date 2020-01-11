@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>注册成功下载APP</title>
+		<link rel="stylesheet" type="text/css" href="api.css"/>
+		<link rel="stylesheet" type="text/css" href="reset.css"/>
+		<link rel="stylesheet" type="text/css" href="lore.css"/>
+	</head>
+
+	<style type="text/css">
+		.tit {
+			text-align: center;
+			margin: 70% auto 0;
+			font-size: 20px;
+			color: #ee8178;
+		}
+		
+		.dec {
+			text-align: center;
+			font-size: 14px;
+			margin: 10px auto 0;
+		}
+		
+		.but {
+			width: 60%;
+			height: 40px;
+			line-height: 40px;
+			background-color: #ee8178;
+			color: #fff;
+			text-align: center;
+			border-radius: 10px;
+			margin: 10px auto 0;
+		}
+		
+		.bg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		}
+		
+		.but a {
+			display: block;
+			color: #fff;
+		}
+		
+		.bg {
+			display: none;
+		}
+	</style>
+
+	<body>
+		<div class="login" id="login">
+			<div class="tit">恭喜你注册成功！</div>
+			<div class="dec">点击以下按钮下载全民农场APP</div>
+			<div class="dec">下载后用刚刚注册的账号密码登录</div>
+			<div style="height: 20px;"></div>
+			<div id="ad" class="but"></div>
+			<!--<div class="but">
+				<a href="https://itunes.apple.com/cn/app/id1470356991">IOS用户点击下载</a>
+			</div>-->
+		</div>
+		<div class="bg"><img src="./xz.png" width="100%" height="100%" alt=""></div>
+	</body>
+
+</html>
+<script src="jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+<script src="vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	$('.ad').click(function() {
+		$('.bg').hide()
+	})
+
+	if(isWeiXin()) { // 是微信内置浏览器
+		$('.but').click(function() {
+			$('.bg').show()
+		})
+		$('#ad').append('Android用户点击下载')
+	} else {
+		$('#ad').append('<a download="" href="http://admin.bakktcns.com:8085/app/qmnc.apk">Android用户点击下载</a>')
+	}
+
+	function isWeiXin() {
+		var ua = window.navigator.userAgent.toLowerCase();
+		console.log(ua); //mozilla/5.0 (iphone; cpu iphone os 9_1 like mac os x) applewebkit/601.1.46 (khtml, like gecko)version/9.0 mobile/13b143 safari/601.1
+		if(ua.match(/MicroMessenger/i) == 'micromessenger') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+</script>

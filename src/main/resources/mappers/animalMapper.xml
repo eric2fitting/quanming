@@ -16,7 +16,7 @@
 	</resultMap>
 	
 	<select id="queryAll" resultType="animal">
-		select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal where isShow=1;
+		select id,animalType,size,minPrice,maxPrice,profit,cycle,nfc,isShow from animal
 	</select>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.Animal">

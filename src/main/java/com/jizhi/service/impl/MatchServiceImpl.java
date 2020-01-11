@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jizhi.dao.AccountCardDao;
 import com.jizhi.dao.MatchDao;
@@ -35,7 +36,8 @@ import com.jizhi.service.PropertyService;
 import com.jizhi.util.AppPushUtil;
 import com.jizhi.util.Base64ToImgUtil;
 import com.jizhi.util.RedisService;
-
+import com.jizhi.util.SMS;
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class MatchServiceImpl implements MatchService{
 	@Autowired
@@ -59,10 +61,12 @@ public class MatchServiceImpl implements MatchService{
 	@Autowired
 	private AppPushUtil appPushUtil;
 	
-	private String content1="恭喜你成功卖出小动物，请尽快联系买家付款并完成交易";
-	private String content2="恭喜你成功匹配到小动物，请尽快付款并联系卖家完成交易";
 	private String title="恭喜你匹配成功";
-
+	private String content1="【全民农场】用户您好，恭喜您已成功匹配到订单，赶快登陆APP查看吧！";
+	private String content3="买家已付款，请尽快核实并确认";
+	private String title1="买家已付款";
+	private String content="【全民农场】用户您好，您在全民农场的动物已经被成功领养了哦，赶快登陆APP核对确认吧！";
+	
 	//一对一匹配，写入数据库
 	public void doMatch(Order order, Property property) {
 		//预约id
@@ -70,7 +74,7 @@ public class MatchServiceImpl implements MatchService{
 		Integer buyerId = order.getUserId();//买家id
 		//资产id
 		Integer propertyId = property.getId();
-		Integer sellerId = property.getUserId();//买家id
+		Integer sellerId = property.getUserId();//卖家id
 		//根据动物id查找利润率
 		Integer animalId = order.getAnimalId();
 		Animal animal=animalService.queryById(animalId);
@@ -80,9 +84,8 @@ public class MatchServiceImpl implements MatchService{
 		BigDecimal p=new BigDecimal(price.toString());
 		//计算卖价，保留两位小数
 		BigDecimal b1 =new BigDecimal(profit.toString());
-		BigDecimal b2 =new BigDecimal(95D);
 		BigDecimal b3 =new BigDecimal(100D);
-		Double sellPrice=p.multiply(b1.add(b2)).divide(b3, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		Double sellPrice=p.multiply(b1.add(b3)).divide(b3, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		//往配对表中添加数据
 		Match match = new Match();
 		match.setOrderId(orderId);
@@ -100,10 +103,19 @@ public class MatchServiceImpl implements MatchService{
 			property2.setIsSold(1);
 			propertyService.updateState(property2);	
 			// 查找双方的cid
-			String buyerCid = userDao.queryById(buyerId).getCid();
-			String sellerCid = userDao.queryById(sellerId).getCid();
+			User buyer=userDao.queryById(buyerId);
+			User seller=userDao.queryById(sellerId);
+			String buyerCid = buyer.getCid();
+			String sellerCid = seller.getCid();
+			//给买家发短信
+			try {
+				SMS.informMsg(buyer.getTel(), content1);
+				//SMS.informMsg(seller.getTel(), content1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			//给双方发推送
-			appPushUtil.pushMsg(buyerCid, title, content2);
+			appPushUtil.pushMsg(buyerCid, title, content1);
 			appPushUtil.pushMsg(sellerCid, title, content1);
 		}
 	}
@@ -121,50 +133,62 @@ public class MatchServiceImpl implements MatchService{
 		String string = redisService.get(token);
 		//用户id,现在的身份是买家
 		Integer buyerId=Integer.parseInt(string);
-		//根据用户id从预约表中查找预约成功的预约id
+		//根据用户id从匹配表里查询还没确认的消息	
 		List<Order> orders=orderService.querySuccessOrder(buyerId);
 		//用于封装领养信息
 		ArrayList<BuyingDetail> list = new ArrayList<BuyingDetail>();
-		if(orders==null) {
+		if(orders.size()==0) {
 			list=null;
 		}else {
 			//根据预约表的id查找match表的信息
 			List<Match> matches=new ArrayList<Match>();
 			for(Order order:orders) {
 				Match match=matchDao.queryByOrderId(order.getId());
-				matches.add(match);
+				if(match!=null) {
+					matches.add(match);
+				}
 			}
-			for(Match match:matches) {
-				//资产表的id
-				Integer propertyId = match.getPropertyId();
-				//得到资产信息也就是卖家该条信息
-				Property property=propertyService.queryById(propertyId);
-				//得到动物类型及所有信息
-				Integer animalId = property.getAnimalId();
-				Animal animal = animalService.queryById(animalId);
-				//将所有需要展示额信息封装到buyingDetail中
-				BuyingDetail buyingDetail = new BuyingDetail();
-				buyingDetail.setMatchId(match.getId());
-				buyingDetail.setPrice(match.getPrice());
-				buyingDetail.setIsPaid(match.getBuyerConfirm());
-				buyingDetail.setAnimalType(animal.getAnimalType());
-				buyingDetail.setSize(animal.getSize());
-				buyingDetail.setCycleProfit(animal.getCycle()+"天/"+animal.getProfit()+"%");
-				//计算可出售的日期、时间
-				Calendar instance = Calendar.getInstance();
-				instance.add(Calendar.DATE, animal.getCycle());
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				String sellDate = simpleDateFormat.format(instance.getTime());//可出售的日期
-				String sellTime=sellDate+" "+property.getBuyTime();
-				buyingDetail.setSellTime(sellTime);
-				//计算最后的付款日期、时间
-				String nowDate = simpleDateFormat.format(new Date());
-				HashMap<String, Object> map = new HashMap<String,Object>();
-				map.put("startTime", property.getBuyTime());
-				map.put("animalId", animalId);
-				String lastTime=orderTimeDao.queryLastTime(map);
-				buyingDetail.setLastPayTime(nowDate+":"+lastTime);
-				list.add(buyingDetail);
+			if(matches.size()>0) {
+				for(Match match:matches) {
+					//资产表的id
+					Integer propertyId = match.getPropertyId();
+					//得到资产信息也就是卖家该条信息
+					Property property=propertyService.queryById(propertyId);
+					//得到动物类型及所有信息
+					Integer animalId = property.getAnimalId();
+					Animal animal = animalService.queryById(animalId);
+					//将所有需要展示额信息封装到buyingDetail中
+					BuyingDetail buyingDetail = new BuyingDetail();
+					buyingDetail.setMatchId(match.getId());//匹配表id
+					buyingDetail.setNumber(property.getCode());//区块编码
+					buyingDetail.setPrice(match.getPrice());//价值
+					buyingDetail.setIsPaid(match.getBuyerConfirm());//是否
+					buyingDetail.setAnimalType(animal.getAnimalType());//物种
+					buyingDetail.setSize(animal.getSize());//大小型号
+					BigDecimal buyPrice = new BigDecimal(match.getPrice());
+					BigDecimal lilv = new BigDecimal(animal.getProfit());
+					BigDecimal b1 = new BigDecimal(100D);
+					double sellPrice = buyPrice.multiply(lilv.add(b1)).divide(b1).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();//卖价
+					buyingDetail.setCycleProfit(animal.getCycle()+"天/"+animal.getProfit()+"%"+"  "+sellPrice);//智能收益
+					//计算可出售的日期、时间
+					Calendar instance = Calendar.getInstance();
+					instance.add(Calendar.DATE, animal.getCycle());
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					String sellDate = simpleDateFormat.format(instance.getTime());//可出售的日期
+					
+					//计算最后的付款日期、时间
+					String nowDate = simpleDateFormat.format(new Date());
+					HashMap<String, Object> map = new HashMap<String,Object>();
+					map.put("startTime", property.getBuyTime());
+					map.put("animalId", animalId);
+					String lastTime=orderTimeDao.queryLastTime(map);
+					buyingDetail.setLastPayTime(nowDate+"  "+lastTime);//付款截止时间
+					buyingDetail.setBuyerDate(nowDate+"  "+property.getBuyTime()+"-"+lastTime);//领养时间
+					
+					String sellTime=sellDate+"  "+property.getBuyTime()+"-"+lastTime;//转让时间
+					buyingDetail.setSellTime(sellTime);
+					list.add(buyingDetail);
+				}
 			}
 		}
 		return list;
@@ -180,25 +204,36 @@ public class MatchServiceImpl implements MatchService{
 			String string = redisService.get(token);
 			Integer userId=Integer.parseInt(string);
 			//根据userId从资产表中查询
-			List<Property> Properties=propertyService.queryByUserId(userId);
+			List<Property> Properties=propertyService.queryNotMatched(userId);
 			//用于封装喂养的动物详情
 			ArrayList<FeedingDetail> list = new ArrayList<FeedingDetail>();
-			if(Properties==null) {
+			if(Properties.size()==0) {
 				list=null;
 			}else {
 				for(Property property:Properties) {
 					Integer animalId = property.getAnimalId();
 					//根据animalId查询该动物的信息
 					Animal animal = animalService.queryById(animalId);
+					//根据动物id和开始时间查询截止时间
+					HashMap<String, Object> mapp = new HashMap<String,Object>();
+					mapp.put("animalId", animalId);
+					mapp.put("startTime", property.getBuyTime());
+					String endTime = orderTimeDao.queryLastTime(mapp);
+					
 					FeedingDetail feedingDetail = new FeedingDetail();
-					feedingDetail.setId(property.getId());
-					feedingDetail.setBuyTime(property.getBuyDate());
-					feedingDetail.setAnimalType(animal.getAnimalType());
-					feedingDetail.setSize(animal.getSize());
-					Integer proftis=animal.getProfit()+95;//利润率
-					feedingDetail.setPrice(property.getPrice()+"×"+proftis+"%");
-					feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit()-5)+"%");
-					feedingDetail.setProfit("价值*"+animal.getProfit());
+					feedingDetail.setNumber(property.getCode());//区块编码
+					feedingDetail.setBuyTime(property.getBuyDate()+"  "+property.getBuyTime()+"-"+endTime);//领养时间
+					
+					feedingDetail.setAnimalType(animal.getAnimalType());//种类
+					feedingDetail.setSize(animal.getSize());//大小
+					feedingDetail.setPrice(property.getPrice()+"");//价值
+		
+					//计算出栏收益
+					BigDecimal b1 = new BigDecimal(property.getPrice());
+					BigDecimal b2 = new BigDecimal(animal.getProfit());
+					BigDecimal b3 = new BigDecimal(100);
+					double sellPrice = b1.multiply(b2.add(b3)).divide(b3).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+					feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit())+"%"+"  "+sellPrice);//只智能合约收益
 					//转让出栏时间
 					String buyTime = property.getBuyDate();//买入时间
 					Integer days=animal.getCycle();//喂养天数
@@ -208,12 +243,8 @@ public class MatchServiceImpl implements MatchService{
 					calendar.setTime(buyDate);
 					calendar.add(Calendar.DATE, days);
 					String sellTime = simpleDateFormat.format(calendar.getTime());
-					feedingDetail.setSellTime(sellTime);
-					if(property.getIsSold()==0) {
-						feedingDetail.setState("喂养收益中");
-					}else if (property.getIsSold()==1) {
-						feedingDetail.setState("正在转让中");
-					}
+					feedingDetail.setSellTime(sellTime+"  "+property.getBuyTime()+"-"+endTime);//出栏时间
+					feedingDetail.setState("喂养收益中");//当前状态
 					list.add(feedingDetail);
 				}
 				return list;
@@ -229,7 +260,7 @@ public class MatchServiceImpl implements MatchService{
 	
 	
 	/**
-	 * 根据预约id查询匹配信息
+	 * 根据预约id查询尚未完成的匹配信息
 	 */
 	@Override
 	public Match queryByOrderId(Integer id) {
@@ -265,6 +296,7 @@ public class MatchServiceImpl implements MatchService{
 		payInfo.setName(seller.getUserName());
 		payInfo.setTel(seller.getTel());
 		payInfo.setAccountCardList(list);
+		payInfo.setPayPic(match.getPayPic());
 		return payInfo;
 	}
 	/**
@@ -278,21 +310,33 @@ public class MatchServiceImpl implements MatchService{
 		}else {
 			HashMap<String, Object> hashMap = new HashMap<String, Object>();
 			
-			String secondPsw = buyerDoPay.getSecondPsw();
-			String token = request.getHeader("token");
-			String user_id = redisService.get(token);
-			Integer userId = Integer.parseInt(user_id);
-			User user = userDao.queryById(userId);
-			String secondpsw2 = user.getSecondpsw();
-			if(secondPsw.equals(secondpsw2)) {
+			//String secondPsw = buyerDoPay.getSecondPsw();
+			//String token = request.getHeader("token");
+			//String user_id = redisService.get(token);
+			//Integer userId = Integer.parseInt(user_id);
+			//User user = userDao.queryById(userId);
+			//String secondpsw2 = user.getSecondpsw();
+			//if(secondPsw.equals(secondpsw2)) {
 				//更改match_tb表状态和付款凭证
-				hashMap.put("id", buyerDoPay.getMatchId());
+				Integer matchId = buyerDoPay.getMatchId();
+				hashMap.put("id", matchId);
 				hashMap.put("payPic", payPic);
 				matchDao.updatePayPic(hashMap);
+				//查找卖家的CID并发推送
+				Match match = matchDao.queryById(matchId);
+				Integer propertyId = match.getPropertyId();
+				Property property = propertyService.queryById(propertyId);
+				Integer sellerId = property.getUserId();
+				User seller = userDao.queryById(sellerId);
+				
+				try {
+					//给卖家发送短信
+					SMS.informMsg(seller.getTel(), content);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				appPushUtil.pushMsg(seller.getCid(), title1, content3);
 				return "成功";
-			}else{
-				return "密码错误";
-			}
 		}
 	}
 	@Override
@@ -307,6 +351,20 @@ public class MatchServiceImpl implements MatchService{
 	public void updateSellerConfirm(Integer id) {
 		matchDao.updateSellerConfirm(id);
 		
+	}
+
+	@Override
+	public void deleteById(Integer id) {
+		matchDao.deleteById(id);
+		
+	}
+	
+	/**
+	 * 驳回，将买家确认改为0
+	 */
+	@Override
+	public Integer cancelSell(Integer id) {
+		return matchDao.cancelSell(id);
 	}
 
 }

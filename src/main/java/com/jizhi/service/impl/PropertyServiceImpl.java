@@ -1,6 +1,7 @@
 package com.jizhi.service.impl;
 
 import java.math.BigDecimal;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,8 +11,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jizhi.dao.MatchDao;
+import com.jizhi.dao.OrderTimeDao;
 import com.jizhi.dao.PropertyDao;
 import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Animal;
@@ -21,6 +24,7 @@ import com.jizhi.pojo.Profits;
 import com.jizhi.pojo.Property;
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.FeedingDetail;
+import com.jizhi.pojo.vo.Sell;
 import com.jizhi.pojo.vo.SellInfo;
 import com.jizhi.service.AnimalService;
 import com.jizhi.service.MatchService;
@@ -28,6 +32,7 @@ import com.jizhi.service.OrderService;
 import com.jizhi.service.ProfitsService;
 import com.jizhi.service.PropertyService;
 import com.jizhi.util.RedisService;
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class PropertyServiceImpl implements PropertyService{
 	
@@ -47,8 +52,10 @@ public class PropertyServiceImpl implements PropertyService{
 	private UserDao userDao;
 	@Autowired
 	private ProfitsService profitsService;
-
 	
+	@Autowired
+	private OrderTimeDao orderTimeDao;
+
 	
 	@Override
 	public List<Property> queryCanSell(HashMap<String, Object> map) {
@@ -89,7 +96,7 @@ public class PropertyServiceImpl implements PropertyService{
 		map.put("userId", userId);
 		map.put("isSold", 1);//1表示正在出售
 		List<Property> Properties=propertyDao.queryIsSelling(map);
-		if(Properties==null) {
+		if(Properties.size()==0) {
 			list=null;
 		}else {
 			//从匹配表中查找已匹配好的
@@ -105,21 +112,24 @@ public class PropertyServiceImpl implements PropertyService{
 				Match match= matchService.queryByPropertyId(hashMap);
 				if(match!=null) {
 					FeedingDetail feedingDetail = new FeedingDetail();
-					feedingDetail.setId(match.getId());
-					feedingDetail.setAnimalType(animal.getAnimalType());
-					feedingDetail.setSize(animal.getSize());
-					feedingDetail.setBuyTime(property.getBuyDate());
-					feedingDetail.setPrice(match.getPrice()+"");
-					feedingDetail.setProfit(animal.getCycle()+"天/"+(animal.getProfit()-5)+"%");
-					feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit()-5)+"%");
+					feedingDetail.setId(match.getId());//匹配表id
+					feedingDetail.setNumber(property.getCode());//区块编码
+					feedingDetail.setAnimalType(animal.getAnimalType());//种类
+					feedingDetail.setSize(animal.getSize());//大小型号
+					feedingDetail.setPrice(property.getPrice()+"");//价值
+					feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit())+"%"+"  "+match.getPrice());//智能收益
+					HashMap<String, Object> hashMap2 = new HashMap<String, Object>();
+					hashMap2.put("animalId", animalId);
+					hashMap2.put("startTime", property.getBuyTime());
+					String endTime = orderTimeDao.queryLastTime(hashMap2);
+					feedingDetail.setBuyTime(property.getBuyDate()+"  "+property.getBuyTime()+"-"+endTime);//领养时间
 					Date date = new Date();
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					String sellTime=simpleDateFormat.format(date);
-					feedingDetail.setSellTime(sellTime);
-					feedingDetail.setState("已出栏");
+					feedingDetail.setSellTime(sellTime+"  "+property.getBuyTime()+"-"+endTime);//转让时间
+					feedingDetail.setState("出栏中");//状态
 					list.add(feedingDetail);
 				}
-
 			}
 		}
 		
@@ -132,6 +142,8 @@ public class PropertyServiceImpl implements PropertyService{
 	public List<FeedingDetail> queryIsSellingList(String token) {
 		String string = redisService.get(token);
 		Integer userId = Integer.parseInt(string);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String nowDate = simpleDateFormat.format(new Date());
 		//用于封装转让中的列表信息
 		ArrayList<FeedingDetail> list = new ArrayList<FeedingDetail>();
 		//从资产表中查找正在卖的资产列表
@@ -139,7 +151,7 @@ public class PropertyServiceImpl implements PropertyService{
 		map.put("userId", userId);
 		map.put("isSold", 1);//1表示正在出售
 		List<Property> Properties=propertyDao.queryIsSelling(map);
-		if(Properties==null) {
+		if(Properties.size()==0) {
 			list=null;
 		}else {
 			//从匹配表中查找已匹配好的
@@ -156,18 +168,22 @@ public class PropertyServiceImpl implements PropertyService{
 				Match match= matchService.queryByPropertyId(hashMap);
 				if(match!=null) {
 					FeedingDetail feedingDetail = new FeedingDetail();
-					feedingDetail.setId(match.getId());//订单编号
+					feedingDetail.setId(match.getId());//匹配表id
+					feedingDetail.setNumber(property.getCode());//区块编码
 					feedingDetail.setAnimalType(animal.getAnimalType());//物种
 					feedingDetail.setSize(animal.getSize());//大小
-					feedingDetail.setBuyTime(property.getBuyDate());//领养时间
-					feedingDetail.setPrice(match.getPrice()+"");//价值
-					feedingDetail.setProfit(animal.getCycle()+"天/"+(animal.getProfit()-5)+"%");//只能喂养合约收益
-					feedingDetail.setCycleProfit("价值*"+animal.getProfit()+"%");//喂养出栏收益
-					feedingDetail.setNoteMsg("平台扣除5%转让手续费");//
-					feedingDetail.setState("等待领养中");
+					feedingDetail.setPrice(property.getPrice()+"");//价值,曾经的买价
+					HashMap<String,Object> map1=new HashMap<String,Object>();
+					map1.put("animalId",animalId);
+					map1.put("startTime",property.getBuyTime());
+					String endTime = orderTimeDao.queryLastTime(map1);
+					feedingDetail.setBuyTime(property.getBuyDate()+"  "+property.getBuyTime()+"-"+endTime);//领养时间
+					feedingDetail.setSellTime(nowDate+"  "+property.getBuyTime()+"-"+endTime);//转让时间
+					feedingDetail.setLastTime(nowDate+"  "+endTime);//最后确认时间
+					feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit())+"%"+"  "+match.getPrice());//智能收益
+					feedingDetail.setState("核对支付凭证");
 					list.add(feedingDetail);
 				}
-				
 			}
 		}
 		return list;
@@ -187,21 +203,33 @@ public class PropertyServiceImpl implements PropertyService{
 		map.put("userId", userId);
 		map.put("isSold", 2);//1表示正在出售
 		List<Property> Properties=propertyDao.queryIsSelling(map);
-		if(Properties==null) {
+		if(Properties.size()==0) {
 			list=null;
 		}else {
 			//从匹配表中查找已匹配好的
 			for(Property property:Properties) {
 				Integer animalId = property.getAnimalId();
 				Animal animal = animalService.queryById(animalId);
+				HashMap<String,Object> map1=new HashMap<String,Object>();
+				map1.put("animalId",animalId);
+				map1.put("startTime",property.getBuyTime());
+				String endTime = orderTimeDao.queryLastTime(map1);//最后时间
 				FeedingDetail feedingDetail = new FeedingDetail();
-				feedingDetail.setId(property.getId());
-				feedingDetail.setBuyTime(property.getBuyDate());
-				feedingDetail.setAnimalType(animal.getAnimalType());
-				feedingDetail.setSize(animal.getSize());
-				feedingDetail.setPrice(property.getPrice()+"×"+(animal.getProfit()-5)+"%");
-				feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit()-5)+"%");
-				feedingDetail.setState("已完成转让收益");
+				
+				feedingDetail.setNumber(property.getCode());//区块编码
+				feedingDetail.setBuyTime(property.getBuyDate()+"  "+property.getBuyTime()+"-"+endTime);//领养时间
+				feedingDetail.setAnimalType(animal.getAnimalType());//种类
+				feedingDetail.setSize(animal.getSize());//大小
+				Match match = matchDao.queryOnlyByPropertyId(property.getId());			
+				feedingDetail.setPrice(property.getPrice()+"");//价值
+				feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit())+"%"+"  "+match.getPrice());//智能收益
+				feedingDetail.setState("已完成收益");
+				//查询转让的时间
+				Integer orderId=match.getOrderId();
+				Order order = orderService.queryByOrderId(orderId);
+				String date = order.getDate();
+				feedingDetail.setSellTime(date+"  "+property.getBuyTime()+"-"+endTime);//转让时间
+				feedingDetail.setId(match.getId());
 				list.add(feedingDetail);
 			}
 		}
@@ -222,17 +250,32 @@ public class PropertyServiceImpl implements PropertyService{
 		return sellInfo;
 	}
 	@Override
-	public void doSell(Integer matchId) {
+	public Integer doSell(Sell sell) {
+		Integer matchId = sell.getId();
+		Match match = matchDao.queryById(matchId);//从匹配表里得到预约信息
+		Integer propertyId=match.getPropertyId();
+		Property properti = propertyDao.queryById(propertyId);
+		Integer sellerId=properti.getUserId();
+		User seller=userDao.queryById(sellerId);
+		//二级密码正确
+		if(seller.getSecondpsw().equals(sell.getSecondPsw())) {
+			return doSellDirectly(matchId);
+		}else {
+			return 0;
+		}	
+	}
+	
+	public Integer doSellDirectly(Integer matchId) {	
+		Match match = matchDao.queryById(matchId);//从匹配表里得到预约信息
 		//更改匹配表里卖家确认
 		matchDao.updateSellerConfirm(matchId);
-		//从匹配表里得到预约信息
-		Match match = matchDao.queryById(matchId);
 		//将资产状态变为已售
 		Integer pId=match.getPropertyId();
+		Property oldP = propertyDao.queryById(pId);//卖的动物资产
 		updateToSold(pId);
-		
 		Integer orderId = match.getOrderId();
-		Order order=orderService.queryByOrderId(orderId);
+		Order order=orderService.queryByOrderId(orderId);//预约信息
+		Integer animalId=order.getAnimalId();
 		Integer buyerId=order.getUserId();
 		//判断该买家是否是第一次购买成功，若是，更改状态为活跃状态
 		List<Property> Properties = propertyDao.queryByUserId(buyerId);
@@ -240,25 +283,53 @@ public class PropertyServiceImpl implements PropertyService{
 			//此次是第一次购买,将状态变为活跃
 			userDao.updateState(buyerId);
 		}
-		//往资产表里添加新数据，买家买入后在资产表里生成自己的新资产
+		//往资产表里添加新数据-买家买入后在资产表里生成自己的新资产
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Property property = new Property();
-		property.setAnimalId(order.getAnimalId());
-		property.setBuyDate(simpleDateFormat.format(new Date()));
-		property.setBuyTime(order.getTime());
-		property.setIsSold(0);
-		Double price = match.getPrice();
-		property.setPrice(price);
-		property.setUserId(buyerId);
-		add(property);
-		//从匹配表里查询资产表信息
-		Integer propertyId = match.getPropertyId();
-		Property property1 = propertyDao.queryById(propertyId);
-		Integer animalId = property1.getAnimalId();
-		//根据动物id查询动物信息
 		Animal animal = animalService.queryById(animalId);
+		//动物的下次出售的价格超过了该种类的最大值
+		Double buyPrice = match.getPrice();
+		Double maxPrice = animal.getMaxPrice();
+		Integer profit = animal.getProfit();
+		BigDecimal b1 = new BigDecimal(buyPrice);
+		BigDecimal b2 = new BigDecimal(profit);
+		BigDecimal b4 = new BigDecimal(100D);
+		Integer newAnimalId=animalId;
+		Double sellPrice=b1.multiply(b2.add(b4)).divide(b4, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		if(sellPrice>maxPrice || sellPrice==maxPrice) {
+			HashMap<String,Object> map1=new HashMap<String,Object>();
+			//改变尺寸
+			if(animal.getSize().equals("小型")) {
+				map1.put("size", "中型");
+				map1.put("animalType", animal.getAnimalType());
+				newAnimalId=animalService.queryAnimalId(map1);
+				if(newAnimalId==null) {
+					newAnimalId=animalId;
+				}
+			}else if(animal.getSize().equals("中型")) {
+				map1.put("size", "大型");
+				map1.put("animalType", animal.getAnimalType());
+				newAnimalId=animalService.queryAnimalId(map1);
+				if(newAnimalId==null) {
+					newAnimalId=animalId;
+				}
+			}
+		}
+		Property property3 = new Property();
+		property3.setAnimalId(newAnimalId);
+		property3.setBuyDate(simpleDateFormat.format(new Date()));
+		property3.setBuyTime(order.getTime());
+		property3.setIsSold(0);
+		property3.setUserId(buyerId);
+		property3.setPrice(buyPrice);
+		property3.setRole(order.getRole());
+		property3.setCode(oldP.getCode());
+		add(property3);	//新增资产
+		Property property1 = oldP;//从匹配表里查询资产表信息
+		//Integer animalId = property1.getAnimalId();
+		//根据动物id查询动物信息
+		//Animal animal = animalService.queryById(animalId);
 		Double price1 = property1.getPrice();
-		BigDecimal bigDecimal = new BigDecimal(price);
+		BigDecimal bigDecimal = new BigDecimal(buyPrice);
 		BigDecimal bigDecimal1=new BigDecimal(price1);
 		Double sellerprofit = bigDecimal.subtract(bigDecimal1).doubleValue();
 		//往利润表里添加卖家的喂养收益和邀请卖家的用户应得到的分享收益
@@ -269,26 +340,53 @@ public class PropertyServiceImpl implements PropertyService{
 		profits.setUserId(userId);
 		User user = userDao.queryById(userId);//卖家
 		String inviteCode = user.getInvitedCode();//卖家被邀请的码,分享者的邀请码
+		//直推用户
 		if(!StringUtils.isEmpty(inviteCode)) {
 			User sharer=userDao.queryByInviteCode(inviteCode);
-			profits.setSharerId(sharer.getId());
-			//计算分享金额
-			List<User> list = userDao.queryByInvitedCode(inviteCode);//分享者一共分享的用户
-			int size = list.size();
-			Double d=0D;
-			if(size<10) {
-				d=1D;
-			}else if(size>9 &&size<20 ) {
-				d=1.2D;
-			}else if(size>19) {
-				d=1.5D;
+			if(sharer!=null) {
+				profits.setSharerId(sharer.getId());
+				BigDecimal sellerprofit_b=new BigDecimal(sellerprofit);
+				BigDecimal b01 = new BigDecimal(8);
+				BigDecimal b02 = new BigDecimal(100);
+				Double shareProfit=sellerprofit_b.multiply(b01).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+				profits.setShareProfit(shareProfit);
+				profitsService.add(profits);
+				//查看是否有二级用户
+				String secondInviteCode=sharer.getInvitedCode();//分享者被邀请的码，别人的邀请码
+				if(StringUtils.isNotEmpty(secondInviteCode)) {
+					User secondSharer=userDao.queryByInviteCode(secondInviteCode);
+					if(secondSharer!=null) {
+						Profits profits2=new Profits();
+						profits2.setUserId(userId);
+						profits2.setNFC(0);
+						profits2.setAnimalProfit(0D);
+						profits2.setSharerId(secondSharer.getId());
+						BigDecimal b03 = new BigDecimal(5);
+						Double SecondShareProfit=sellerprofit_b.multiply(b03).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						profits2.setShareProfit(SecondShareProfit);
+						profitsService.add(profits2);
+						//是否有三级用户
+						String thirdInviteCode=secondSharer.getInvitedCode();
+						if(StringUtils.isNotEmpty(thirdInviteCode)) {
+							User thirdSharer=userDao.queryByInviteCode(thirdInviteCode);
+							if(thirdSharer!=null) {
+								Profits profits3=new Profits();
+								profits3.setUserId(userId);
+								profits3.setNFC(0);
+								profits3.setAnimalProfit(0D);
+								profits3.setSharerId(thirdSharer.getId());
+								BigDecimal b04 = new BigDecimal(3);
+								Double thirdShareProfit=sellerprofit_b.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+								profits3.setShareProfit(thirdShareProfit);
+								profitsService.add(profits3);
+							}
+						}
+					}
+				}
 			}
-			BigDecimal bigDecimal2=new BigDecimal(d);
-			BigDecimal bigDecimal3=new BigDecimal(100D);
-			Double shareProfit=bigDecimal.multiply(bigDecimal2).divide(bigDecimal3, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
-			profits.setShareProfit(shareProfit);
+			
 		}
-		profitsService.add(profits);
+		return 1;
 	}
 	
 	public void add(Property property) {
@@ -306,6 +404,36 @@ public class PropertyServiceImpl implements PropertyService{
 		propertyDao.updateState(property);
 		
 	}
+
+	@Override
+	public List<Property> queryNotMatched(Integer userId) {
+		return propertyDao.queryNotMatched(userId);
+	}
+
+	@Override
+	public void updateBuyDateTime(HashMap<String, Object> map) {
+		propertyDao.updateBuyDateTime(map);
+		
+	}
 	
+	/**
+	 * 驳回
+	 */
+	@Override
+	public Integer cancelSell(Sell sell) {
+		Integer matchId = sell.getId();
+		Match match = matchDao.queryById(matchId);//从匹配表里得到预约信息
+		Integer propertyId=match.getPropertyId();
+		Property properti = propertyDao.queryById(propertyId);
+		Integer sellerId=properti.getUserId();
+		User seller=userDao.queryById(sellerId);
+		//二级密码正确
+		if(seller.getSecondpsw().equals(sell.getSecondPsw())) {
+			return matchService.cancelSell(matchId);
+		}else {
+			return 2;
+		}
+	}
+
 	
 }

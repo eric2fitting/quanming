@@ -17,12 +17,12 @@
 		values(#{userId},#{type},#{accountName},#{accountNum},#{pic})
 	</insert>
 	
-	<delete id="del" parameterType="int">
-		delete from accountcard where user_id=#{userId}
+	<delete id="del" parameterType="java.lang.Integer">
+		delete from accountcard where id=#{id}
 	</delete>
 	
 	<update id="update" parameterType="com.jizhi.pojo.AccountCard">
-		update accountcard set
+		update accountcard set 
 		type=#{type},
 		accountName=#{accountName},
 		accountNum=#{accountNum},
@@ -31,7 +31,7 @@
 	</update>
 	
 	<select id="queryAll" parameterType="java.lang.Integer" resultMap="accountCard">
-		select user_id,type,accountName,accountNum,pic from accountCard where user_id=#{userId}
+		select id,user_id,type,accountName,accountNum,pic from accountCard where user_id=#{userId}
 	</select>
 	
 </mapper>

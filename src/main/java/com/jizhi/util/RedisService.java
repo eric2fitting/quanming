@@ -1,12 +1,14 @@
 package com.jizhi.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
 import java.util.concurrent.TimeUnit;
 
 /**
  * redis对缓存的操作
  */
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 /**
  * Redis的相关操作方法
  * 

@@ -11,12 +11,14 @@
 		<result column="buyDate" property="buyDate"/>
 		<result column="buyTime" property="buyTime"/>
 		<result column="isSold" property="isSold"/>
+		<result column="role" property="role"/>
+		<result column="code" property="code"/>
 	</resultMap>
 	
 	<select id="queryCanSell" parameterType="java.util.Map" resultMap="property">
-		select id,userId,animalId,price,buyDate,buyTime from property 
+		select id,userId,animalId,price,buyDate,buyTime,role,code from property 
 		where 
-		animalId=#{animalId},buyDate=#{buyDate},buyTime=#{buyTime}
+		animalId=#{animalId} and buyDate=#{buyDate} and buyTime=#{buyTime} and isSold=0 and role=0
 	</select>
 	
 	<update id="updateToSold" parameterType="java.lang.Integer">
@@ -32,25 +34,33 @@
 	</select>
 	
 	<select id="queryById" parameterType="java.lang.Integer" resultMap="property">
-		select userId,animalId,buyDate,buyTime,price 
+		select id,userId,animalId,buyDate,buyTime,price,role,code 
 		from property 
 		where id=#{id}
 	</select>
 	
 	<select id="queryByUserId" parameterType="java.lang.Integer" resultMap="property">
-		select id,userId,animalId,price,buyDate,buyTime,isSold 
+		select id,userId,animalId,price,buyDate,buyTime,isSold,role,code  
 		from property 
-		where userId=#{userId}
+		where userId=#{userId} and (isSold=0 or isSold=1)
 	</select>
 	
 	<select id="queryIsSelling" parameterType="java.util.Map" resultMap="property">
-		select id,userId,animalId,price,buyDate,buyTime,isSold 
+		select id,userId,animalId,price,buyDate,buyTime,isSold,role,code 
 		from property 
 		where userId=#{userId} and isSold=#{isSold}
 	</select>
 	
 	<insert id="add" parameterType="com.jizhi.pojo.Property">
-		insert into property(userId,animalId,price,buyDate,buyTime,isSold) 
-		values(#{userId},#{animalId},#{price},#{buyDate},#{buyTime},#{isSold})
+		insert into property(userId,animalId,price,buyDate,buyTime,isSold,role,code) 
+		values(#{userId},#{animalId},#{price},#{buyDate},#{buyTime},#{isSold},#{role},#{code})
 	</insert>
+	
+	<select id="queryNotMatched" parameterType="java.lang.Integer" resultMap="property">
+		select * from property where userId=#{userId} and isSold=0
+	</select>
+	
+	<update id="updateBuyDateTime" parameterType="java.util.HashMap">
+		update property set buyDate=#{buyDate},buyTime=#{buyTime},isSold=0 where id=#{id}
+	</update>
 </mapper>

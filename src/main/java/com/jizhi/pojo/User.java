@@ -15,7 +15,7 @@ public class User implements Serializable{
 	private String password;
 	private String inviteCode;
 	private String invitedCode;
-	private Integer isConfirmed;
+	private Integer isConfirmed;//0表示没上传 ，1表示确定，2审核中，3未通过。
 	private String secondpsw;
 	private Integer role;
 	private String cid;

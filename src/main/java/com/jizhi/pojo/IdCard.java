@@ -13,8 +13,8 @@ public class IdCard implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer userId;
-	private String name;
-	private String pic;
+	private String name;//收益方式，支付宝/微信
+	private String pic;//二维码
 	private String idNum;
 	public String getIdNum() {
 		return idNum;

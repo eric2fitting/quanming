@@ -1,11 +1,10 @@
 package com.jizhi.dao;
 
-import java.util.HashMap;
-import java.util.List;
-
+import com.jizhi.pojo.Animal;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jizhi.pojo.Animal;
+import java.util.HashMap;
+import java.util.List;
 
 @Mapper
 public interface AnimalDao {

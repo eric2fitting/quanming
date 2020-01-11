@@ -8,4 +8,6 @@ public interface IdCardService {
 
 	int updateIdCard(IdCard idCard,String token);
 
+	Integer queryIsConfirmed(String token);
+
 }

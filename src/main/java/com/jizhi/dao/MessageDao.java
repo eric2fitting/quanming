@@ -1,10 +1,9 @@
 package com.jizhi.dao;
 
-import java.util.List;
-
+import com.jizhi.pojo.Message;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jizhi.pojo.Message;
+import java.util.List;
 
 @Mapper
 public interface MessageDao {
@@ -12,4 +11,5 @@ public interface MessageDao {
 	List<Message> queryAll();
 	List<Message> queryByType(Integer type);
 	Message queryLatestMsg();
+	Integer delete(Integer id);
 }

@@ -1,8 +1,7 @@
 package com.jizhi.dao;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.jizhi.pojo.IdCard;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface IdCardDao {

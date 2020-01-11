@@ -1,9 +1,9 @@
 package com.jizhi.pojo.vo;
 
+import com.jizhi.pojo.AccountCard;
+
 import java.io.Serializable;
 import java.util.List;
-
-import com.jizhi.pojo.AccountCard;
 
 public class PayInfo implements Serializable{
 	/**
@@ -15,6 +15,7 @@ public class PayInfo implements Serializable{
 	private Double price;//价格
 	private List<AccountCard> accountCardList;//付款方式
 	private Integer isConfirm;//是否付款0没哟u，1付款了。
+	private String payPic;
 	public String getName() {
 		return name;
 	}
@@ -44,6 +45,12 @@ public class PayInfo implements Serializable{
 	}
 	public void setIsConfirm(Integer isConfirm) {
 		this.isConfirm = isConfirm;
+	}
+	public String getPayPic() {
+		return payPic;
+	}
+	public void setPayPic(String payPic) {
+		this.payPic = payPic;
 	}
 	
 	

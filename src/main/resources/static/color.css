@@ -1,0 +1,41 @@
+/*背景颜色*/
+.bg-fff{
+	background-color: #FFFFFF;
+}
+.bg-2E7E41{
+	background-color: #2E7E41;
+}
+.bg-999{
+	background-color: #999999;
+}
+.bg-FF5758{
+	background-color: #FF5758;
+}
+.bg-f5{
+	background-color: #E5E5E5;
+}
+/*字体颜色*/
+.col-fff{
+	color:#FFFFFF
+}
+.col-F49C2E{
+	color: #F49C2E;
+}
+.col-FFA24E{
+	color: #FFA24E;
+}
+.col-333{
+	color: #333333;
+}
+.col-666{
+	color: #666666;
+}
+.col-2E7E41{
+	color: #2E7E41;
+}
+.col-0196FF{
+	color: #0196FF;
+}
+.col-FF5758{
+	color: #FF5758;
+}

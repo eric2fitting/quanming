@@ -1,16 +1,16 @@
 package com.jizhi.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.jizhi.dao.MessageDao;
 import com.jizhi.pojo.Message;
 import com.jizhi.service.MessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class MessageServiceImpl implements MessageService{
 	@Autowired
@@ -38,6 +38,13 @@ public class MessageServiceImpl implements MessageService{
 	@Override
 	public Message queryLatestMsg() {
 		return messageDao.queryLatestMsg();
+	}
+	@Override
+	public Integer delete(Integer id) {
+		if(id!=null) {
+			return messageDao.delete(id);
+		}
+		return null;
 	}
 
 

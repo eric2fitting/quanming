@@ -1,15 +1,14 @@
 package com.jizhi.controller;
 
-import java.util.List;
-
+import com.jizhi.pojo.FinalResult;
+import com.jizhi.pojo.NormalQue;
+import com.jizhi.service.NormalQueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jizhi.pojo.FinalResult;
-import com.jizhi.pojo.NormalQue;
-import com.jizhi.service.NormalQueService;
+import java.util.List;
 
 @RestController
 @RequestMapping("que")
@@ -42,6 +41,33 @@ public class NormalQueController {
 		finalResult.setBody(list);
 		return finalResult;
 	}
+	
+	@RequestMapping("/delete")
+	public FinalResult delete(@RequestBody NormalQue normalQue) {
+		FinalResult finalResult = new FinalResult();
+		int i=normalQueService.delete(normalQue.getId());
+		if (i>0) {
+			finalResult.setCode("100");
+		}else {
+			finalResult.setCode("104");
+		}
+		return finalResult;
+	}
+	
+	@RequestMapping("/update")
+	public FinalResult update(@RequestBody NormalQue normalQue){
+		
+		FinalResult finalResult = new FinalResult();
+		int i=normalQueService.update(normalQue);
+		if (i>0) {
+			finalResult.setCode("100");
+		}else {
+			finalResult.setCode("104");
+		}
+		return finalResult;
+	}
+	
+	
 	
 	
 }

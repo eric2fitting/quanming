@@ -1,15 +1,14 @@
 package com.jizhi.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.jizhi.pojo.FinalResult;
+import com.jizhi.pojo.IdCard;
+import com.jizhi.service.IdCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jizhi.pojo.FinalResult;
-import com.jizhi.pojo.IdCard;
-import com.jizhi.service.IdCardService;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("idCard")
@@ -50,6 +49,17 @@ public class IdCardController {
 			fz.setMsg("更新失败");
 		}
 		return fz;
+	}
+	
+	
+	@RequestMapping("/isConfirmed")
+	public FinalResult isConfirmed(HttpServletRequest request) {
+		String token = request.getHeader("token");
+		Integer integer=idCardService.queryIsConfirmed(token);
+		FinalResult finalResult = new FinalResult();
+		finalResult.setCode("100");
+		finalResult.setBody(integer);
+		return finalResult;
 	}
 	
 	
