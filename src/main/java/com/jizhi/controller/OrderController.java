@@ -36,13 +36,13 @@ public class OrderController {
 		String token = request.getHeader("token");
 		int i=this.orderService.addOrder(id,token);
 		FinalResult finalResult = new FinalResult();
-		if(i>0) {
+		if(i==1) {
 			finalResult.setCode("100");
 			finalResult.setMsg("预约中");
 			
-		}else {
+		}else if(i==2){
 			finalResult.setCode("104");
-			finalResult.setMsg("无法预约");
+			finalResult.setMsg("饲料不足");
 		}
 		return finalResult;
 	}

@@ -14,6 +14,7 @@ public class UserInfo implements Serializable{
 	private Double animalProfit;
 	private Double shareProfit;
 	private Integer NFC;
+	private Integer level;
 	public String getUserName() {
 		return userName;
 	}
@@ -49,6 +50,12 @@ public class UserInfo implements Serializable{
 	}
 	public void setNFC(Integer nFC) {
 		NFC = nFC;
+	}
+	public Integer getLevel() {
+		return level;
+	}
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
 	

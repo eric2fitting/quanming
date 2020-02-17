@@ -1,5 +1,7 @@
 package com.jizhi.pojo;
 
+
+
 public class Profits {
 	private Integer id;
 	private Integer userId;//卖家id
@@ -7,7 +9,7 @@ public class Profits {
 	private Double shareProfit;
 	private Integer NFC;
 	private Integer sharerId;//分享给卖家的人的id
-	
+	private Integer state;
 	public Integer getId() {
 		return id;
 	}
@@ -43,6 +45,12 @@ public class Profits {
 	}
 	public void setSharerId(Integer sharerId) {
 		this.sharerId = sharerId;
+	}
+	public Integer getState() {
+		return state;
+	}
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 }

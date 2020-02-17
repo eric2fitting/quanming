@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jizhi.dao.AccountCardDao;
+import com.jizhi.dao.FeedDao;
 import com.jizhi.dao.MatchDao;
 import com.jizhi.dao.OrderTimeDao;
 import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.AccountCard;
 import com.jizhi.pojo.Animal;
+import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.Match;
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.Property;
@@ -60,6 +62,8 @@ public class MatchServiceImpl implements MatchService{
 	private Base64ToImgUtil base64ToImgUtil;
 	@Autowired
 	private AppPushUtil appPushUtil;
+	@Autowired
+	private FeedDao feedDao;
 	
 	private String title="恭喜你匹配成功";
 	private String content1="【全民农场】用户您好，恭喜您已成功匹配到订单，赶快登陆APP查看吧！";
@@ -107,6 +111,18 @@ public class MatchServiceImpl implements MatchService{
 			User seller=userDao.queryById(sellerId);
 			String buyerCid = buyer.getCid();
 			String sellerCid = seller.getCid();
+			//将饲料给买家退回一部分
+			Feed feed = new Feed();
+			feed.setDate(new Date());
+			feed.setUserId(buyerId);
+			feed.setType(6);
+			//计算退回数据
+			BigDecimal b11 =new BigDecimal(sellPrice); 
+			BigDecimal b12 =new BigDecimal(3);
+			BigDecimal max_b = new BigDecimal(animal.getMaxPrice());
+			Double feedNum=(max_b.subtract(b11)).multiply(b12).divide(b3).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			feed.setNum(feedNum);
+			feedDao.insert(feed);
 			//给买家发短信
 			try {
 				SMS.informMsg(buyer.getTel(), content1);

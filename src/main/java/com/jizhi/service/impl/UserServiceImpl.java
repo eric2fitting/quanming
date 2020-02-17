@@ -103,25 +103,44 @@ public class UserServiceImpl implements UserSevice{
 			String record = this.redisService.get(tel);
 			//验证码一致，保存用户
 			if(code.equals(record)) {
+				String invitedCode = info.getInvitedCode();
 				User user = new User();
 				user.setTel(tel);
 				user.setPassword(info.getPassword());
 				user.setSecondpsw(info.getSecondPassword());
-				//TODO 邀请码是否为空还没判断
-				user.setInvitedCode(info.getInvitedCode());
+				user.setInvitedCode(invitedCode);
 				//随机生成6位数自己的邀请码，判断是否重复，没有则保存
-//				String random;
-//				while(true) {
-//					random = random();
-//					User u=this.userDao.queryByRandom(random);
-//					if(u==null) {
-//						break;
-//					}
-//				}
-//				user.setInviteCode(random);
-				//用自己的手机号生成验证码
-				user.setInviteCode(tel);
+				String random;
+				while(true) {
+					random = random();
+					User u=this.userDao.queryByRandom(random);
+					if(u==null) {
+						break;
+					}
+				}
+				user.setInviteCode(random);
 				this.userDao.save(user);
+				//判断邀请者现在的级别
+				if(invitedCode!=null) {
+					User inviterUser=userDao.queryByInviteCode(invitedCode);
+					if(inviterUser!=null) {
+						//Integer level = user.getLevel();
+						List<User> list1 = userDao.queryByInvitedCode(invitedCode);
+						int level1Num = list1.size();
+						//直推10人或以上
+						if(level1Num>9) {
+							Double allShareProfit = profitsService.getAllShare(inviterUser.getId());
+							HashMap<String, Object> map = new HashMap<String,Object>();
+							map.put("level1Num", level1Num);
+							map.put("user", inviterUser);
+							map.put("allShareProfit", allShareProfit);
+							map.put("activeNum", queryActiveMum(inviterUser, 0));
+							map.put("level2Num", queryLevel2Num(inviterUser, 0));
+							map.put("level3Num", queryLevel3Num(inviterUser, 0));
+							updateLevel(map);
+						}
+					}
+				}
 				return true;
 			}
 			//验证码不一致，
@@ -129,9 +148,132 @@ public class UserServiceImpl implements UserSevice{
 				return false;
 			}
 		}
-		
 	}
-
+	
+	/**
+	 * 查询团队活跃人数
+	 */
+	public int queryActiveMum(User user,int activeMum) {
+		String inviteCode = user.getInviteCode();
+		List<User> list = userDao.queryByInvitedCode(inviteCode);
+		if(list.size()>0) {
+			for(User user1:list) {
+				if(user1.getState().equals("活跃")) {
+					activeMum++;
+				}
+				activeMum=queryActiveMum(user1,activeMum);
+			}
+		}
+		return activeMum;
+	}
+	
+	/**
+	 * 查询团队二级会员的人数
+	 * @param user
+	 * @param level2Num
+	 * @return
+	 */
+	public int queryLevel2Num(User user,int level2Num) {
+		String inviteCode = user.getInviteCode();
+		List<User> list = userDao.queryByInvitedCode(inviteCode);
+		if(list.size()>0) {
+			for(User user1:list) {
+				if(user1.getLevel()==2) {
+					level2Num++;
+				}
+				level2Num=queryLevel2Num(user1,level2Num);
+			}
+		}
+		return level2Num;
+	}
+	
+	/**
+	 * 查询团队三级会员人数
+	 * @param user
+	 * @param level3Num
+	 * @return
+	 */
+	public int queryLevel3Num(User user,int level3Num) {
+		String inviteCode = user.getInviteCode();
+		List<User> list = userDao.queryByInvitedCode(inviteCode);
+		if(list.size()>0) {
+			for(User user1:list) {
+				if(user1.getLevel()==3) {
+					level3Num++;
+				}
+				level3Num=queryLevel3Num(user1,level3Num);
+			}
+		}
+		return level3Num;
+	}
+	
+//	public HashMap<String, Object> queryUserLevelFactor(List<User> list,int activeNum,int level2Num,int level3Num){
+//		for(User user:list) {
+//			if(user.getState().equals("活跃")) {
+//				activeNum++;
+//			}
+//			if(user.getLevel()==2) {
+//				level2Num++;
+//			}else if (user.getLevel()==3) {
+//				level3Num++;
+//			}
+//			List<User> list2 = userDao.queryByInvitedCode(user.getInviteCode());
+//			if(list2.size()>0) {
+//				queryUserLevelFactor(list2,activeNum,level2Num,level3Num);
+//			}
+//		}
+//		HashMap<String, Object> map = new HashMap<String,Object>();
+//		map.put("activeNum", activeNum);
+//		map.put("level2Num", level2Num);
+//		map.put("level3Num", level3Num);
+//		return map;
+//	}
+	
+	
+	
+	public void updateLevel(HashMap<String, Object> map) {
+		int activeNum=(int) map.get("activeNum");
+		int level2Num=(int) map.get("level2Num");
+		int level3Num=(int) map.get("level3Num");
+		int level1Num=(int) map.get("level1Num");
+		Double allShareProfit=(Double) map.get("allShareProfit");
+		if(allShareProfit==null) {
+			allShareProfit=0D;
+		}
+		User inviterUser=(User) map.get("user");
+		switch (inviterUser.getLevel()) {
+		case 0:
+			if(level1Num>9 && activeNum>20) {
+				//更改用户等级
+				inviterUser.setLevel(1);
+				userDao.updateLevel(inviterUser);
+			}
+			break;
+		case 1:
+			if(allShareProfit>=5000 && activeNum>50 && level1Num>15) {
+				inviterUser.setLevel(2);
+				userDao.updateLevel(inviterUser);
+			}
+			break;
+		case 2:
+			if(allShareProfit>=30000 && activeNum>=100 && level1Num>=20 && level2Num>=2) {
+				inviterUser.setLevel(3);
+				userDao.updateLevel(inviterUser);
+			}
+			break;
+		case 3:
+			if(allShareProfit>=60000 && activeNum>=200 && level1Num>=25 && level3Num>=2) {
+				inviterUser.setLevel(4);
+				userDao.updateLevel(inviterUser);
+			}
+			break;
+		}
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * 忘记密码重新设置
@@ -204,6 +346,7 @@ public class UserServiceImpl implements UserSevice{
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUserName(user.getUserName());
 		userInfo.setTel(user.getTel());
+		userInfo.setLevel(user.getLevel());
 		if(totalMoney==null) {
 			userInfo.setTotalMoney(0D);
 		}else {
@@ -271,7 +414,7 @@ public class UserServiceImpl implements UserSevice{
 		if(StringUtils.isNotEmpty(invitedCode)) {
 			List<User> users=userDao.queryByInvitedCode(invitedCode);
 			ArrayList<TeamMate> teamMates = new ArrayList<TeamMate>();
-			Double allShareProfit = profitsService.queryShareProfit(id);
+			Double allShareProfit = profitsService.getAllShare(id);
 			Integer level_1_num=0; 
 			Integer level_2_num=0; 
 			Integer level_3_num=0; 
@@ -282,7 +425,9 @@ public class UserServiceImpl implements UserSevice{
 			}
 			if(users.size()>0) {
 				for(User user:users) {
-					level_1_num++;
+					if(user.getState().equals("活跃")) {
+						level_1_num++;
+					}
 					TeamMate mate = new TeamMate();
 					mate.setName(user.getUserName());//设置团员名字
 					mate.setLevel(1);//直推用户
@@ -304,7 +449,9 @@ public class UserServiceImpl implements UserSevice{
 					//遍历二代会员
 					if(users_2.size()>0) {
 						for(User user_2:users_2) {
-							level_2_num++;
+							if(user_2.getState().equals("活跃")) {
+								level_2_num++;
+							}
 							TeamMate mate_2 = new TeamMate();
 							mate_2.setLevel(2);
 							mate_2.setName(user_2.getUserName());
@@ -324,9 +471,11 @@ public class UserServiceImpl implements UserSevice{
 							String invitedCode_3= user_2.getInviteCode();
 							List<User> users_3=userDao.queryByInvitedCode(invitedCode_3);//二代会员
 							//遍历三代会员
-							if(users_2.size()>0) {
+							if(users_3.size()>0) {
 								for(User user_3:users_3) {
-									level_3_num++;
+									if(user_3.getState().equals("活跃")) {
+										level_3_num++;
+									}
 									TeamMate mate_3 = new TeamMate();
 									mate_3.setLevel(3);
 									mate_3.setName(user_3.getUserName());
@@ -342,6 +491,7 @@ public class UserServiceImpl implements UserSevice{
 										mate_3.setShareMoney(shareProfits_3);
 									}
 									teamMates.add(mate_3);//放入集合中
+									
 								}
 							}
 						}

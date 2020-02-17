@@ -27,6 +27,10 @@ public interface ProfitsDao {
 	Double queryAllAnimalProfits(Integer userId);
 
 	Integer queryAllNFC(Integer userId);
+	//添加数据，把分享收益兑换饲料
+	void shareProfitsToFeed(Profits profits);
+
+	Double getAllShare(Integer sharerId);
 
 
 }

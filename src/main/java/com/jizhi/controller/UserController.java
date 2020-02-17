@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.LoginInfo;
@@ -17,6 +18,7 @@ import com.jizhi.pojo.vo.MyTeam;
 import com.jizhi.pojo.vo.PswInfo;
 import com.jizhi.pojo.vo.UserInfo;
 import com.jizhi.service.UserSevice;
+import com.jizhi.util.RedisService;
 
 @CrossOrigin
 @RestController
@@ -24,6 +26,10 @@ import com.jizhi.service.UserSevice;
 public class UserController {
 	@Autowired
 	private UserSevice userSevice;
+	@Autowired
+	private RedisService redisService;
+	@Autowired
+	private UserDao userDao;
 	/*
 	 *登陆
 	 */
@@ -211,6 +217,16 @@ public class UserController {
 			finalResult.setCode("104");
 		}
 		return finalResult;
+	}
+	
+	@RequestMapping("test")
+	public String voidtest(HttpServletRequest request) {
+		String token = request.getHeader("token");
+		String user_id = redisService.get(token);
+		int userId = Integer.parseInt(user_id);
+		User user = userDao.queryById(userId);
+		int queryActiveMum = userSevice.queryLevel2Num(user,0);
+		return queryActiveMum+"........."+userId;
 		
 	}
 }

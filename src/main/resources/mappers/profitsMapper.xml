@@ -37,4 +37,13 @@
 	<select id="queryShareProfit" parameterType="java.lang.Integer" resultType="java.lang.Double">
 		select sum(shareProfit) from profits where sharerId=#{id}
 	</select>
+	
+	<insert id="shareProfitsToFeed" parameterType="com.jizhi.pojo.Profits">
+		insert into profits(userId,animalProfit,shareProfit,NFC,sharerId,state) 
+		values(#{userId},#{animalProfit},#{shareProfit},#{NFC},#{sharerId},#{state})
+	</insert>
+	
+	<select id="getAllShare" parameterType="java.lang.Integer" resultType="java.lang.Double">
+		select sum(shareProfit) from profits where sharerId=#{sharerId} and state=0
+	</select>
 </mapper>

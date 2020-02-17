@@ -40,6 +40,9 @@ public interface OrderDao {
 	void deleteAll();
 
 
+	List<Order> queryFailedOrder(Order order);
+
+
 
 
 }

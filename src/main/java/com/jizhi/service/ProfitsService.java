@@ -1,6 +1,7 @@
 package com.jizhi.service;
 
 import com.jizhi.pojo.Profits;
+import com.jizhi.pojo.vo.FeedExchangeParam;
 import com.jizhi.pojo.vo.UserInfo;
 
 public interface ProfitsService {
@@ -20,7 +21,15 @@ public interface ProfitsService {
 	//根据用户id查询总的NFC币
 	Integer queryAllNFC(Integer id);
 
+	FeedExchangeParam tryShareProfitsToFeed(Integer userId);
 
+	Integer shareProfitsToFeed(FeedExchangeParam feedExchangeParam);
+
+	FeedExchangeParam tryNFCToFeed(Integer userId);
+
+	Integer NFCToFeed(FeedExchangeParam feedExchangeParam);
+
+	Double getAllShare(Integer sharerId);
 
 
 }

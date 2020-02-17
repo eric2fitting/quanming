@@ -1,7 +1,6 @@
 package com.jizhi.service.impl;
 
 import java.math.BigDecimal;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +30,7 @@ import com.jizhi.service.MatchService;
 import com.jizhi.service.OrderService;
 import com.jizhi.service.ProfitsService;
 import com.jizhi.service.PropertyService;
+import com.jizhi.service.UserSevice;
 import com.jizhi.util.RedisService;
 @Transactional(rollbackFor = Exception.class)
 @Service
@@ -55,7 +55,8 @@ public class PropertyServiceImpl implements PropertyService{
 	
 	@Autowired
 	private OrderTimeDao orderTimeDao;
-
+	@Autowired
+	private UserSevice userSevice;
 	
 	@Override
 	public List<Property> queryCanSell(HashMap<String, Object> map) {
@@ -267,6 +268,9 @@ public class PropertyServiceImpl implements PropertyService{
 	
 	public Integer doSellDirectly(Integer matchId) {	
 		Match match = matchDao.queryById(matchId);//从匹配表里得到预约信息
+		if(match.getSellerConfirm()==1) {
+			return 1;
+		}
 		//更改匹配表里卖家确认
 		matchDao.updateSellerConfirm(matchId);
 		//将资产状态变为已售
@@ -282,6 +286,9 @@ public class PropertyServiceImpl implements PropertyService{
 		if(Properties.size()==0) {
 			//此次是第一次购买,将状态变为活跃
 			userDao.updateState(buyerId);
+			//并查看自己变为活跃后是否对推荐者及前人们的等级是否有影响
+			User buyer = userDao.queryById(buyerId);
+			updateOlderUserLevel(buyer);
 		}
 		//往资产表里添加新数据-买家买入后在资产表里生成自己的新资产
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -338,47 +345,63 @@ public class PropertyServiceImpl implements PropertyService{
 		profits.setNFC(animal.getNfc());
 		Integer userId = property1.getUserId();
 		profits.setUserId(userId);
+		profits.setShareProfit(0D);
+		profits.setSharerId(null);
+		//保存卖家的收益
+		profitsService.add(profits);
+		
 		User user = userDao.queryById(userId);//卖家
 		String inviteCode = user.getInvitedCode();//卖家被邀请的码,分享者的邀请码
 		//直推用户
 		if(!StringUtils.isEmpty(inviteCode)) {
 			User sharer=userDao.queryByInviteCode(inviteCode);
+			BigDecimal sellerprofit_b=new BigDecimal(sellerprofit);
+			BigDecimal b02 = new BigDecimal(100);
 			if(sharer!=null) {
-				profits.setSharerId(sharer.getId());
-				BigDecimal sellerprofit_b=new BigDecimal(sellerprofit);
-				BigDecimal b01 = new BigDecimal(8);
-				BigDecimal b02 = new BigDecimal(100);
-				Double shareProfit=sellerprofit_b.multiply(b01).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-				profits.setShareProfit(shareProfit);
-				profitsService.add(profits);
+				if(user.getLevel()<sharer.getLevel() || sharer.getLevel()<2 ) {
+					Profits profits_1=new Profits();
+					profits_1.setUserId(userId);
+					profits_1.setNFC(0);
+					profits_1.setAnimalProfit(0D);
+					profits_1.setSharerId(sharer.getId());
+					BigDecimal b01 = new BigDecimal(8);
+					Double shareProfit=sellerprofit_b.multiply(b01).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+					profits_1.setShareProfit(shareProfit);
+					profitsService.add(profits_1);
+				}
 				//查看是否有二级用户
 				String secondInviteCode=sharer.getInvitedCode();//分享者被邀请的码，别人的邀请码
 				if(StringUtils.isNotEmpty(secondInviteCode)) {
 					User secondSharer=userDao.queryByInviteCode(secondInviteCode);
 					if(secondSharer!=null) {
-						Profits profits2=new Profits();
-						profits2.setUserId(userId);
-						profits2.setNFC(0);
-						profits2.setAnimalProfit(0D);
-						profits2.setSharerId(secondSharer.getId());
-						BigDecimal b03 = new BigDecimal(5);
-						Double SecondShareProfit=sellerprofit_b.multiply(b03).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-						profits2.setShareProfit(SecondShareProfit);
-						profitsService.add(profits2);
+						if(user.getLevel()<secondSharer.getLevel() || secondSharer.getLevel()<2) {
+							Profits profits2=new Profits();
+							profits2.setUserId(userId);
+							profits2.setNFC(0);
+							profits2.setAnimalProfit(0D);
+							profits2.setSharerId(secondSharer.getId());
+							BigDecimal b03 = new BigDecimal(5);
+							Double SecondShareProfit=sellerprofit_b.multiply(b03).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+							profits2.setShareProfit(SecondShareProfit);
+							profitsService.add(profits2);
+						}
 						//是否有三级用户
 						String thirdInviteCode=secondSharer.getInvitedCode();
 						if(StringUtils.isNotEmpty(thirdInviteCode)) {
 							User thirdSharer=userDao.queryByInviteCode(thirdInviteCode);
 							if(thirdSharer!=null) {
-								Profits profits3=new Profits();
-								profits3.setUserId(userId);
-								profits3.setNFC(0);
-								profits3.setAnimalProfit(0D);
-								profits3.setSharerId(thirdSharer.getId());
-								BigDecimal b04 = new BigDecimal(3);
-								Double thirdShareProfit=sellerprofit_b.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-								profits3.setShareProfit(thirdShareProfit);
-								profitsService.add(profits3);
+								if(user.getLevel()<thirdSharer.getLevel() || thirdSharer.getLevel()<2) {
+									Profits profits3=new Profits();
+									profits3.setUserId(userId);
+									profits3.setNFC(0);
+									profits3.setAnimalProfit(0D);
+									profits3.setSharerId(thirdSharer.getId());
+									BigDecimal b04 = new BigDecimal(3);
+									Double thirdShareProfit=sellerprofit_b.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+									profits3.setShareProfit(thirdShareProfit);
+									profitsService.add(profits3);
+								}
+								addAllSharerShareProfits(user, thirdSharer, sellerprofit_b, 4);
 							}
 						}
 					}
@@ -388,6 +411,93 @@ public class PropertyServiceImpl implements PropertyService{
 		}
 		return 1;
 	}
+	
+	
+	public void addAllSharerShareProfits(User buyer,User record,BigDecimal sellerprofit,int num) {
+		String invitedCode = record.getInvitedCode();
+		if(StringUtils.isNotEmpty(invitedCode)) {
+			User sharer = userDao.queryByInviteCode(invitedCode);
+			if(sharer!=null) {
+				if(sharer.getLevel()>buyer.getLevel()) {
+					Profits profits=new Profits();
+					profits.setUserId(buyer.getId());
+					profits.setNFC(0);
+					profits.setAnimalProfit(0D);
+					profits.setSharerId(sharer.getId());
+					BigDecimal b02 = new BigDecimal(100);
+					switch (sharer.getLevel()) {
+					case 1:
+						if(num<=10) {
+							BigDecimal b04 = new BigDecimal(1);
+							Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+							profits.setShareProfit(shareProfit);
+							profitsService.add(profits);
+						}
+						num++;
+						break;
+					case 2:
+						if(num<=20) {
+							BigDecimal b04 = new BigDecimal(2);
+							Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+							profits.setShareProfit(shareProfit);
+							profitsService.add(profits);
+						}
+						num++;
+						break;
+					case 3:
+						BigDecimal b04 = new BigDecimal(3);
+						Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						profits.setShareProfit(shareProfit);
+						profitsService.add(profits);
+						num++;
+						break;
+					case 4:
+						BigDecimal b05 = new BigDecimal(5);
+						Double shareProfit1=sellerprofit.multiply(b05).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						profits.setShareProfit(shareProfit1);
+						profitsService.add(profits);
+						num++;
+						break;
+					}
+					addAllSharerShareProfits(buyer,sharer,sellerprofit,num);
+				}
+			}
+		}
+		
+	}
+	
+	
+	
+	/**
+	 * 查看上一级的条件看是否可以更改
+	 * @param user
+	 */
+	public void updateOlderUserLevel(User user){
+		String invitedCode = user.getInvitedCode();
+		if(StringUtils.isNotBlank(invitedCode)) {
+			User inviter1 = userDao.queryByInviteCode(invitedCode);
+			if(inviter1!=null) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("activeNum", userSevice.queryActiveMum(inviter1, 0));
+				map.put("level2Num", userSevice.queryLevel2Num(inviter1, 0));
+				map.put("level3Num", userSevice.queryLevel3Num(inviter1, 0));
+				List<User> list = userDao.queryByInvitedCode(invitedCode);
+				//HashMap<String, Object> userLevelFactor = userSevice.queryUserLevelFactor(list, 0, 0, 0);
+				map.put("user", inviter1);
+				//判断该邀请者是否更升入下一等级并执行
+				Double shareProfit = profitsService.getAllShare(inviter1.getId());
+				map.put("allShareProfit", shareProfit);
+				map.put("level1Num", list.size());
+				userSevice.updateLevel(map);
+				//递归
+				updateOlderUserLevel(inviter1);
+			}
+		}
+	}
+	
+	
+	
+	
 	
 	public void add(Property property) {
 		propertyDao.add(property);
@@ -435,5 +545,4 @@ public class PropertyServiceImpl implements PropertyService{
 		}
 	}
 
-	
 }

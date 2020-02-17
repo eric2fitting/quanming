@@ -65,4 +65,8 @@
 	<delete id="deleteAll">
 		update orders set flag=1 where flag=0
 	</delete>
+	
+	<select id="queryFailedOrder" parameterType="com.jizhi.pojo.Order" resultMap="order">
+		select * from orders where date=#{date} and time=#{time} and animalId=#{animalId} and role=#{role} and state=1;
+	</select>
 </mapper>

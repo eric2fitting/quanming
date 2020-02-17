@@ -1,27 +1,31 @@
 	package com.jizhi.service.impl;
 
-    import com.jizhi.dao.OrderDao;
-    import com.jizhi.dao.OrderTimeDao;
-    import com.jizhi.pojo.Animal;
-    import com.jizhi.pojo.Order;
-    import com.jizhi.pojo.OrderTime;
-    import com.jizhi.pojo.vo.AnimaInfo;
-    import com.jizhi.pojo.vo.IsOrderOrOverTime;
-    import com.jizhi.pojo.vo.OrderDetail;
-    import com.jizhi.service.AnimalService;
-    import com.jizhi.service.OrderService;
-    import com.jizhi.util.RedisService;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.stereotype.Service;
+    import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-    import java.text.SimpleDateFormat;
-    import java.util.ArrayList;
-    import java.util.Date;
-    import java.util.HashMap;
-    import java.util.List;
-    @Transactional(rollbackFor = Exception.class)
+import com.jizhi.dao.FeedDao;
+import com.jizhi.dao.OrderDao;
+import com.jizhi.dao.OrderTimeDao;
+import com.jizhi.pojo.Animal;
+import com.jizhi.pojo.Feed;
+import com.jizhi.pojo.Order;
+import com.jizhi.pojo.OrderTime;
+import com.jizhi.pojo.vo.AnimaInfo;
+import com.jizhi.pojo.vo.IsOrderOrOverTime;
+import com.jizhi.pojo.vo.OrderDetail;
+import com.jizhi.service.AnimalService;
+import com.jizhi.service.OrderService;
+import com.jizhi.util.RedisService;
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class OrderServiceImpl implements OrderService{
 	
@@ -37,6 +41,9 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private AnimalService animalService;
 	
+	@Autowired
+	private FeedDao feedDao;
+	
 	/**
 	 * 添加预约
 	 */
@@ -49,12 +56,31 @@ public class OrderServiceImpl implements OrderService{
 		order.setUserId(userId);//设置预约订单的预约人id
 		//根据orderTimeId查询时间动物id等
 		OrderTime orderTime=orderTimeDao.queryById(id);
+		Integer animalId = orderTime.getAnimalId();
+		Animal animal = animalService.queryById(animalId);
 		order.setTime(orderTime.getStartTime());//设置预约订单的开始时间
 		order.setDate(simpleDateFormat.format(new Date()));//设置订单的日期
-		order.setAnimalId(orderTime.getAnimalId());//设置订单的animalId
+		order.setAnimalId(animalId);//设置订单的animalId
 		order.setState(1);//设置订单状态为正在预约
 		order.setRole(0);
-		return orderDao.save(order);
+		AnimaInfo info = toOrder(animalId, token);
+		if(info.getFeedOwns()<info.getFeedNeed()) {
+			return 2;
+		}
+		orderDao.save(order);
+		BigDecimal b1 = new BigDecimal(animal.getMaxPrice());
+		BigDecimal b2 = new BigDecimal(3);
+		BigDecimal b3 = new BigDecimal(100);
+		//预约所需要的饲料
+		double feedNeed = b1.multiply(b2).divide(b3).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		//扣除相应饲料
+		Feed feed = new Feed();
+		feed.setDate(new Date());
+		feed.setNum(-feedNeed);
+		feed.setType(1);
+		feed.setUserId(userId);
+		feedDao.insert(feed);
+		return 1;
 	}
 	
 	/**
@@ -69,8 +95,21 @@ public class OrderServiceImpl implements OrderService{
 		//得到用户
 		String user_id = this.redisService.get(token);
 		Integer userId=Integer.parseInt(user_id);
+		BigDecimal b1 = new BigDecimal(animal.getMaxPrice());
+		BigDecimal b2 = new BigDecimal(3);
+		BigDecimal b3 = new BigDecimal(100);
+		//预约所需要的饲料
+		double feedNeed = b1.multiply(b2).divide(b3).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		//用户拥有的饲料
+		Double feedOwns = feedDao.queryTotalFeedByUserId(userId);
 		//用AnimaInfo封装需要返回的信息
 		AnimaInfo animaInfo = new AnimaInfo();
+		animaInfo.setFeedNeed(feedNeed);
+		if(feedOwns==null) {
+			animaInfo.setFeedOwns(0D);
+		}else {
+			animaInfo.setFeedOwns(feedOwns);
+		}
 		animaInfo.setAnimalSize(animal.getSize());
 		animaInfo.setAnimalType(animal.getAnimalType());
 		ArrayList<IsOrderOrOverTime> list = new ArrayList<IsOrderOrOverTime>();
@@ -200,6 +239,14 @@ public class OrderServiceImpl implements OrderService{
 	public void deleteAll() {
 		orderDao.deleteAll();
 		
+	}
+	
+	/**
+	 * 查询预约失败的order
+	 */
+	@Override
+	public List<Order> queryFailedOrder(Order order) {
+		return orderDao.queryFailedOrder(order);
 	}
 
 	

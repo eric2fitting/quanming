@@ -41,6 +41,8 @@ public interface UserDao {
 	void updateCid(User user);
 	//更改用户为审核中
 	void updateIsConfirmed(Integer id);
+	//更改用户等级
+	void updateLevel(User inviterUser);
 
 	
 

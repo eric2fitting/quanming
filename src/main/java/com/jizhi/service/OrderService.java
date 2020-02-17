@@ -34,4 +34,6 @@ public interface OrderService{
 	//删除所有定时任务
 	void deleteAll();
 
+	List<Order> queryFailedOrder(Order order);
+
 }

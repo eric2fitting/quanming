@@ -16,6 +16,7 @@
 		<result column="secondpsw" property="secondpsw"/>
 		<result column="role" property="role"/>
 		<result column="cid" property="cid"/>
+		<result column="level" property="level"/>
 	</resultMap>
 	
 	<select id="queryByTel" parameterType="java.lang.String" resultMap="user">
@@ -43,7 +44,7 @@
 	</update>
 	
 	<select id="queryByRandom" parameterType="java.lang.String" resultMap="user">
-		select id,tel from user where inviteCode=#{inviteCode}
+		select * from user where inviteCode=#{inviteCode}
 	</select>
 	
 	<select id="queryById" parameterType="java.lang.Integer" resultMap="user">
@@ -56,7 +57,7 @@
 			   inviteCode,
 			   invitedCode,
 			   isConfirmed,
-			   secondpsw,role,cid from user where id=#{id}
+			   secondpsw,role,cid,level from user where id=#{id}
 	</select>
 	
 
@@ -86,5 +87,9 @@
 	</update>
 	<update id="updateIsConfirmed" parameterType="java.lang.Integer">
 		update user set isConfirmed=2 where id=#{id}
+	</update>
+	
+	<update id="updateLevel" parameterType="com.jizhi.pojo.User">
+		update user set level=#{level} where id=#{id}
 	</update>
 </mapper>

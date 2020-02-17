@@ -1,6 +1,7 @@
 
 package com.jizhi.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,14 +11,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.jizhi.dao.FeedDao;
 import com.jizhi.dao.OrderTimeDao;
 import com.jizhi.pojo.Animal;
+import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.Match;
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.OrderTime;
@@ -49,13 +54,17 @@ public class AutomaticService {
 	private OrderTimeDao orderTimeDao;
 	@Autowired
 	private UserSevice userSevice;
+	@Autowired
+	private FeedDao feedDao;
 	
+	private static final Logger log = LoggerFactory.getLogger(AutomaticService.class);
 	/**
 	 * 自动匹配预约用户和资产拥有者
 	 */
 	@Scheduled(fixedRate=60*1000*3)
 	public void match() {
 		System.out.println("自动匹配开始执行");
+		log.info("自动匹配开始执行");
 		SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");	
 		try {
@@ -112,6 +121,18 @@ public class AutomaticService {
 					int orderSize = orders.size();
 					//可售人数
 					int sellSize = properties.size();
+					//查询properties中有没有卖价要超过最大值的，取出全部匹配给管理员
+					for(int a=0;a<sellSize;a++) {
+						Property p0=properties.get(0);
+						//价格超过了最大值
+						if(judge(p0)) {
+							//匹配给管理员并从集合中取出
+							matchService.doMatch(newAdminOrder(p0.getAnimalId(), nowDateString, buyTime), p0);
+							properties.remove(p0);
+						}
+					}
+					//现在可售人数
+					sellSize = properties.size();
 					//当买家多余卖家
 					if(orderSize>sellSize) {
 						for(int i=0;i<sellSize;i++) {
@@ -216,8 +237,10 @@ public class AutomaticService {
 			
 		} catch (Exception e) {
 			System.out.println("自动匹配出错");
+			log.info("自动匹配出错");
 		}
 		System.out.println("自动匹配执行结束");
+		log.info("自动匹配执行结束");
 	}
 	
 	/**
@@ -227,6 +250,7 @@ public class AutomaticService {
 	public void confirm() {
 		try {
 			System.out.println("自动确认开始执行");
+			log.info("自动确认开始执行");
 			SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm");
 			SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 			String nowTime = simpleDateFormat1.format(new Date());//当前时间
@@ -249,16 +273,35 @@ public class AutomaticService {
 				}
 			}
 			for(OrderTime orderTime:orderTimes) {
+				Integer animal_Id=orderTime.getAnimalId();
 				//根据动物id,预约时间更改所有预约信息的状态未失败。管理员的除外
 				Order order = new Order();
-				order.setAnimalId(orderTime.getAnimalId());
+				order.setAnimalId(animal_Id);
 				order.setDate(nowDate);
 				order.setTime(orderTime.getStartTime());
 				order.setRole(0);
 				order.setState(0);
-				orderService.updateToFail(order);
+				//根据动物id,预约时间查看所有预约失败的order
+				List<Order> failedOrders=orderService.queryFailedOrder(order);
+				if(failedOrders.size()>0) {
+					//退回预约的饲料
+					Animal failedAnimal = animalService.queryById(animal_Id);
+					BigDecimal max_b = new BigDecimal(failedAnimal.getMaxPrice());
+					BigDecimal aa = new BigDecimal(3);
+					BigDecimal bb = new BigDecimal(100);
+					Double feed_Num=max_b.multiply(aa).divide(bb).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+					for(Order failedOrder:failedOrders) {
+						Feed feed = new Feed();
+						feed.setDate(new Date());
+						feed.setNum(feed_Num);
+						feed.setType(6);
+						feed.setUserId(failedOrder.getUserId());
+						feedDao.insert(feed);
+					}
+					//将状态修改为失败
+					orderService.updateToFail(order);
+				}
 			}
-				
 			//查询匹配表里所有双方都没有确认的消息
 			List<Match> matches=matchService.queryAllByBuyerConfirm();
 			if(matches.size()>0) {
@@ -351,9 +394,11 @@ public class AutomaticService {
 			}
 			
 			System.out.println("自动确认执行结束");
+			log.info("自动确认执行结束");
 		}
 		 catch (Exception e) {
 			System.out.println("自动确认出错");
+			log.info("自动确认出错");
 		}
 	}
 	
@@ -363,6 +408,43 @@ public class AutomaticService {
 	@Scheduled(cron="0 0 1 * * ?")
 	public void delete() {
 		orderService.deleteAll();//软删除
+	}
+	
+	
+	
+	public  Order newAdminOrder(Integer animalId,String nowDateString,String buyTime) {
+		//查询管理员账户
+		List<User> users=userSevice.queryAdmin();
+		int num=users.size();
+		Random random = new Random();
+		Order adminOrder = new Order();
+		adminOrder.setAnimalId(animalId);
+		//随机匹配一个管理员
+		int nextInt = random.nextInt(num);
+		adminOrder.setUserId(users.get(nextInt).getId());
+		adminOrder.setRole(1);
+		adminOrder.setDate(nowDateString);
+		adminOrder.setTime(buyTime);
+		adminOrder.setState(1);
+		orderService.save(adminOrder);
+		return adminOrder;
+	}
+	
+	/**
+	 * 判断卖价是否超过最高价，超过了匹配给管理员
+	 * @param property
+	 * @return
+	 */
+	public boolean judge(Property property) {
+		Integer sellAnimalId=property.getAnimalId();
+		Animal sellAnimal = animalService.queryById(sellAnimalId);
+		//计算动物的出栏价格
+		BigDecimal bb1=new BigDecimal(property.getPrice());
+		BigDecimal bb2=new BigDecimal(sellAnimal.getProfit());
+		BigDecimal bb3=new BigDecimal(100D);
+		Double sellMoney=bb1.multiply(bb2.add(bb3)).divide(bb3).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		//价格超过最高值的大型动物
+		return sellMoney>=sellAnimal.getMaxPrice();
 	}
 }
 
