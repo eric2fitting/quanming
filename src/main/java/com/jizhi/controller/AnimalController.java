@@ -21,7 +21,7 @@ public class AnimalController {
 	private FirstPageService firstPageService;
 	
 	/**
-	 * 展示首页可预约的动物及时间列表信息
+	 * 展示首页可预约的动物及时间列表信息  呵呵
 	 * @return
 	 */
 	@RequestMapping("/all")
