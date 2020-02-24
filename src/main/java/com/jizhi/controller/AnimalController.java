@@ -20,8 +20,10 @@ public class AnimalController {
 	@Autowired
 	private FirstPageService firstPageService;
 	
+	
 	/**
-	 * 展示首页可预约的动物及时间列表信息  呵呵
+	 * 展示首页可预约的动物及时间列表信息  呵呵 嘻嘻
+	 * bbb
 	 * @return
 	 */
 	@RequestMapping("/all")
@@ -51,6 +53,10 @@ public class AnimalController {
 		finalResult.setCode("100");
 		finalResult.setBody(map);
 		return finalResult;
+	}
+	
+	public String test() {
+		return "hehe";
 	}
 	
 }
