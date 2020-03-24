@@ -1,6 +1,6 @@
 package com.jizhi.pojo;
 
-
+import java.util.Date;
 
 public class Profits {
 	private Integer id;
@@ -10,6 +10,14 @@ public class Profits {
 	private Integer NFC;
 	private Integer sharerId;//分享给卖家的人的id
 	private Integer state;
+	private Date updateTime;
+	
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 	public Integer getId() {
 		return id;
 	}

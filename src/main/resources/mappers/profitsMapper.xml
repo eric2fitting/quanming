@@ -11,6 +11,7 @@
 		<result column="NFC" property="NFC"/>
 		<result column="sharerId" property="sharerId"/>
 		<result column="state" property="state"/>
+		<result column="update_time" property="updateTime"/>
 	</resultMap>
 	
 	<select id="queryAllAnimalProfits" parameterType="java.lang.Integer" resultType="java.lang.Double">
@@ -26,8 +27,8 @@
 	</select>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.Profits">
-		insert into profits(userId,animalProfit,shareProfit,NFC,sharerId) 
-		values(#{userId},#{animalProfit},#{shareProfit},#{NFC},#{sharerId})
+		insert into profits(userId,animalProfit,shareProfit,NFC,sharerId,update_time) 
+		values(#{userId},#{animalProfit},#{shareProfit},#{NFC},#{sharerId},now())
 	</insert>
 	
 	<select id="queryAllShareProfitToOthers" parameterType="com.jizhi.pojo.Profits" resultType="java.lang.Double">

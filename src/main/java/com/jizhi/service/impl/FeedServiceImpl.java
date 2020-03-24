@@ -54,12 +54,12 @@ public class FeedServiceImpl implements FeedService{
 		Double sendNum = feedSendParam.getNum();//转赠数量
 		Integer userId = feedSendParam.getUserId();//用户id
 		String tel = feedSendParam.getTel();//受赠者手机
-		if(sendNum<=100D) {
-			return "转赠数量必须大于100";
+		if(sendNum<200D || sendNum%200!=0) {
+			return "转赠数量必须是200的倍数";
 		}
 		Double total = feedDao.queryTotalFeedByUserId(userId);
-		if(total<sendNum) {
-			return "你所拥有的饲料不足";
+		if(total<sendNum+200) {
+			return "转赠后剩余饲料不能小于200";
 		}
 		User record = userDao.queryByTel(tel);
 		if(record==null) {

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +59,8 @@ public class PropertyServiceImpl implements PropertyService{
 	private OrderTimeDao orderTimeDao;
 	@Autowired
 	private UserSevice userSevice;
+	
+	private static final Logger log = LoggerFactory.getLogger(PropertyServiceImpl.class);
 	
 	@Override
 	public List<Property> queryCanSell(HashMap<String, Object> map) {
@@ -209,29 +213,32 @@ public class PropertyServiceImpl implements PropertyService{
 		}else {
 			//从匹配表中查找已匹配好的
 			for(Property property:Properties) {
-				Integer animalId = property.getAnimalId();
-				Animal animal = animalService.queryById(animalId);
-				HashMap<String,Object> map1=new HashMap<String,Object>();
-				map1.put("animalId",animalId);
-				map1.put("startTime",property.getBuyTime());
-				String endTime = orderTimeDao.queryLastTime(map1);//最后时间
-				FeedingDetail feedingDetail = new FeedingDetail();
-				
-				feedingDetail.setNumber(property.getCode());//区块编码
-				feedingDetail.setBuyTime(property.getBuyDate()+"  "+property.getBuyTime()+"-"+endTime);//领养时间
-				feedingDetail.setAnimalType(animal.getAnimalType());//种类
-				feedingDetail.setSize(animal.getSize());//大小
-				Match match = matchDao.queryOnlyByPropertyId(property.getId());			
-				feedingDetail.setPrice(property.getPrice()+"");//价值
-				feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit())+"%"+"  "+match.getPrice());//智能收益
-				feedingDetail.setState("已完成收益");
-				//查询转让的时间
-				Integer orderId=match.getOrderId();
-				Order order = orderService.queryByOrderId(orderId);
-				String date = order.getDate();
-				feedingDetail.setSellTime(date+"  "+property.getBuyTime()+"-"+endTime);//转让时间
-				feedingDetail.setId(match.getId());
-				list.add(feedingDetail);
+				try {
+					Integer animalId = property.getAnimalId();
+					Animal animal = animalService.queryById(animalId);
+					HashMap<String,Object> map1=new HashMap<String,Object>();
+					map1.put("animalId",animalId);
+					map1.put("startTime",property.getBuyTime());
+					String endTime = orderTimeDao.queryLastTime(map1);//最后时间
+					FeedingDetail feedingDetail = new FeedingDetail();
+					feedingDetail.setNumber(property.getCode());//区块编码
+					feedingDetail.setBuyTime(property.getBuyDate()+"  "+property.getBuyTime()+"-"+endTime);//领养时间
+					feedingDetail.setAnimalType(animal.getAnimalType());//种类
+					feedingDetail.setSize(animal.getSize());//大小
+					Match match = matchDao.queryOnlyByPropertyId(property.getId());			
+					feedingDetail.setPrice(property.getPrice()+"");//价值
+					feedingDetail.setCycleProfit(animal.getCycle()+"天/"+(animal.getProfit())+"%"+"  "+match.getPrice());//智能收益
+					feedingDetail.setState("已完成收益");
+					//查询转让的时间
+					Integer orderId=match.getOrderId();
+					Order order = orderService.queryByOrderId(orderId);
+					String date = order.getDate();
+					feedingDetail.setSellTime(date+"  "+property.getBuyTime()+"-"+endTime);//转让时间
+					feedingDetail.setId(match.getId());
+					list.add(feedingDetail);
+				} catch (Exception e) {
+					log.info("匹配表里缺数据");
+				}
 			}
 		}
 		return list;

@@ -119,20 +119,19 @@ public class AutomaticService {
 					List<Property> properties=propertyService.queryCanSell(map1);
 					//预约人数
 					int orderSize = orders.size();
-					//可售人数
-					int sellSize = properties.size();
 					//查询properties中有没有卖价要超过最大值的，取出全部匹配给管理员
-					for(int a=0;a<sellSize;a++) {
-						Property p0=properties.get(0);
+					for(int a=0;a<properties.size();a++) {
+						Property p0=properties.get(a);
 						//价格超过了最大值
 						if(judge(p0)) {
 							//匹配给管理员并从集合中取出
 							matchService.doMatch(newAdminOrder(p0.getAnimalId(), nowDateString, buyTime), p0);
 							properties.remove(p0);
+							a--;
 						}
 					}
 					//现在可售人数
-					sellSize = properties.size();
+					int sellSize = properties.size();
 					//当买家多余卖家
 					if(orderSize>sellSize) {
 						for(int i=0;i<sellSize;i++) {
