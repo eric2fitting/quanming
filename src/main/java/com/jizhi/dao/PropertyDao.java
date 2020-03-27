@@ -1,6 +1,8 @@
 package com.jizhi.dao;
 
 import com.jizhi.pojo.Property;
+
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -36,6 +38,9 @@ public interface PropertyDao {
 
 
 	void updateBuyDateTime(HashMap<String, Object> map);
+
+	@Delete("delete from property where id>200")
+	Integer deleteAll();
 
 	
 

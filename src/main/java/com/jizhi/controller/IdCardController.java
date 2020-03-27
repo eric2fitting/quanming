@@ -23,10 +23,14 @@ public class IdCardController {
 		String token = request.getHeader("token");
 		int i=idCardService.saveIdCard(idCard,token);
 		FinalResult fz = new FinalResult();
-		if(i>0) {
+		if(i==1) {
 			fz.setCode("100"); 
 			fz.setMsg("保存成功");
-		}else {
+		}else if (i==2) {
+			fz.setCode("104"); 
+			fz.setMsg("请勿重复认证");
+		}
+		else {
 			fz.setCode("104"); 
 			fz.setMsg("保存失败");
 		}

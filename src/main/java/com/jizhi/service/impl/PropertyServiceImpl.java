@@ -552,4 +552,9 @@ public class PropertyServiceImpl implements PropertyService{
 		}
 	}
 
+	@Override
+	public Integer killAll() {
+		return propertyDao.deleteAll();
+	}
+
 }

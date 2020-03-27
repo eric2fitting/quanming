@@ -40,8 +40,8 @@
 	</select>
 	
 	<insert id="shareProfitsToFeed" parameterType="com.jizhi.pojo.Profits">
-		insert into profits(userId,animalProfit,shareProfit,NFC,sharerId,state) 
-		values(#{userId},#{animalProfit},#{shareProfit},#{NFC},#{sharerId},#{state})
+		insert into profits(userId,animalProfit,shareProfit,NFC,sharerId,state,update_time) 
+		values(#{userId},#{animalProfit},#{shareProfit},#{NFC},#{sharerId},#{state},now())
 	</insert>
 	
 	<select id="getAllShare" parameterType="java.lang.Integer" resultType="java.lang.Double">

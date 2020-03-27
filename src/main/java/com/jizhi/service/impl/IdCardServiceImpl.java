@@ -30,10 +30,14 @@ public class IdCardServiceImpl implements IdCardService{
 	 * 保存身份证 
 	 */
 	public int saveIdCard(IdCard idCard,String token) {
-		//将前端传来的图片上传到本地并记录地址pic
-		String pic = base64ToImgUtil.base64(idCard.getPic());
+		Integer num=IdCardDao.querySizeByIdNum(idCard.getIdNum());
+		if(num>0) {
+			return 2;
+		}
+		//将前端传来的图片上传到本地并记录地址pic	
+		String pic = base64ToImgUtil.base64(idCard.getPic());   
 		int i;
-		if(StringUtils.isEmpty(pic) || StringUtils.isEmpty(idCard.getIdNum()) 
+		if(StringUtils.isEmpty(pic) ||StringUtils.isEmpty(idCard.getIdNum()) 
 				|| StringUtils.isEmpty(idCard.getName())
 				|| (idCard.getIdNum().length()!=15 && idCard.getIdNum().length()!=18)) {
 			i= 0;
@@ -42,6 +46,10 @@ public class IdCardServiceImpl implements IdCardService{
 			//根据token得到userId
 			String user_Id = this.redisService.get(token);
 			Integer userId=Integer.valueOf(user_Id);
+			IdCard record=IdCardDao.queryByUserId(userId);
+			if(record!=null) {
+				return 2;
+			}
 			idCard.setUserId(userId);
 			i=this.IdCardDao.save(idCard);
 			//上传成功后，将该用户设置为审核中
