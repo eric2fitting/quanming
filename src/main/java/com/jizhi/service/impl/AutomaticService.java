@@ -402,10 +402,11 @@ public class AutomaticService {
 	}
 	
 	/**
-	 * 定时每天凌晨1点删除所有预约记录
+	 * 定时每天晚上11点30删除所有预约记录
 	 */
-	@Scheduled(cron="0 0 1 * * ?")
+	@Scheduled(cron="0 30 23 * * ?")
 	public void delete() {
+		log.info("软删除预约记录");
 		orderService.deleteAll();//软删除
 	}
 	

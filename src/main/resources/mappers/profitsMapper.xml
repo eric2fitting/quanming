@@ -13,13 +13,13 @@
 		<result column="state" property="state"/>
 		<result column="update_time" property="updateTime"/>
 	</resultMap>
-	
+
 	<select id="queryAllAnimalProfits" parameterType="java.lang.Integer" resultType="java.lang.Double">
 		select sum(animalProfit) from profits where userId=#{userId}
 	</select>
 	
 	<select id="queryAllNFC" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-	select sum(NFC) from profits where userId=#{userId}
+		select sum(NFC) from profits where userId=#{userId}
 	</select>
 	
 	<select id="selectAllProfits" parameterType="java.lang.Integer" resultType="profits">
@@ -45,6 +45,10 @@
 	</insert>
 	
 	<select id="getAllShare" parameterType="java.lang.Integer" resultType="java.lang.Double">
-		select sum(shareProfit) from profits where sharerId=#{sharerId} and state=0
+		select sum(shareProfit) from profits where sharerId=#{sharerId} and shareProfit>0
+	</select>
+	
+	<select id="queryShareProfitsList" parameterType="java.lang.Integer" resultMap="profits">
+		select shareProfit,state,update_time from profits where sharerId=#{sharerId} and 0>shareProfit and (state=0 or state=1)
 	</select>
 </mapper>

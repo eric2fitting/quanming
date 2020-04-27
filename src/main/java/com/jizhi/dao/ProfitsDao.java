@@ -1,7 +1,11 @@
 package com.jizhi.dao;
 
-import com.jizhi.pojo.Profits;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import com.jizhi.pojo.Profits;
 
 @Mapper
 public interface ProfitsDao {
@@ -18,7 +22,7 @@ public interface ProfitsDao {
 	Double queryAllShareProfitToOthers(Profits profits);
 	
 	/**
-	 * 查询自己得到的总得分享收益
+	 * 查询现在拥有的总的分享收益
 	 * @param id
 	 * @return
 	 */
@@ -31,6 +35,9 @@ public interface ProfitsDao {
 	void shareProfitsToFeed(Profits profits);
 
 	Double getAllShare(Integer sharerId);
+	
+	//提现列表
+	List<Profits> queryShareProfitsList(Integer sharerId);
 
 
 }

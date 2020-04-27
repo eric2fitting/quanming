@@ -13,7 +13,7 @@ public interface UserSevice {
 
 	HashMap<String, Object> query(User user);
 	boolean sendMsgCode(String tel) throws Exception;
-	boolean save(LoginInfo info);
+	int save(LoginInfo info);
 	boolean forgetPsw(LoginInfo info);
 	//Integer updateUserName(String userName, String token);
 	UserInfo queryUserInfo(String token);

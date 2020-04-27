@@ -54,18 +54,23 @@ public class FeedServiceImpl implements FeedService{
 		Double sendNum = feedSendParam.getNum();//转赠数量
 		Integer userId = feedSendParam.getUserId();//用户id
 		String tel = feedSendParam.getTel();//受赠者手机
-		if(sendNum<200D || sendNum%200!=0) {
-			return "转赠数量必须是200的倍数";
+		if(sendNum<100D || sendNum%100!=0) {
+			return "转赠数量必须是100的倍数";
 		}
 		Double total = feedDao.queryTotalFeedByUserId(userId);
-		if(total<sendNum+200) {
-			return "转赠后剩余饲料不能小于200";
+		if(total<sendNum+150) {
+			return "转赠后剩余饲料不能小于150";
 		}
 		User record = userDao.queryByTel(tel);
+		User user = userDao.queryById(userId);
 		if(record==null) {
 			return "你所转赠的用户不存在";
+		}else {
+			//判断两人是否是上下级关系
+			if((!record.getInviteCode().equals(user.getInvitedCode())) && (!record.getInvitedCode().equals(user.getInviteCode()))){
+				return "仅限上下级之间的转赠";
+			}
 		}
-		User user = userDao.queryById(userId);
 		if(!feedSendParam.getSeconPsw().equals(user.getSecondpsw())) {
 			return "二级密码错误";
 		}

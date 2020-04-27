@@ -104,7 +104,7 @@ public class PropertyController {
 	}
 	
 	/**
-	 * 确认转让
+	 * 取消转让
 	 * @param request
 	 * @return
 	 */

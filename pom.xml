@@ -29,6 +29,14 @@
 
 
 	<dependencies>
+	
+		<!-- 图片压缩插件 -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+		
 		<!-- 个推依赖 -->
 		<dependency>
 			<groupId>com.gexin.platform</groupId>
@@ -101,7 +109,23 @@
 			<version>2.2.3</version>
 			<classifier>jdk15</classifier><!-- 指定jdk版本 -->
 		</dependency>
-
+		
+		<!-- 数据传输 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.9.0</version>
+		</dependency>
 
 
 	</dependencies>

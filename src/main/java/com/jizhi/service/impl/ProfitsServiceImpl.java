@@ -1,21 +1,22 @@
 package com.jizhi.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jizhi.dao.FeedDao;
-import com.jizhi.dao.OtherInfoDao;
 import com.jizhi.dao.ProfitsDao;
 import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Feed;
-import com.jizhi.pojo.OtherInfo;
 import com.jizhi.pojo.Profits;
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.FeedExchangeParam;
+import com.jizhi.pojo.vo.ShareProfitsVO;
 import com.jizhi.pojo.vo.UserInfo;
 import com.jizhi.service.ProfitsService;
 import com.jizhi.util.RedisService;
@@ -28,10 +29,7 @@ public class ProfitsServiceImpl implements ProfitsService{
 	
 	@Autowired
 	private RedisService redisService;
-	
-	@Autowired
-	private OtherInfoDao otherInfoDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 	
@@ -71,11 +69,11 @@ public class ProfitsServiceImpl implements ProfitsService{
 		Double shareProfit = userInfo.getShareProfit();
 		//查询自己的总分享收益
 		Double allShareProfit = profitsDao.queryShareProfit(sharerId);
-		//查询提现金额
-		OtherInfo otherInfo = otherInfoDao.query();
-		Double limit = otherInfo.getEarnMoney();
-		if((shareProfit>=limit) && (allShareProfit>=shareProfit)) {
+		if(allShareProfit>=shareProfit) {
 			Profits profits = new Profits();
+			profits.setAnimalProfit(0D);
+			profits.setNFC(0);
+			profits.setUserId(null);
 			profits.setSharerId(sharerId);
 			profits.setShareProfit(-shareProfit);
 			return profitsDao.save(profits);
@@ -281,6 +279,29 @@ public class ProfitsServiceImpl implements ProfitsService{
 		profits.setState(2);
 		profitsDao.shareProfitsToFeed(profits);
 		return 2;
+	}
+	/**
+	 * 提现列表
+	 */
+	@Override
+	public List<ShareProfitsVO> queryShareProfitsList(String token) {
+		Integer sharerId=Integer.parseInt(redisService.get(token));
+		List<Profits> list=profitsDao.queryShareProfitsList(sharerId);
+		ArrayList<ShareProfitsVO> response = new ArrayList<ShareProfitsVO>();
+		if(list.size()>0) {
+			for(Profits profits:list) {
+				ShareProfitsVO shareProfitsVO = new ShareProfitsVO();
+				if(profits.getState()==0) {
+					shareProfitsVO.setResult("处理中");
+				}else {
+					shareProfitsVO.setResult("已处理");
+				}
+				shareProfitsVO.setDate(profits.getUpdateTime());
+				shareProfitsVO.setShareProfit(Math.abs(profits.getShareProfit()));
+				response.add(shareProfitsVO);
+			}
+		}
+		return response;
 	}
 
 

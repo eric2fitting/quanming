@@ -288,13 +288,13 @@ public class PropertyServiceImpl implements PropertyService{
 		Order order=orderService.queryByOrderId(orderId);//预约信息
 		Integer animalId=order.getAnimalId();
 		Integer buyerId=order.getUserId();
+		User buyer = userDao.queryById(buyerId);
 		//判断该买家是否是第一次购买成功，若是，更改状态为活跃状态
 		List<Property> Properties = propertyDao.queryByUserId(buyerId);
 		if(Properties.size()==0) {
 			//此次是第一次购买,将状态变为活跃
 			userDao.updateState(buyerId);
 			//并查看自己变为活跃后是否对推荐者及前人们的等级是否有影响
-			User buyer = userDao.queryById(buyerId);
 			updateOlderUserLevel(buyer);
 		}
 		//往资产表里添加新数据-买家买入后在资产表里生成自己的新资产
@@ -342,11 +342,13 @@ public class PropertyServiceImpl implements PropertyService{
 		//Integer animalId = property1.getAnimalId();
 		//根据动物id查询动物信息
 		//Animal animal = animalService.queryById(animalId);
+		
 		Double price1 = property1.getPrice();
 		BigDecimal bigDecimal = new BigDecimal(buyPrice);
 		BigDecimal bigDecimal1=new BigDecimal(price1);
 		Double sellerprofit = bigDecimal.subtract(bigDecimal1).doubleValue();
-		//往利润表里添加卖家的喂养收益和邀请卖家的用户应得到的分享收益
+		
+		//往利润表里添加卖家的喂养收益
 		Profits profits = new Profits();
 		profits.setAnimalProfit(sellerprofit);
 		profits.setNFC(animal.getNfc());
@@ -357,17 +359,20 @@ public class PropertyServiceImpl implements PropertyService{
 		//保存卖家的收益
 		profitsService.add(profits);
 		
-		User user = userDao.queryById(userId);//卖家
-		String inviteCode = user.getInvitedCode();//卖家被邀请的码,分享者的邀请码
+		//提前计算买家出售时的收益
+		BigDecimal b02 = new BigDecimal(100);
+		bigDecimal1=new BigDecimal(animal.getProfit());
+		sellerprofit=bigDecimal.multiply(bigDecimal1).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		//User user = userDao.queryById(userId);//卖家
+		String inviteCode = buyer.getInvitedCode();//买家被邀请的码,分享者的邀请码
 		//直推用户
 		if(!StringUtils.isEmpty(inviteCode)) {
 			User sharer=userDao.queryByInviteCode(inviteCode);
 			BigDecimal sellerprofit_b=new BigDecimal(sellerprofit);
-			BigDecimal b02 = new BigDecimal(100);
 			if(sharer!=null) {
-				if(user.getLevel()<sharer.getLevel() || sharer.getLevel()<2 ) {
+				if(buyer.getLevel()<sharer.getLevel() || sharer.getLevel()<2 ) {
 					Profits profits_1=new Profits();
-					profits_1.setUserId(userId);
+					profits_1.setUserId(buyerId);
 					profits_1.setNFC(0);
 					profits_1.setAnimalProfit(0D);
 					profits_1.setSharerId(sharer.getId());
@@ -381,9 +386,9 @@ public class PropertyServiceImpl implements PropertyService{
 				if(StringUtils.isNotEmpty(secondInviteCode)) {
 					User secondSharer=userDao.queryByInviteCode(secondInviteCode);
 					if(secondSharer!=null) {
-						if(user.getLevel()<secondSharer.getLevel() || secondSharer.getLevel()<2) {
+						if(buyer.getLevel()<secondSharer.getLevel() || secondSharer.getLevel()<2) {
 							Profits profits2=new Profits();
-							profits2.setUserId(userId);
+							profits2.setUserId(buyerId);
 							profits2.setNFC(0);
 							profits2.setAnimalProfit(0D);
 							profits2.setSharerId(secondSharer.getId());
@@ -397,9 +402,9 @@ public class PropertyServiceImpl implements PropertyService{
 						if(StringUtils.isNotEmpty(thirdInviteCode)) {
 							User thirdSharer=userDao.queryByInviteCode(thirdInviteCode);
 							if(thirdSharer!=null) {
-								if(user.getLevel()<thirdSharer.getLevel() || thirdSharer.getLevel()<2) {
+								if(buyer.getLevel()<thirdSharer.getLevel() || thirdSharer.getLevel()<2) {
 									Profits profits3=new Profits();
-									profits3.setUserId(userId);
+									profits3.setUserId(buyerId);
 									profits3.setNFC(0);
 									profits3.setAnimalProfit(0D);
 									profits3.setSharerId(thirdSharer.getId());
@@ -408,7 +413,7 @@ public class PropertyServiceImpl implements PropertyService{
 									profits3.setShareProfit(thirdShareProfit);
 									profitsService.add(profits3);
 								}
-								addAllSharerShareProfits(user, thirdSharer, sellerprofit_b, 4);
+								addAllSharerShareProfits(buyer, thirdSharer, sellerprofit_b, 4);
 							}
 						}
 					}
@@ -466,11 +471,10 @@ public class PropertyServiceImpl implements PropertyService{
 						num++;
 						break;
 					}
-					addAllSharerShareProfits(buyer,sharer,sellerprofit,num);
 				}
+				addAllSharerShareProfits(buyer,sharer,sellerprofit,num);
 			}
 		}
-		
 	}
 	
 	

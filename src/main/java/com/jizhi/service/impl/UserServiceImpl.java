@@ -91,12 +91,12 @@ public class UserServiceImpl implements UserSevice{
 	 * 2、保存用户
 	 */
 	@Override
-	public boolean save(LoginInfo info) {
+	public int save(LoginInfo info) {
 		String tel = info.getTel();
 		//判断该电话是否已经注册，没有才能注册
 		User hasUser = userDao.queryByTel(tel);
 		if(hasUser!=null) {
-			return false;
+			return 1;//手机号已注册过
 		}else {
 			String code = info.getCode();
 			//从redis中查询该手机对应的验证码
@@ -104,6 +104,13 @@ public class UserServiceImpl implements UserSevice{
 			//验证码一致，保存用户
 			if(code.equals(record)) {
 				String invitedCode = info.getInvitedCode();
+				if(StringUtils.isEmpty(invitedCode)) {
+					return 3;
+				}
+				User Inviter=userDao.queryByInviteCode(invitedCode);
+				if(Inviter==null) {
+					return 4;
+				}
 				User user = new User();
 				user.setTel(tel);
 				user.setPassword(info.getPassword());
@@ -126,6 +133,7 @@ public class UserServiceImpl implements UserSevice{
 					if(inviterUser!=null) {
 						//Integer level = user.getLevel();
 						List<User> list1 = userDao.queryByInvitedCode(invitedCode);
+						//直推人数
 						int level1Num = list1.size();
 						//直推10人或以上
 						if(level1Num>9) {
@@ -141,11 +149,11 @@ public class UserServiceImpl implements UserSevice{
 						}
 					}
 				}
-				return true;
+				return 0;
 			}
 			//验证码不一致，
 			else {
-				return false;
+				return 2;//验证码不一致
 			}
 		}
 	}
@@ -243,26 +251,30 @@ public class UserServiceImpl implements UserSevice{
 		User inviterUser=(User) map.get("user");
 		switch (inviterUser.getLevel()) {
 		case 0:
-			if(level1Num>9 && activeNum>20) {
+			//1级用户：直推10人，团队活跃人数30
+			if(level1Num>9 && activeNum>30) {
 				//更改用户等级
 				inviterUser.setLevel(1);
 				userDao.updateLevel(inviterUser);
 			}
 			break;
 		case 1:
-			if(allShareProfit>=5000 && activeNum>50 && level1Num>15) {
+			//2级用户：直推20人，团队活跃人数80，累计分享收益1500
+			if(allShareProfit>=1500 && activeNum>80 && level1Num>20) {
 				inviterUser.setLevel(2);
 				userDao.updateLevel(inviterUser);
 			}
 			break;
 		case 2:
-			if(allShareProfit>=30000 && activeNum>=100 && level1Num>=20 && level2Num>=2) {
+			//3级用户：直推40人，团队活跃人数300，累计分享收益5000,伞下两个二级会员
+			if(allShareProfit>=5000 && activeNum>=300 && level1Num>=40 && level2Num>=2) {
 				inviterUser.setLevel(3);
 				userDao.updateLevel(inviterUser);
 			}
 			break;
 		case 3:
-			if(allShareProfit>=60000 && activeNum>=200 && level1Num>=25 && level3Num>=2) {
+			//3级用户：直推80人，团队活跃人数500，累计分享收益10000,伞下两个三级会员
+			if(allShareProfit>=10000 && activeNum>=500 && level1Num>=80 && level3Num>=2) {
 				inviterUser.setLevel(4);
 				userDao.updateLevel(inviterUser);
 			}
@@ -408,7 +420,10 @@ public class UserServiceImpl implements UserSevice{
 		String string = redisService.get(token);
 		Integer id = Integer.parseInt(string);
 		User record = userDao.queryById(id);
+		int totalTeamNum = queryTotalTeamNum(record,  0);
 		MyTeam result=new MyTeam();
+		//团队总人数
+		result.setTeamNum(totalTeamNum);
 		//用户自己的邀请码也就是别人被邀请的码
 		String invitedCode = record.getInviteCode();
 		if(StringUtils.isNotEmpty(invitedCode)) {
@@ -501,13 +516,11 @@ public class UserServiceImpl implements UserSevice{
 				result.setLevel_2_num(level_2_num);
 				result.setLevel_3_num(level_3_num);
 				result.setTeamMates(teamMates);
-				result.setTeamNum(level_1_num+level_2_num+level_3_num);
 			}else {
 				result.setLevel_1_num(0);
 				result.setLevel_2_num(0);
 				result.setLevel_3_num(0);
 				result.setTeamMates(null);
-				result.setTeamNum(0);
 				result.setTeamProfit(0D);
 			}
 		}else {
@@ -565,6 +578,23 @@ public class UserServiceImpl implements UserSevice{
 		userDao.updateIsConfirmed(id);
 		
 	}
-	
-	
+	/**
+	 * 查询自己团队下的总人数
+	 * @param record
+	 * @param num
+	 * @return
+	 */
+	public int queryTotalTeamNum(User record,int num) {
+		//用户自己的邀请码
+		String inviteCode = record.getInviteCode();
+		//邀请下一级用户
+		List<User> users = userDao.queryByInvitedCode(inviteCode);
+		if(users.size()>0) {
+			num=num+users.size();
+			for(User user:users) {
+				num=queryTotalTeamNum(user,num);
+			}
+		}
+		return num;
+	}
 }

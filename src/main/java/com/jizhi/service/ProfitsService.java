@@ -1,7 +1,10 @@
 package com.jizhi.service;
 
+import java.util.List;
+
 import com.jizhi.pojo.Profits;
 import com.jizhi.pojo.vo.FeedExchangeParam;
+import com.jizhi.pojo.vo.ShareProfitsVO;
 import com.jizhi.pojo.vo.UserInfo;
 
 public interface ProfitsService {
@@ -30,6 +33,8 @@ public interface ProfitsService {
 	Integer NFCToFeed(FeedExchangeParam feedExchangeParam);
 
 	Double getAllShare(Integer sharerId);
+	//提现列表
+	List<ShareProfitsVO> queryShareProfitsList(String token);
 
 
 }

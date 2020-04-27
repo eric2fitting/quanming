@@ -55,14 +55,21 @@ public class UserController {
 	 */
 	@RequestMapping("/register")
 	public FinalResult register(@RequestBody LoginInfo info) {
-		boolean bool=this.userSevice.save(info);
+		int result=this.userSevice.save(info);
 		FinalResult finalResult=new FinalResult();
-		if(!bool) {
-			finalResult.setCode("103");
-			finalResult.setMsg("该手机号已经注册过，或验证码错误");
-		}else {
+		if(result==0) {
 			finalResult.setCode("100");
 			finalResult.setMsg("注册成功");
+			
+		}else if(result==1){
+			finalResult.setCode("103");
+			finalResult.setMsg("该手机号已经注册过");
+		}else if(result==2){
+			finalResult.setCode("103");
+			finalResult.setMsg("验证码错误");
+		}else {
+			finalResult.setCode("103");
+			finalResult.setMsg("请填写正确的邀请码");
 		}
 		return finalResult;
 		

@@ -2,6 +2,8 @@ package com.jizhi.pojo;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Profits {
 	private Integer id;
 	private Integer userId;//卖家id
