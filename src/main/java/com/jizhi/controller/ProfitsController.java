@@ -25,7 +25,12 @@ public class ProfitsController {
 	private ProfitsService profitsService;
 	@Autowired
 	private RedisService redisService;
-	
+	/**
+	 * 提现
+	 * @param request
+	 * @param userInfo
+	 * @return
+	 */
 	@RequestMapping("/update")
 	public FinalResult updateShareProfit(HttpServletRequest request,@RequestBody UserInfo userInfo) {
 		String token = request.getHeader("token");
@@ -80,6 +85,9 @@ public class ProfitsController {
 		}else if (i==2) {
 			finalResult.setCode("100");
 			finalResult.setMsg("兑换成功");
+		}else if (i==3) {
+			finalResult.setCode("101");
+			finalResult.setMsg("会员等级达到v2才能兑换");
 		}
 		return finalResult;
 	}

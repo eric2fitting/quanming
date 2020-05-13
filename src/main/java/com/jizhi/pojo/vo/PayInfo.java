@@ -13,6 +13,7 @@ public class PayInfo implements Serializable{
 	private String name;//姓名
 	private String tel;//电话
 	private Double price;//价格
+	private Double usdtPrice;//火币网价格
 	private List<AccountCard> accountCardList;//付款方式
 	private Integer isConfirm;//是否付款0没哟u，1付款了。
 	private String payPic;
@@ -51,6 +52,12 @@ public class PayInfo implements Serializable{
 	}
 	public void setPayPic(String payPic) {
 		this.payPic = payPic;
+	}
+	public Double getUsdtPrice() {
+		return usdtPrice;
+	}
+	public void setUsdtPrice(Double usdtPrice) {
+		this.usdtPrice = usdtPrice;
 	}
 	
 	

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jizhi.dao.AccountCardDao;
+import com.jizhi.dao.ExchangeRateDao;
 import com.jizhi.dao.FeedDao;
 import com.jizhi.dao.MatchDao;
 import com.jizhi.dao.OrderTimeDao;
@@ -64,6 +65,8 @@ public class MatchServiceImpl implements MatchService{
 	private AppPushUtil appPushUtil;
 	@Autowired
 	private FeedDao feedDao;
+	@Autowired
+	private ExchangeRateDao exchangeRateDao;
 	
 	private String title="恭喜你匹配成功";
 	private String content1="【全民农场】用户您好，恭喜您已成功匹配到订单，赶快登陆APP查看吧！";
@@ -308,6 +311,8 @@ public class MatchServiceImpl implements MatchService{
 		List<AccountCard> list = accountCardDao.queryAll(sellerId);
 		PayInfo payInfo = new PayInfo();
 		payInfo.setPrice(match.getPrice());
+		//计算火币网的价格
+		payInfo.setUsdtPrice(calculateUsdtPrice(match.getPrice()));
 		payInfo.setIsConfirm(match.getBuyerConfirm());
 		payInfo.setName(seller.getUserName());
 		payInfo.setTel(seller.getTel());
@@ -383,4 +388,12 @@ public class MatchServiceImpl implements MatchService{
 		return matchDao.cancelSell(id);
 	}
 
+	@Override
+	public Double calculateUsdtPrice(Double price) {
+		BigDecimal b1 = new BigDecimal(price);
+		BigDecimal b2 = new BigDecimal(exchangeRateDao.getRate());
+		Double result=b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		return result;
+		
+	}
 }

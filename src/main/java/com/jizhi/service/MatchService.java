@@ -36,4 +36,5 @@ public interface MatchService {
 	//删除匹配信息。
 	void deleteById(Integer id);
 	Integer cancelSell(Integer id);
+	public Double calculateUsdtPrice(Double price);//计算火币网应收价格
 }

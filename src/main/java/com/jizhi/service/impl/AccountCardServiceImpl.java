@@ -26,10 +26,12 @@ public class AccountCardServiceImpl implements AccountCardService{
 	@Override
 	public int save(AccountCard accountCard,String token) {
 		String pic;
-		//将前端传来的图片上传到本地并记录地址pic
+		String picPAram=accountCard.getPic();
+		//银行卡没有图片
 		if(StringUtils.isEmpty(accountCard.getPic())) {
-			return 0;
+			pic=picPAram ;
 		}else {
+			//支付宝二维码火币网
 			pic= base64ToImgUtil.base64(accountCard.getPic());
 		}
 		//根据token得到userId
@@ -39,7 +41,6 @@ public class AccountCardServiceImpl implements AccountCardService{
 				|| StringUtils.isEmpty(accountCard.getType())) {
 			return 0;
 		}else {
-			accountCard.setAccountName(null);
 			accountCard.setPic(pic);
 			return this.accountCardDao.save(accountCard);
 		}

@@ -15,6 +15,7 @@ public class SellInfo implements Serializable{
 	private String buyerName;
 	private String buyerTel;
 	private Double price;
+	private Double usdtPrice;
 	private String pic;
 	public String getBuyerName() {
 		return buyerName;
@@ -39,6 +40,12 @@ public class SellInfo implements Serializable{
 	}
 	public void setPic(String pic) {
 		this.pic = pic;
+	}
+	public Double getUsdtPrice() {
+		return usdtPrice;
+	}
+	public void setUsdtPrice(Double usdtPrice) {
+		this.usdtPrice = usdtPrice;
 	}
 	
 }

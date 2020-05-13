@@ -175,6 +175,9 @@ public class ProfitsServiceImpl implements ProfitsService{
 		}
 		Integer userId = feedExchangeParam.getUserId();
 		User user = userDao.queryById(userId);
+		if(user.getLevel()<2) {
+			return 3;//会员等级小于2
+		}
 		if(!user.getSecondpsw().equals(feedExchangeParam.getSecondPsw())) {
 			return 1;//二级密码错误
 		}

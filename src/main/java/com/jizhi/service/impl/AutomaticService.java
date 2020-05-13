@@ -140,7 +140,7 @@ public class AutomaticService {
 							Order order0=orders.get(number);
 							Property property0=properties.get(0);
 							//买家卖家不是同一个人
-							if(order0.getUserId()!=property0.getUserId()) {
+							if(!order0.getUserId().equals(property0.getUserId())) {
 								matchService.doMatch(order0, property0);
 								orderSize--;
 								orders.remove(order0);
@@ -164,7 +164,7 @@ public class AutomaticService {
 						for(int i=0;i<sellSize;i++) {
 							Order order0=orders.get(0);
 							Property property0=properties.get(0);
-							if(order0.getUserId()!=property0.getUserId()) {
+							if(!order0.getUserId().equals(property0.getUserId())) {
 								matchService.doMatch(order0, property0);
 								orders.remove(order0);
 								properties.remove(property0);
@@ -201,7 +201,7 @@ public class AutomaticService {
 						for(int i=0;i<orderSize;i++) {
 							Order order0=orders.get(0);
 							Property property0=properties.get(0);
-							if(order0.getUserId()!=property0.getUserId()) {
+							if(!order0.getUserId().equals(property0.getUserId())) {
 								matchService.doMatch(order0,property0);
 								orders.remove(order0);
 								properties.remove(property0);

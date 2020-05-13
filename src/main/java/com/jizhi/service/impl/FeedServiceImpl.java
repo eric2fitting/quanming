@@ -5,6 +5,9 @@ import java.util.Date;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,8 @@ public class FeedServiceImpl implements FeedService{
 	/**
 	 * 查询用户当前所有饲料
 	 */
+	
+	private static final Logger log = LoggerFactory.getLogger(FeedServiceImpl.class);
 	@Override
 	public Double queryTotalFeed(Integer userId) {
 		Double totalFeed=feedDao.queryTotalFeedByUserId(userId);
@@ -61,21 +66,22 @@ public class FeedServiceImpl implements FeedService{
 		if(total<sendNum+150) {
 			return "转赠后剩余饲料不能小于150";
 		}
-		User record = userDao.queryByTel(tel);
-		User user = userDao.queryById(userId);
+		User record = userDao.queryByTel(tel);//获赠者
+		User user = userDao.queryById(userId);//赠送者
+		if(user.getLevel()==0) {
+			return "级别达到v1才能转赠";
+		}
 		if(record==null) {
 			return "你所转赠的用户不存在";
 		}else {
-			//判断两人是否是上下级关系
-			if((!record.getInviteCode().equals(user.getInvitedCode())) && (!record.getInvitedCode().equals(user.getInviteCode()))){
-				return "仅限上下级之间的转赠";
+			//判断获赠者是否是自己的下线
+			log.info("赠送者id"+user.getId());
+			if(checkRelation(user, record, 0)==0){
+				return "只能转赠给团队里的成员";
 			}
 		}
 		if(!feedSendParam.getSeconPsw().equals(user.getSecondpsw())) {
 			return "二级密码错误";
-		}
-		if(user.getTel().equals(tel)) {
-			return "不能转让给自己";
 		}
 		//减少用户饲料
 		Feed feed = new Feed();
@@ -90,6 +96,26 @@ public class FeedServiceImpl implements FeedService{
 		feed.setUserId(record.getId());
 		feedDao.insert(feed);
 		return null;
+	}
+	
+	/**
+	 * 判断获赠者是不是转赠者团队里的成员
+	 * @return
+	 */
+	public int checkRelation(User sender,User recipient,int num) {
+		String invitedCode = recipient.getInvitedCode();
+		if(StringUtils.isNotEmpty(invitedCode)) {
+			User inviter = userDao.queryByInviteCode(invitedCode);
+			if(inviter==null) {
+				return num;
+			}
+			log.info("接收者上级id"+inviter.getId());
+			if(inviter.getId().equals(sender.getId())) {
+				return 1;
+			}
+			num=checkRelation(sender,inviter,num);
+		}		
+		return num;
 	}
 	
 }

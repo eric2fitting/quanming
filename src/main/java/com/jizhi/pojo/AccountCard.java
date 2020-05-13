@@ -16,7 +16,7 @@ public class AccountCard implements Serializable{
 	private Integer id;
 	private Integer userId;
 	private String type;//
-	private String accountName;//现在没用了不管
+	private String accountName;//账户号码，用于银行卡
 	private String accountNum;//账户名
 	private String pic;//照片
 	

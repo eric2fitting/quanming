@@ -254,6 +254,7 @@ public class PropertyServiceImpl implements PropertyService{
 		sellInfo.setBuyerName(user.getUserName());
 		sellInfo.setBuyerTel(user.getTel());
 		sellInfo.setPrice(match.getPrice());
+		sellInfo.setUsdtPrice(matchService.calculateUsdtPrice(match.getPrice()));//usdt金额
 		sellInfo.setPic(match.getPayPic());
 		return sellInfo;
 	}
@@ -449,7 +450,7 @@ public class PropertyServiceImpl implements PropertyService{
 						break;
 					case 2:
 						if(num<=20) {
-							BigDecimal b04 = new BigDecimal(2);
+							BigDecimal b04 = new BigDecimal(1);
 							Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 							profits.setShareProfit(shareProfit);
 							profitsService.add(profits);
@@ -457,14 +458,14 @@ public class PropertyServiceImpl implements PropertyService{
 						num++;
 						break;
 					case 3:
-						BigDecimal b04 = new BigDecimal(3);
+						BigDecimal b04 = new BigDecimal(1);
 						Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 						profits.setShareProfit(shareProfit);
 						profitsService.add(profits);
 						num++;
 						break;
 					case 4:
-						BigDecimal b05 = new BigDecimal(5);
+						BigDecimal b05 = new BigDecimal(2);
 						Double shareProfit1=sellerprofit.multiply(b05).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 						profits.setShareProfit(shareProfit1);
 						profitsService.add(profits);

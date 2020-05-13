@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jizhi.dao.AccountCardDao;
 import com.jizhi.dao.FeedDao;
 import com.jizhi.dao.OrderDao;
 import com.jizhi.dao.OrderTimeDao;
+import com.jizhi.pojo.AccountCard;
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.Order;
@@ -44,6 +46,8 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private FeedDao feedDao;
 	
+	@Autowired
+	private AccountCardDao accountCardDao;
 	/**
 	 * 添加预约
 	 */
@@ -52,6 +56,26 @@ public class OrderServiceImpl implements OrderService{
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String string = redisService.get(token);
 		Integer userId=Integer.parseInt(string);
+		List<AccountCard> accountCards=accountCardDao.queryAll(userId);
+		boolean bool1=false;
+		boolean bool2=false;
+		if(accountCards.size()<2) {
+			return 0;
+		}else {
+			for(AccountCard accountCard:accountCards) {
+				if(accountCard.getType().equals("微信") 
+						|| accountCard.getType().equals("支付宝") 
+						|| accountCard.getType().equals("火币网钱包")) {
+					bool1=true;
+				}else {
+					bool2=true;
+				}
+			}
+			if(bool1 && bool2) {
+			}else {
+				return 0;
+			}
+		}
 		Order order = new Order();
 		order.setUserId(userId);//设置预约订单的预约人id
 		//根据orderTimeId查询时间动物id等
@@ -59,8 +83,13 @@ public class OrderServiceImpl implements OrderService{
 		Integer animalId = orderTime.getAnimalId();
 		Animal animal = animalService.queryById(animalId);
 		order.setTime(orderTime.getStartTime());//设置预约订单的开始时间
-		order.setDate(simpleDateFormat.format(new Date()));//设置订单的日期
 		order.setAnimalId(animalId);//设置订单的animalId
+		//判断
+		Order orderRecord=orderDao.queryByUserIdAndTime(order);
+		if(orderRecord!=null) {
+			return 3;
+		}
+		order.setDate(simpleDateFormat.format(new Date()));//设置订单的日期
 		order.setState(1);//设置订单状态为正在预约
 		order.setRole(0);
 		AnimaInfo info = toOrder(animalId, token);
@@ -139,7 +168,7 @@ public class OrderServiceImpl implements OrderService{
 					if(order==null) {
 						isOrderOrOverTime.setState("2");;//表示可以预约
 					}else {
-						isOrderOrOverTime.setState("1");//2表示已经预约
+						isOrderOrOverTime.setState("1");//表示已经预约
 					}
 				}
 				list.add(isOrderOrOverTime);

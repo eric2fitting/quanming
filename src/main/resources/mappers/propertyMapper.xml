@@ -48,7 +48,7 @@
 	<select id="queryIsSelling" parameterType="java.util.Map" resultMap="property">
 		select id,userId,animalId,price,buyDate,buyTime,isSold,role,code 
 		from property 
-		where userId=#{userId} and isSold=#{isSold}
+		where userId=#{userId} and isSold=#{isSold} ORDER BY id desc
 	</select>
 	
 	<insert id="add" parameterType="com.jizhi.pojo.Property">
