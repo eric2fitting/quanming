@@ -361,8 +361,9 @@ public class PropertyServiceImpl implements PropertyService{
 		profitsService.add(profits);
 		
 		//提前计算买家出售时的收益
+		Animal aa=animalService.queryById(newAnimalId);//买家买入的动物
 		BigDecimal b02 = new BigDecimal(100);
-		bigDecimal1=new BigDecimal(animal.getProfit());
+		bigDecimal1=new BigDecimal(aa.getProfit());
 		sellerprofit=bigDecimal.multiply(bigDecimal1).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		//User user = userDao.queryById(userId);//卖家
 		String inviteCode = buyer.getInvitedCode();//买家被邀请的码,分享者的邀请码

@@ -19,11 +19,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.jizhi.dao.AnimalDao;
 import com.jizhi.dao.FeedDao;
+import com.jizhi.dao.MatchDao;
+import com.jizhi.dao.MatchDetailDao;
+import com.jizhi.dao.OrderDao;
 import com.jizhi.dao.OrderTimeDao;
+import com.jizhi.dao.PropertyDao;
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.Match;
+import com.jizhi.pojo.MatchDetail;
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.OrderTime;
 import com.jizhi.pojo.Property;
@@ -48,6 +54,7 @@ public class AutomaticService {
 	@Autowired
 	private PropertyService propertyService;
 	
+	
 	@Autowired
 	private MatchService matchService;
 	@Autowired
@@ -56,6 +63,16 @@ public class AutomaticService {
 	private UserSevice userSevice;
 	@Autowired
 	private FeedDao feedDao;
+	@Autowired
+	private MatchDao matchDao;
+	@Autowired
+	private AnimalDao animalDao;
+	@Autowired
+	private OrderDao orderDao;
+	@Autowired
+	private MatchDetailDao matchDetailDao;
+	@Autowired
+	private PropertyDao propertyDao;
 	
 	private static final Logger log = LoggerFactory.getLogger(AutomaticService.class);
 	/**
@@ -410,7 +427,107 @@ public class AutomaticService {
 		orderService.deleteAll();//软删除
 	}
 	
+	/**
+	 * 定时每天晚上11点30删除所有买家未付款的订单
+	 */
+	@Scheduled(cron="0 40 23 * * ?")
+	public void deleteNotPay() {
+		log.info("删除所有未付款的匹配记录");
+		matchDao.deleteNotPay();
+	}
 	
+	/**
+	 * 10点05自动将多余玩家按比例匹配给管理员
+	 */
+	@Scheduled(cron="0 05 10 * * ?")
+	public void leftMatch1() {
+		autoMatchLeft("10:00");
+	}
+	
+	/**
+	 * 13点05自动将多余玩家按比例匹配给管理员
+	 */
+	@Scheduled(cron="0 05 13 * * ?")
+	public void leftMatch2() {
+		autoMatchLeft("13:00");
+	}
+	
+	/**
+	 * 16点05自动将多余玩家按比例匹配给管理员
+	 */
+	@Scheduled(cron="0 05 16 * * ?")
+	public void leftMatch3() {
+		autoMatchLeft("16:00");
+	}
+	
+	public void autoMatchLeft(String buyTime) {
+		try {
+			log.info("多余订单开始匹配"+buyTime+"---------");
+			List<Animal> animals = animalDao.queryAll();
+			List<User> users=userSevice.queryAdmin();
+			SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+			int j=0;
+			for(Animal animal :animals) {
+				Order record=new Order();
+				record.setAnimalId(animal.getId());
+				record.setTime(buyTime);
+				List<Order> leftOrders=orderDao.queryLeftOrders(record);
+				MatchDetail md=matchDetailDao.queryByAnimalId(animal.getId());
+				Calendar instance = Calendar.getInstance();
+				instance.add(Calendar.DATE, -animal.getCycle());
+				String buyDate = simpleDateFormat2.format(instance.getTime());
+				//预约成功的普通玩家人数
+				int successBuySize=orderDao.querySuccessBuySize(animal.getId(),buyTime);
+				log.info("成功预约的人数"+successBuySize+"---id"+animal.getId());
+				//普通买家人数
+				int buySize=orderDao.queryBuySize(animal.getId(),buyTime);
+				log.info("买家人数"+buySize+"---id"+animal.getId());
+				Integer rate=md.getRate();
+				Double minPrice=md.getMinPrice();
+				Double maxPrice=md.getMaxPrice();
+				BigDecimal b1=new BigDecimal(rate);
+				BigDecimal b2=new BigDecimal(100);
+				int orderSize=leftOrders.size();
+				BigDecimal b3=new BigDecimal(buySize);
+				//允许的最大买家数量
+				int canBuyNum = b3.multiply(b1).divide(b2).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+				log.info("允许最大买家数量"+canBuyNum+"---id"+animal.getId());
+				if(canBuyNum>successBuySize) {
+					//还应匹配的玩家人数
+					int buyNum=canBuyNum-successBuySize;
+					log.info("管理员应再放数量+"+buyNum+"---id"+animal.getId());
+					for(int i=0;i<buyNum;i++) {
+						Random random = new Random();
+						int nextInt = random.nextInt(orderSize);
+						Property property = new Property();
+						property.setAnimalId(animal.getId());
+						property.setBuyTime(buyTime);
+						property.setCode(animalService.queryNumber());
+						property.setIsSold(0);
+						property.setRole(1);
+						if(j==users.size()) {
+							j=0;
+						}
+						property.setUserId(users.get(j).getId());
+						Double price=new BigDecimal(Math.random()*(maxPrice-minPrice)+minPrice).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						property.setPrice(price);
+						
+						property.setBuyDate(buyDate);
+						propertyDao.add(property);
+						Order o1=leftOrders.get(nextInt);
+						matchService.doMatch(o1, property);
+						leftOrders.remove(o1);
+						j++;
+						orderSize--;
+					}
+				}
+			}
+			log.info("多余订单匹配成功---"+buyTime);
+		} catch (Exception e) {
+			log.info("多余订单匹配失败---"+buyTime);
+		}
+		
+	}
 	
 	public  Order newAdminOrder(Integer animalId,String nowDateString,String buyTime) {
 		//查询管理员账户

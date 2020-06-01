@@ -4,6 +4,8 @@ import com.jizhi.pojo.Property;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,9 @@ public interface PropertyDao {
 
 	@Delete("delete from property where id>200")
 	Integer deleteAll();
+
+	@Select("select count(*) from property where animalId=#{animalId} and buyDate=#{buyDate} and buyTime=#{buyTime} and isSold>0")
+	int querySellSize(@Param("animalId") Integer animalId, @Param("buyDate") String buyDate, @Param("buyTime") String buyTime);
 
 	
 

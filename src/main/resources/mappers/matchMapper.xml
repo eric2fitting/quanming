@@ -65,4 +65,7 @@
 		update match_tb set buyerConfirm=0 where id=#{id}
 	</update>
 	
+	<delete id="deleteNotPay">
+		delete from match_tb where buyerConfirm=0 and sellerConfirm=0
+	</delete>
 </mapper>

@@ -1,18 +1,20 @@
 package com.jizhi.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.jizhi.dao.AnimalDao;
+import com.jizhi.dao.NumbersDao;
 import com.jizhi.dao.OrderTimeDao;
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.OrderTime;
 import com.jizhi.pojo.vo.ShowInfo;
 import com.jizhi.service.AnimalService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 @Service
 public class AnimalServiceImpl implements AnimalService{
@@ -20,7 +22,8 @@ public class AnimalServiceImpl implements AnimalService{
 	private AnimalDao animalDao;
 	@Autowired
 	private OrderTimeDao orderTimeDao;
-	
+	@Autowired
+	private NumbersDao numbersDao;
 	@Override
 	public List<ShowInfo> queryAnimalList() {
 		//查询所有动物列表
@@ -76,6 +79,21 @@ public class AnimalServiceImpl implements AnimalService{
 	@Override
 	public Integer queryAnimalId(HashMap<String, Object> map) {
 		return animalDao.queryAnimalId(map);
+	}
+
+	@Override
+	public String queryNumber() {
+		String number=numbersDao.queryNumber();
+		if(number==null||number=="") {
+			number="bakktbfcpros8888";
+		}
+		String letter=number.substring(0,12);
+		String str=number.substring(12);
+		int i=Integer.parseInt(str);
+		i=i+1;
+		String newNumber=letter+i;
+		numbersDao.updateNumber(newNumber);
+		return number;
 	}
 	
 

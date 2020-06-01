@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jizhi.dao.MatchDetailDao">
+	<resultMap type="com.jizhi.pojo.MatchDetail" id="matchDetail">
+		<id column="id" property="id"/>
+		<result column="animal_id" property="animalId"/>
+		<result column="animal" property="animal"/>
+		<result column="rate" property="rate"/>
+		<result column="min_price" property="minPrice"/>
+		<result column="max_price" property="maxPrice"/>
+	</resultMap>
+	<select id="queryByAnimalId" parameterType="java.lang.Integer" resultMap="matchDetail">
+		select rate,min_price,max_price from match_detail where animal_id=#{animalId}
+	</select>
+</mapper>

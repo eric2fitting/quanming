@@ -1,12 +1,16 @@
 package com.jizhi.service.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jizhi.dao.AccountCardDao;
 import com.jizhi.dao.IdCardDao;
 import com.jizhi.dao.UserDao;
+import com.jizhi.pojo.AccountCard;
 import com.jizhi.pojo.IdCard;
 import com.jizhi.service.IdCardService;
 import com.jizhi.service.UserSevice;
@@ -25,6 +29,8 @@ public class IdCardServiceImpl implements IdCardService{
 	private UserSevice userSevice;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private AccountCardDao accountCardDao;
 	@Override
 	/**
 	 * 保存身份证 
@@ -33,6 +39,15 @@ public class IdCardServiceImpl implements IdCardService{
 		Integer num=IdCardDao.querySizeByIdNum(idCard.getIdNum());
 		if(num>0) {
 			return 2;
+		}
+		//根据token得到userId
+		String user_Id = this.redisService.get(token);
+		Integer userId=Integer.valueOf(user_Id);
+		//是否绑定收益方式
+		List<AccountCard> accountCards = accountCardDao.queryAll(userId);
+		if(accountCards.size()<1) {
+			//未绑定收益方式
+			return 3;
 		}
 		//将前端传来的图片上传到本地并记录地址pic	
 		String pic = base64ToImgUtil.base64(idCard.getPic());   
@@ -43,12 +58,10 @@ public class IdCardServiceImpl implements IdCardService{
 			i= 0;
 		}else {
 			idCard.setPic(pic);
-			//根据token得到userId
-			String user_Id = this.redisService.get(token);
-			Integer userId=Integer.valueOf(user_Id);
+			
 			IdCard record=IdCardDao.queryByUserId(userId);
 			if(record!=null) {
-				return 2;
+				return 4;
 			}
 			idCard.setUserId(userId);
 			i=this.IdCardDao.save(idCard);

@@ -28,11 +28,17 @@ public class IdCardController {
 			fz.setMsg("保存成功");
 		}else if (i==2) {
 			fz.setCode("104"); 
+			fz.setMsg("身份证号码重复");
+		}else if (i==3) {
+			fz.setCode("104"); 
+			fz.setMsg("请先绑定收益方式");
+		}else if (i==4) {
+			fz.setCode("104"); 
 			fz.setMsg("请勿重复认证");
 		}
 		else {
 			fz.setCode("104"); 
-			fz.setMsg("保存失败");
+			fz.setMsg("系统错误");
 		}
 		return fz;
 	}

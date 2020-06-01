@@ -52,6 +52,9 @@
 	</select>
 	
 	<insert id="add" parameterType="com.jizhi.pojo.Property">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+		 	select LAST_INSERT_ID()
+		 </selectKey>
 		insert into property(userId,animalId,price,buyDate,buyTime,isSold,role,code) 
 		values(#{userId},#{animalId},#{price},#{buyDate},#{buyTime},#{isSold},#{role},#{code})
 	</insert>

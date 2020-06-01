@@ -17,5 +17,6 @@ public interface AnimalService {
 	List<Animal> queryByEndTime(String endTime);
 	//根据动物类型和大小查找动物id
 	Integer queryAnimalId(HashMap<String, Object> map);
-
+	//查询动物编码
+	String queryNumber();
 }

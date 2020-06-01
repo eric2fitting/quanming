@@ -36,6 +36,9 @@ public interface MatchDao {
 	 * @return
 	 */
 	Integer cancelSell(Integer id);
+	
+	
+	void deleteNotPay();
 
 	
 	
