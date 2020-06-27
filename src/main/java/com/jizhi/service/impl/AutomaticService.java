@@ -25,7 +25,9 @@ import com.jizhi.dao.MatchDao;
 import com.jizhi.dao.MatchDetailDao;
 import com.jizhi.dao.OrderDao;
 import com.jizhi.dao.OrderTimeDao;
+import com.jizhi.dao.ProfitsDao;
 import com.jizhi.dao.PropertyDao;
+import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.Match;
@@ -73,12 +75,16 @@ public class AutomaticService {
 	private MatchDetailDao matchDetailDao;
 	@Autowired
 	private PropertyDao propertyDao;
+	@Autowired
+	private UserDao userDao;
+	@Autowired
+	private ProfitsDao profitsDao;
 	
 	private static final Logger log = LoggerFactory.getLogger(AutomaticService.class);
 	/**
 	 * 自动匹配预约用户和资产拥有者
 	 */
-	@Scheduled(fixedRate=60*1000*3)
+	@Scheduled(fixedRate=60*1000*5)
 	public void match() {
 		System.out.println("自动匹配开始执行");
 		log.info("自动匹配开始执行");
@@ -262,7 +268,7 @@ public class AutomaticService {
 	/**
 	 * 根据最后时间进行自动确认
 	 */
-	@Scheduled(fixedRate=60*1000*3)
+	@Scheduled(fixedRate=60*1000*5)
 	public void confirm() {
 		try {
 			System.out.println("自动确认开始执行");
@@ -439,7 +445,7 @@ public class AutomaticService {
 	/**
 	 * 10点05自动将多余玩家按比例匹配给管理员
 	 */
-	@Scheduled(cron="0 05 10 * * ?")
+	@Scheduled(cron="0 12 10 * * ?")
 	public void leftMatch1() {
 		autoMatchLeft("10:00");
 	}
@@ -447,7 +453,7 @@ public class AutomaticService {
 	/**
 	 * 13点05自动将多余玩家按比例匹配给管理员
 	 */
-	@Scheduled(cron="0 05 13 * * ?")
+	@Scheduled(cron="0 12 13 * * ?")
 	public void leftMatch2() {
 		autoMatchLeft("13:00");
 	}
@@ -455,7 +461,7 @@ public class AutomaticService {
 	/**
 	 * 16点05自动将多余玩家按比例匹配给管理员
 	 */
-	@Scheduled(cron="0 05 16 * * ?")
+	@Scheduled(cron="0 12 16 * * ?")
 	public void leftMatch3() {
 		autoMatchLeft("16:00");
 	}
@@ -562,6 +568,42 @@ public class AutomaticService {
 		Double sellMoney=bb1.multiply(bb2.add(bb3)).divide(bb3).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		//价格超过最高值的大型动物
 		return sellMoney>=sellAnimal.getMaxPrice();
+	}
+	
+	/**
+	 * 每晚8：05更新所有普通用户的总资产
+	 */
+	@Scheduled(cron="0 05 20 * * ?")
+	public void updateTotalMoney() {
+		log.info("开始更新个人总资产");
+		try {
+			List<User> users=userDao.queryAll();
+			for(User user:users) {
+				Integer userId=user.getId();
+				//查找所有资产
+				Double totalProperty = propertyDao.queryTotalMonet(userId);
+				if(totalProperty==null) {
+					totalProperty=0D;
+				}
+				//总nfc
+				Integer totalNFC = profitsDao.queryAllNFC(userId);
+				if(totalNFC==null) {
+					totalNFC=0;
+				}
+				//总分享收益
+				Double totalShare = profitsDao.queryShareProfit(userId);
+				if(totalShare==null) {
+					totalShare=0D;
+				}
+				Double total=totalProperty+totalNFC+totalShare;
+				user.setTotalMoney(total);
+				//更新总资产
+				userDao.updateTotalMoney(user);
+			}
+		} catch (Exception e) {
+			log.info("更新个人总资产出错");
+		}
+		log.info("更新个人总资产完成");
 	}
 }
 

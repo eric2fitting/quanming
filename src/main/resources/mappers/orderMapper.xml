@@ -67,6 +67,6 @@
 	</delete>
 	
 	<select id="queryFailedOrder" parameterType="com.jizhi.pojo.Order" resultMap="order">
-		select * from orders where date=#{date} and time=#{time} and animalId=#{animalId} and role=#{role} and state=1;
+		select id,userId,animalId,date,time,state,role from orders where animalId=#{animalId} and date=#{date} and time=#{time} and role=#{role} and state=1;
 	</select>
 </mapper>

@@ -2,6 +2,7 @@ package com.jizhi.dao;
 
 import com.jizhi.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,11 @@ public interface UserDao {
 	void updateIsConfirmed(Integer id);
 	//更改用户等级
 	void updateLevel(User inviterUser);
+	//查找所有普通用户
+	@Select("select id,userName from user where role=0")
+	List<User> queryAll();
+	//更新总资产
+	void updateTotalMoney(User user);
 
 	
 

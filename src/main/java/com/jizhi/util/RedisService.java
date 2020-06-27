@@ -32,6 +32,9 @@ public class RedisService {
         return redisTemplate.opsForValue().get(Key);
     }
     
+    public Boolean hasKey(String key) {
+    	return redisTemplate.hasKey(key);
+    }
     /**
      * 写入缓存并设置有效时间
      * @param key

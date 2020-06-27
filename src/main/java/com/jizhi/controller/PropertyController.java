@@ -15,6 +15,7 @@ import com.jizhi.pojo.vo.FeedingDetail;
 import com.jizhi.pojo.vo.Sell;
 import com.jizhi.pojo.vo.SellInfo;
 import com.jizhi.service.PropertyService;
+import com.jizhi.util.RedisService;
 
 @RestController
 @RequestMapping("property")
@@ -22,6 +23,8 @@ public class PropertyController {
 	
 	@Autowired
 	private PropertyService propertyService;
+	@Autowired
+	private RedisService redisService;
 	
 	
 	/**
@@ -91,15 +94,24 @@ public class PropertyController {
 	 */
 	@RequestMapping("/doSell")
 	public FinalResult doSell(@RequestBody	Sell sell) {
-		Integer i = propertyService.doSell(sell);
+		Integer id=sell.getId();
 		FinalResult finalResult = new FinalResult();
-		if(i>0) {
-			finalResult.setCode("100");
-			finalResult.setMsg("转让成功");
-		}else {
+		if(redisService.hasKey(id+"")) {
 			finalResult.setCode("104");
-			finalResult.setMsg("二级密码错误");
+			finalResult.setMsg("正在处理");
+		}else {
+			redisService.set(id+"", "", 60*3);
+			Integer i = propertyService.doSell(sell);
+			redisService.delete(id+"");
+			if(i>0) {
+				finalResult.setCode("100");
+				finalResult.setMsg("转让成功");
+			}else {
+				finalResult.setCode("104");
+				finalResult.setMsg("二级密码错误");
+			}
 		}
+		
 		return finalResult;
 	}
 	

@@ -17,6 +17,7 @@
 		<result column="role" property="role"/>
 		<result column="cid" property="cid"/>
 		<result column="level" property="level"/>
+		<result column="totalMoney" property="totalMoney"/>
 	</resultMap>
 	
 	<select id="queryByTel" parameterType="java.lang.String" resultMap="user">
@@ -91,5 +92,9 @@
 	
 	<update id="updateLevel" parameterType="com.jizhi.pojo.User">
 		update user set level=#{level} where id=#{id}
+	</update>
+	
+	<update id="updateTotalMoney" parameterType="com.jizhi.pojo.User">
+		update user set totalMoney=#{totalMoney} where id=#{id}
 	</update>
 </mapper>

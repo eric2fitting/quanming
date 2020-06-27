@@ -20,6 +20,7 @@ public class User implements Serializable{
 	private Integer role;
 	private String cid;
 	private Integer level;//会员等级0普通会员，1:V1,2:V2,3:V3,4:V4
+	private Double totalMoney;//个人总资产
 	public Integer getRole() {
 		return role;
 	}
@@ -99,6 +100,12 @@ public class User implements Serializable{
 	}
 	public void setLevel(Integer level) {
 		this.level = level;
+	}
+	public Double getTotalMoney() {
+		return totalMoney;
+	}
+	public void setTotalMoney(Double totalMoney) {
+		this.totalMoney = totalMoney;
 	}
 
 	

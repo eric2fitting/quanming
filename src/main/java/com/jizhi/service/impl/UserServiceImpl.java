@@ -259,8 +259,8 @@ public class UserServiceImpl implements UserSevice{
 			}
 			break;
 		case 1:
-			//2级用户：直推20人，团队活跃人数80，累计分享收益1500
-			if(allShareProfit>=1500 && activeNum>80 && level1Num>20) {
+			//2级用户：直推25人，团队活跃人数80，累计分享收益1500
+			if(allShareProfit>=1500 && activeNum>80 && level1Num>=25) {
 				inviterUser.setLevel(2);
 				userDao.updateLevel(inviterUser);
 			}
