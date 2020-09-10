@@ -1,5 +1,6 @@
 package com.jizhi.dao;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,6 +53,9 @@ public interface OrderDao {
 
 	@Select("select count(*) from orders where animalId=#{animalId} and time=#{time} and role=0 and state=2 and flag=0")
 	int querySuccessBuySize(@Param("animalId") Integer animalId, @Param("time") String time);
+
+	@Select("select * from orders where userId=#{userId} and date=#{date}")
+	List<Order> queryByUserIdAndDate(@Param("userId") Integer userId, @Param("date") String date);
 	
 	
 

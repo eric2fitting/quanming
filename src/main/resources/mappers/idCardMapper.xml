@@ -12,13 +12,13 @@
 	</resultMap>
 	
 	<insert id="save" parameterType="com.jizhi.pojo.IdCard">
-		insert into idCard(user_id,name,idNum,pic) values(#{userId},#{name},#{idNum},#{pic})
+		insert into idcard(user_id,name,idNum,pic) values(#{userId},#{name},#{idNum},#{pic})
 	</insert>
 	
 	<update id="update" parameterType="com.jizhi.pojo.IdCard">
-		update idCard set user_id=#{userId},name=#{name},pic=#{pic},idNum=#{idNum} where user_id=#{userId}
+		update idcard set user_id=#{userId},name=#{name},pic=#{pic},idNum=#{idNum} where user_id=#{userId}
 	</update>
 	<select id="querySizeByIdNum" parameterType="java.lang.String" resultType="java.lang.Integer">
-		select count(*) from idCard where idNum=#{idNum}
+		select count(*) from idcard where idNum=#{idNum}
 	</select>
 </mapper>

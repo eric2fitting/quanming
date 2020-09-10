@@ -92,45 +92,46 @@ public class ProfitsController {
 		return finalResult;
 	}
 	
-	/**
-	 *用NFC币兑换饲料页面显示
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/tryNFCToFeed")
-	public FinalResult tryNFCToFeed(HttpServletRequest request) {
-		String token = request.getHeader("token");
-		String user_id = redisService.get(token);
-		Integer userId=Integer.parseInt(user_id);
-		FeedExchangeParam result=profitsService.tryNFCToFeed(userId);
-		FinalResult finalResult = new FinalResult();
-		finalResult.setCode("100");
-		finalResult.setBody(result);
-		return finalResult;
-	}
-	
-	/**
-	 *NFC兑换饲料接口
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/NFCToFeed")
-	public FinalResult NFCToFeed(@RequestBody FeedExchangeParam feedExchangeParam) {
-		Integer i=profitsService.NFCToFeed(feedExchangeParam);
-		FinalResult finalResult = new FinalResult();
-		if(i==0) {
-			finalResult.setCode("101");
-			finalResult.setMsg("超过最大兑换数量");
-		}else if (i==1) {
-			finalResult.setCode("101");
-			finalResult.setMsg("二级密码错误");
-		}else if (i==2) {
-			finalResult.setCode("100");
-			finalResult.setMsg("兑换成功");
-		}
-		return finalResult;
-	}
-	
+//	客户暂时取消NFC（mtoken）兑换饲料（金券）
+//	/**
+//	 *用NFC币兑换饲料页面显示
+//	 * @param request
+//	 * @return
+//	 */
+//	@RequestMapping("/tryNFCToFeed")
+//	public FinalResult tryNFCToFeed(HttpServletRequest request) {
+//		String token = request.getHeader("token");
+//		String user_id = redisService.get(token);
+//		Integer userId=Integer.parseInt(user_id);
+//		FeedExchangeParam result=profitsService.tryNFCToFeed(userId);
+//		FinalResult finalResult = new FinalResult();
+//		finalResult.setCode("100");
+//		finalResult.setBody(result);
+//		return finalResult;
+//	}
+//	
+//	/**
+//	 *NFC兑换饲料接口
+//	 * @param request
+//	 * @return
+//	 */
+//	@RequestMapping("/NFCToFeed")
+//	public FinalResult NFCToFeed(@RequestBody FeedExchangeParam feedExchangeParam) {
+//		Integer i=profitsService.NFCToFeed(feedExchangeParam);
+//		FinalResult finalResult = new FinalResult();
+//		if(i==0) {
+//			finalResult.setCode("101");
+//			finalResult.setMsg("超过最大兑换数量");
+//		}else if (i==1) {
+//			finalResult.setCode("101");
+//			finalResult.setMsg("二级密码错误");
+//		}else if (i==2) {
+//			finalResult.setCode("100");
+//			finalResult.setMsg("兑换成功");
+//		}
+//		return finalResult;
+//	}
+//	
 	/**
 	 * 提现列表
 	 * @return

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.FinalResult;
 import com.jizhi.pojo.vo.FeedSendParam;
+import com.jizhi.pojo.vo.FeedVO;
 import com.jizhi.service.FeedService;
 import com.jizhi.util.RedisService;
 
@@ -49,7 +49,7 @@ public class FeedController {
 		String token=request.getHeader("token");
 		String user_id=redisService.get(token);
 		Integer userId = Integer.parseInt(user_id);
-		List<Feed> list=feedService.queryFeedDetail(userId);
+		List<FeedVO> list=feedService.queryFeedDetail(userId);
 		finalResult.setCode("100"); 
 		finalResult.setBody(list);
 		return finalResult;

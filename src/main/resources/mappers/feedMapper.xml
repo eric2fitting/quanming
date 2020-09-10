@@ -9,6 +9,7 @@
 		<result column="num" property="num"/>
 		<result column="type" property="type"/>
 		<result column="date" property="date"/>
+		<result column="other_id" property="otherId"/>
 	</resultMap>
 	
 	<select id="queryTotalFeedByUserId" parameterType="java.lang.Integer" resultType="java.lang.Double">
@@ -16,11 +17,11 @@
 	</select>
 	
 	<select id="queryFeedDetail" parameterType="java.lang.Integer" resultMap="feed">
-		select userId,num,type,date from feed where userId=#{userId} ORDER BY id desc
+		select * from feed where userId=#{userId} ORDER BY id desc
 	</select>
 	
 	<insert id="insert" parameterType="com.jizhi.pojo.Feed">
-		insert into feed(userId,num,type,date) values 
-		(#{userId},#{num},#{type},#{date})
+		insert into feed(userId,num,type,date,other_id) values 
+		(#{userId},#{num},#{type},#{date},#{otherId})
 	</insert>
 </mapper>

@@ -14,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jizhi.dao.FeedDao;
 import com.jizhi.dao.MatchDao;
+import com.jizhi.dao.OrderDao;
 import com.jizhi.dao.OrderTimeDao;
 import com.jizhi.dao.PropertyDao;
 import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Animal;
+import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.Match;
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.Profits;
@@ -54,6 +57,11 @@ public class PropertyServiceImpl implements PropertyService{
 	private UserDao userDao;
 	@Autowired
 	private ProfitsService profitsService;
+	@Autowired
+	private OrderDao orderDao;
+	@Autowired
+	private FeedDao feedDao;
+	private final SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Autowired
 	private OrderTimeDao orderTimeDao;
@@ -253,8 +261,8 @@ public class PropertyServiceImpl implements PropertyService{
 		User user = userDao.queryById(userId);
 		sellInfo.setBuyerName(user.getUserName());
 		sellInfo.setBuyerTel(user.getTel());
-		sellInfo.setPrice(match.getPrice());
-		sellInfo.setUsdtPrice(matchService.calculateUsdtPrice(match.getPrice()));//usdt金额
+		sellInfo.setPrice(matchService.calculateUsdtPrice(match.getPrice()));
+		sellInfo.setUsdtPrice(match.getPrice());//usdt金额
 		sellInfo.setPic(match.getPayPic());
 		return sellInfo;
 	}
@@ -274,7 +282,9 @@ public class PropertyServiceImpl implements PropertyService{
 		}	
 	}
 	
-	public Integer doSellDirectly(Integer matchId) {	
+	public Integer doSellDirectly(Integer matchId) {
+		log.info("开始确认交易");
+		Long l1=System.currentTimeMillis();
 		Match match = matchDao.queryById(matchId);//从匹配表里得到预约信息
 		if(match.getSellerConfirm()==1) {
 			return 1;
@@ -313,15 +323,15 @@ public class PropertyServiceImpl implements PropertyService{
 		if(sellPrice>maxPrice || sellPrice==maxPrice) {
 			HashMap<String,Object> map1=new HashMap<String,Object>();
 			//改变尺寸
-			if(animal.getSize().equals("小型")) {
-				map1.put("size", "中型");
+			if(animal.getSize().equals("A")) {
+				map1.put("size", "B");
 				map1.put("animalType", animal.getAnimalType());
 				newAnimalId=animalService.queryAnimalId(map1);
 				if(newAnimalId==null) {
 					newAnimalId=animalId;
 				}
-			}else if(animal.getSize().equals("中型")) {
-				map1.put("size", "大型");
+			}else if(animal.getSize().equals("B")) {
+				map1.put("size", "C");
 				map1.put("animalType", animal.getAnimalType());
 				newAnimalId=animalService.queryAnimalId(map1);
 				if(newAnimalId==null) {
@@ -352,14 +362,33 @@ public class PropertyServiceImpl implements PropertyService{
 		//往利润表里添加卖家的喂养收益
 		Profits profits = new Profits();
 		profits.setAnimalProfit(sellerprofit);
-		profits.setNFC(animal.getNfc());
+		profits.setNFC(0D);
 		Integer userId = property1.getUserId();
 		profits.setUserId(userId);
 		profits.setShareProfit(0D);
 		profits.setSharerId(null);
 		//保存卖家的收益
 		profitsService.add(profits);
-		
+		//给买家的添加mtoken（NFC）收益，扣除金券（饲料）
+		Profits buyerProfits=new Profits();
+		buyerProfits.setUserId(buyerId);
+		buyerProfits.setAnimalProfit(0D);
+		buyerProfits.setShareProfit(0D);
+		buyerProfits.setSharerId(null);
+		BigDecimal b21=new BigDecimal(sellPrice);
+		BigDecimal b22=new BigDecimal(buyPrice);
+		//买入成功后，预计收益的百分之10的价格，作为mToken(NFC)收益和金券（饲料）扣除
+		Double mToken=(b21.subtract(b22)).multiply(new BigDecimal(0.1D)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+		buyerProfits.setNFC(mToken);
+		profitsService.add(buyerProfits);
+		//扣除买家的金券
+		Feed subFeed=new Feed();
+		subFeed.setDate(new Date());
+		subFeed.setNum(-mToken);
+		subFeed.setOtherId(null);
+		subFeed.setUserId(buyerId);
+		subFeed.setType(8);//M-token兑换
+		feedDao.insert(subFeed);
 		//提前计算买家出售时的收益
 		Animal aa=animalService.queryById(newAnimalId);//买家买入的动物
 		BigDecimal b02 = new BigDecimal(100);
@@ -373,15 +402,17 @@ public class PropertyServiceImpl implements PropertyService{
 			BigDecimal sellerprofit_b=new BigDecimal(sellerprofit);
 			if(sharer!=null) {
 				if(buyer.getLevel()<sharer.getLevel() || sharer.getLevel()<2 ) {
-					Profits profits_1=new Profits();
-					profits_1.setUserId(buyerId);
-					profits_1.setNFC(0);
-					profits_1.setAnimalProfit(0D);
-					profits_1.setSharerId(sharer.getId());
-					BigDecimal b01 = new BigDecimal(8);
-					Double shareProfit=sellerprofit_b.multiply(b01).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-					profits_1.setShareProfit(shareProfit);
-					profitsService.add(profits_1);
+					if(haveOrderedToday(sharer.getId())) {
+						Profits profits_1=new Profits();
+						profits_1.setUserId(buyerId);
+						profits_1.setNFC(0D);
+						profits_1.setAnimalProfit(0D);
+						profits_1.setSharerId(sharer.getId());
+						BigDecimal b01 = new BigDecimal(6);
+						Double shareProfit=sellerprofit_b.multiply(b01).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						profits_1.setShareProfit(shareProfit);
+						profitsService.add(profits_1);
+					}
 				}
 				//查看是否有二级用户
 				String secondInviteCode=sharer.getInvitedCode();//分享者被邀请的码，别人的邀请码
@@ -389,15 +420,17 @@ public class PropertyServiceImpl implements PropertyService{
 					User secondSharer=userDao.queryByInviteCode(secondInviteCode);
 					if(secondSharer!=null) {
 						if(buyer.getLevel()<secondSharer.getLevel() || secondSharer.getLevel()<2) {
-							Profits profits2=new Profits();
-							profits2.setUserId(buyerId);
-							profits2.setNFC(0);
-							profits2.setAnimalProfit(0D);
-							profits2.setSharerId(secondSharer.getId());
-							BigDecimal b03 = new BigDecimal(5);
-							Double SecondShareProfit=sellerprofit_b.multiply(b03).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-							profits2.setShareProfit(SecondShareProfit);
-							profitsService.add(profits2);
+							if(haveOrderedToday(secondSharer.getId())) {
+								Profits profits2=new Profits();
+								profits2.setUserId(buyerId);
+								profits2.setNFC(0D);
+								profits2.setAnimalProfit(0D);
+								profits2.setSharerId(secondSharer.getId());
+								BigDecimal b03 = new BigDecimal(4);
+								Double SecondShareProfit=sellerprofit_b.multiply(b03).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+								profits2.setShareProfit(SecondShareProfit);
+								profitsService.add(profits2);
+							}
 						}
 						//是否有三级用户
 						String thirdInviteCode=secondSharer.getInvitedCode();
@@ -405,15 +438,18 @@ public class PropertyServiceImpl implements PropertyService{
 							User thirdSharer=userDao.queryByInviteCode(thirdInviteCode);
 							if(thirdSharer!=null) {
 								if(buyer.getLevel()<thirdSharer.getLevel() || thirdSharer.getLevel()<2) {
-									Profits profits3=new Profits();
-									profits3.setUserId(buyerId);
-									profits3.setNFC(0);
-									profits3.setAnimalProfit(0D);
-									profits3.setSharerId(thirdSharer.getId());
-									BigDecimal b04 = new BigDecimal(3);
-									Double thirdShareProfit=sellerprofit_b.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-									profits3.setShareProfit(thirdShareProfit);
-									profitsService.add(profits3);
+									if(haveOrderedToday(thirdSharer.getId())) {
+										Profits profits3=new Profits();
+										profits3.setUserId(buyerId);
+										profits3.setNFC(0D);
+										profits3.setAnimalProfit(0D);
+										profits3.setSharerId(thirdSharer.getId());
+										BigDecimal b04 = new BigDecimal(2);
+										Double thirdShareProfit=sellerprofit_b.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+										profits3.setShareProfit(thirdShareProfit);
+										profitsService.add(profits3);
+									}
+									
 								}
 								addAllSharerShareProfits(buyer, thirdSharer, sellerprofit_b, 4);
 							}
@@ -423,6 +459,7 @@ public class PropertyServiceImpl implements PropertyService{
 			}
 			
 		}
+		log.info("确认交易完成，用时："+(System.currentTimeMillis()-l1)+"毫秒");
 		return 1;
 	}
 	
@@ -433,50 +470,67 @@ public class PropertyServiceImpl implements PropertyService{
 			User sharer = userDao.queryByInviteCode(invitedCode);
 			if(sharer!=null) {
 				if(sharer.getLevel()>buyer.getLevel()) {
-					Profits profits=new Profits();
-					profits.setUserId(buyer.getId());
-					profits.setNFC(0);
-					profits.setAnimalProfit(0D);
-					profits.setSharerId(sharer.getId());
-					BigDecimal b02 = new BigDecimal(100);
-					switch (sharer.getLevel()) {
-					case 1:
-						if(num<=10) {
+					if(haveOrderedToday(sharer.getId())) {
+						Profits profits=new Profits();
+						profits.setUserId(buyer.getId());
+						profits.setNFC(0D);
+						profits.setAnimalProfit(0D);
+						profits.setSharerId(sharer.getId());
+						BigDecimal b02 = new BigDecimal(100);
+						switch (sharer.getLevel()) {
+						case 1:
+							if(num<=10) {
+								BigDecimal b04 = new BigDecimal(1);
+								Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+								profits.setShareProfit(shareProfit);
+								profitsService.add(profits);
+							}
+							num++;
+							break;
+						case 2:
+							if(num<=20) {
+								BigDecimal b04 = new BigDecimal(1);
+								Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+								profits.setShareProfit(shareProfit);
+								profitsService.add(profits);
+							}
+							num++;
+							break;
+						case 3:
 							BigDecimal b04 = new BigDecimal(1);
 							Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 							profits.setShareProfit(shareProfit);
 							profitsService.add(profits);
-						}
-						num++;
-						break;
-					case 2:
-						if(num<=20) {
-							BigDecimal b04 = new BigDecimal(1);
-							Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-							profits.setShareProfit(shareProfit);
+							num++;
+							break;
+						case 4:
+							BigDecimal b05 = new BigDecimal(2);
+							Double shareProfit1=sellerprofit.multiply(b05).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+							profits.setShareProfit(shareProfit1);
 							profitsService.add(profits);
+							num++;
+							break;
 						}
-						num++;
-						break;
-					case 3:
-						BigDecimal b04 = new BigDecimal(1);
-						Double shareProfit=sellerprofit.multiply(b04).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-						profits.setShareProfit(shareProfit);
-						profitsService.add(profits);
-						num++;
-						break;
-					case 4:
-						BigDecimal b05 = new BigDecimal(2);
-						Double shareProfit1=sellerprofit.multiply(b05).divide(b02).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-						profits.setShareProfit(shareProfit1);
-						profitsService.add(profits);
-						num++;
-						break;
-					}
+					}	
 				}
 				addAllSharerShareProfits(buyer,sharer,sellerprofit,num);
 			}
 		}
+	}
+	
+	/**
+	 * 查看上一级是否今天有预约，有预约才可以得到分享收益
+	 * @param userId
+	 * @return
+	 */
+	public boolean haveOrderedToday(Integer userId) {
+		Date date = new Date();
+		String today = simpleDateFormat.format(date);
+		List<Order> orders=orderDao.queryByUserIdAndDate(userId,today);
+		if(orders.size()>0) {
+			return true;
+		}
+		return false;
 	}
 	
 	

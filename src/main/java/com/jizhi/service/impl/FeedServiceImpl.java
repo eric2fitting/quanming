@@ -1,8 +1,8 @@
 package com.jizhi.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
-
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,6 +17,7 @@ import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.FeedSendParam;
+import com.jizhi.pojo.vo.FeedVO;
 import com.jizhi.service.FeedService;
 @Transactional(rollbackFor = Exception.class)
 @Service
@@ -47,8 +48,23 @@ public class FeedServiceImpl implements FeedService{
 	 * 查询用户饲料明细
 	 */
 	@Override
-	public List<Feed> queryFeedDetail(Integer userId) {
-		return feedDao.queryFeedDetail(userId);
+	public List<FeedVO> queryFeedDetail(Integer userId) {
+		ArrayList<FeedVO> result = new ArrayList<FeedVO>();
+		List<Feed> feedList = feedDao.queryFeedDetail(userId);
+		for(Feed feed:feedList) {
+			FeedVO feedVO = new FeedVO();
+			feedVO.setId(feed.getId());
+			feedVO.setDate(feed.getDate());
+			feedVO.setNum(feed.getNum());
+			feedVO.setType(feed.getType());
+			feedVO.setUserId(feed.getUserId());
+			if(feed.getType()==3 || feed.getType()==5) {
+				User other = userDao.queryById(feed.getOtherId());
+				feedVO.setPhone(other.getTel());
+			}
+			result.add(feedVO);
+		}
+		return result;
 	}
 
 	/**
@@ -89,11 +105,13 @@ public class FeedServiceImpl implements FeedService{
 		feed.setNum(-sendNum);
 		feed.setType(5);
 		feed.setUserId(userId);
+		feed.setOtherId(record.getId());//获赠者id
 		feedDao.insert(feed);
 		//给受赠者添加
 		feed.setType(3);
 		feed.setNum(sendNum);
 		feed.setUserId(record.getId());
+		feed.setOtherId(userId);//赠送者id
 		feedDao.insert(feed);
 		return null;
 	}

@@ -11,10 +11,12 @@ public class Feed {
 	private Integer id;
 	private Integer userId;
 	private Double num;
-	private Integer type;//1预约扣除、2系统发放、3转入、4兑换、5转出
+	private Integer type;//1预约扣除、2系统发放、3转入、4兑换、5转出、6预约返回饲料、7系统回收、8M-token兑换
 	@JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date date;
+	//受赠者或赠送者的id
+	private Integer otherId;
 	
 	public Integer getId() {
 		return id;
@@ -45,6 +47,12 @@ public class Feed {
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	public Integer getOtherId() {
+		return otherId;
+	}
+	public void setOtherId(Integer otherId) {
+		this.otherId = otherId;
 	}
 	
 }

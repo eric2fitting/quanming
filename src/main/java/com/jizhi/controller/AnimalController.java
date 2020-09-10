@@ -30,11 +30,11 @@ public class AnimalController {
 		FinalResult finalResult = new FinalResult();
 		if(list.size()==0) {
 			finalResult.setBody(null);
-			finalResult.setMsg("暂无可喂养动物");
+			finalResult.setMsg("暂无可租赁旺铺");
 			finalResult.setCode("104");
 		}else {
 			finalResult.setBody(list);
-			finalResult.setMsg("可喂养动物列表");
+			finalResult.setMsg("可租赁旺铺列表");
 			finalResult.setCode("100");
 		}
 		return finalResult;

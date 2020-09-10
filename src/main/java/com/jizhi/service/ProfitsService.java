@@ -28,9 +28,9 @@ public interface ProfitsService {
 
 	Integer shareProfitsToFeed(FeedExchangeParam feedExchangeParam);
 
-	FeedExchangeParam tryNFCToFeed(Integer userId);
-
-	Integer NFCToFeed(FeedExchangeParam feedExchangeParam);
+//	FeedExchangeParam tryNFCToFeed(Integer userId);
+//
+//	Integer NFCToFeed(FeedExchangeParam feedExchangeParam);
 
 	Double getAllShare(Integer sharerId);
 	//提现列表

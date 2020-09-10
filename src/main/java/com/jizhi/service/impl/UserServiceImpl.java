@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserSevice{
 		List<User> list = userDao.queryByInvitedCode(inviteCode);
 		if(list.size()>0) {
 			for(User user1:list) {
-				if(user1.getState().equals("活跃")) {
+				if("活跃".equals(user1.getState())) {
 					activeMum++;
 				}
 				activeMum=queryActiveMum(user1,activeMum);

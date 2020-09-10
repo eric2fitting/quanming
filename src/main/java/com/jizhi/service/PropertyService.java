@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.jizhi.pojo.Property;
+import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.FeedingDetail;
 import com.jizhi.pojo.vo.Sell;
 import com.jizhi.pojo.vo.SellInfo;
@@ -44,5 +45,6 @@ public interface PropertyService {
 	Integer doSellDirectly(Integer matchId);
 	Integer cancelSell(Sell sell);
 	Integer killAll();
-
+	
+	public void updateOlderUserLevel(User user);
 }

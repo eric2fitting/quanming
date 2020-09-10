@@ -69,10 +69,10 @@ public class MatchServiceImpl implements MatchService{
 	private ExchangeRateDao exchangeRateDao;
 	
 	private String title="恭喜你匹配成功";
-	private String content1="【全民农场】用户您好，恭喜您已成功匹配到订单，赶快登陆APP查看吧！";
+	private String content1="【EGP数字链】尊敬的用户您好，恭喜您已成功匹配链上旺铺，赶快登陆APP查看吧！";
 	private String content3="买家已付款，请尽快核实并确认";
 	private String title1="买家已付款";
-	private String content="【全民农场】用户您好，您在全民农场的动物已经被成功领养了哦，赶快登陆APP核对确认吧！";
+	private String content="【EGP数字链】尊敬的用户您好，您链上的旺铺被成功出租，赶快登陆APP核对确认吧！";
 	
 	//一对一匹配，写入数据库
 	public void doMatch(Order order, Property property) {
@@ -310,9 +310,9 @@ public class MatchServiceImpl implements MatchService{
 		User seller = userDao.queryById(sellerId);
 		List<AccountCard> list = accountCardDao.queryAll(sellerId);
 		PayInfo payInfo = new PayInfo();
-		payInfo.setPrice(match.getPrice());
+		payInfo.setPrice(calculateUsdtPrice(match.getPrice()));
 		//计算火币网的价格
-		payInfo.setUsdtPrice(calculateUsdtPrice(match.getPrice()));
+		payInfo.setUsdtPrice(match.getPrice());
 		payInfo.setIsConfirm(match.getBuyerConfirm());
 		payInfo.setName(seller.getUserName());
 		payInfo.setTel(seller.getTel());
@@ -392,7 +392,7 @@ public class MatchServiceImpl implements MatchService{
 	public Double calculateUsdtPrice(Double price) {
 		BigDecimal b1 = new BigDecimal(price);
 		BigDecimal b2 = new BigDecimal(exchangeRateDao.getRate());
-		Double result=b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		Double result=b1.multiply(b2).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		return result;
 		
 	}

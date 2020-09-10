@@ -22,14 +22,20 @@ public class MyWebMvcCfg extends WebMvcConfigurerAdapter{
 		  registry.addInterceptor(getOrderInterceptor()).addPathPatterns("/order/try");
 	  }
 	  
-	  
+//	  windows
+//	  @Override 
+//	  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		  registry.addResourceHandler("/pics/**").addResourceLocations(
+//				  "file:D:/pics/");
+//	  }
+	  /**
+	   * linux
+	   */
 	  @Override 
 	  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		  registry.addResourceHandler("/pics/**").addResourceLocations(
-				  "file:D:/pics/");
+		  registry.addResourceHandler("/pic/**").addResourceLocations(
+				  "file:/home/qmApp/pic/");
 	  }
-
-	
 	
 	@Bean
 	public HandlerInterceptor getLoginInterceptor(){

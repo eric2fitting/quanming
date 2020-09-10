@@ -9,7 +9,7 @@ public class Profits {
 	private Integer userId;//卖家id
 	private Double animalProfit;
 	private Double shareProfit;
-	private Integer NFC;
+	private Double NFC;
 	private Integer sharerId;//分享给卖家的人的id
 	private Integer state;
 	private Date updateTime;
@@ -44,10 +44,10 @@ public class Profits {
 	public void setShareProfit(Double shareProfit) {
 		this.shareProfit = shareProfit;
 	}
-	public Integer getNFC() {
+	public Double getNFC() {
 		return NFC;
 	}
-	public void setNFC(Integer nFC) {
+	public void setNFC(Double nFC) {
 		NFC = nFC;
 	}
 	public Integer getSharerId() {

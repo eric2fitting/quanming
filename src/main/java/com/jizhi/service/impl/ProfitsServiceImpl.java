@@ -72,7 +72,7 @@ public class ProfitsServiceImpl implements ProfitsService{
 		if(allShareProfit>=shareProfit) {
 			Profits profits = new Profits();
 			profits.setAnimalProfit(0D);
-			profits.setNFC(0);
+			profits.setNFC(0D);
 			profits.setUserId(null);
 			profits.setSharerId(sharerId);
 			profits.setShareProfit(-shareProfit);
@@ -212,7 +212,7 @@ public class ProfitsServiceImpl implements ProfitsService{
 		profits.setShareProfit(-shareProfit);
 		profits.setState(2);
 		profits.setAnimalProfit(0D);
-		profits.setNFC(0);
+		profits.setNFC(0D);
 		profits.setUserId(null);
 		profitsDao.shareProfitsToFeed(profits);
 		//增加饲料
@@ -224,65 +224,65 @@ public class ProfitsServiceImpl implements ProfitsService{
 		feedDao.insert(feed);
 		return 2;
 	}
-	
-	/**
-	 *用NFC币兑换饲料页面显示
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public FeedExchangeParam tryNFCToFeed(Integer userId) {
-		User user = userDao.queryById(userId);
-		Integer NFC = queryAllNFC(userId);
-		FeedExchangeParam feedExchangeParam = new FeedExchangeParam();
-		if(NFC!=null) {
-			feedExchangeParam.setNFC(NFC);
-			feedExchangeParam.setMaxExchangeNum(NFC);
-		}else {
-			feedExchangeParam.setNFC(0);
-			feedExchangeParam.setMaxExchangeNum(0);
-		}
-		feedExchangeParam.setLevel(user.getLevel());
-		feedExchangeParam.setUserId(userId);		
-		return feedExchangeParam;
-	}
-	
-	/**
-	 *NFC币兑换饲料确认页面
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public Integer NFCToFeed(FeedExchangeParam feedExchangeParam) {
-		Integer maxExchangeNum = feedExchangeParam.getMaxExchangeNum();
-		Integer exchangeNum = feedExchangeParam.getExchangeNum(); 
-		Double feedNum=Double.parseDouble(exchangeNum+"");
-		Integer userId = feedExchangeParam.getUserId();
-		User user = userDao.queryById(userId);
-		if(exchangeNum>maxExchangeNum) {
-			return 0;
-		}
-		if(!user.getSecondpsw().equals(feedExchangeParam.getSecondPsw())) {
-			return 1;//二级密码错误
-		}
-		//增加饲料
-		Feed feed = new Feed();
-		feed.setUserId(userId);
-		feed.setNum(feedNum);
-		feed.setType(4);
-		feed.setDate(new Date());
-		feedDao.insert(feed);
-		//扣除NFC币
-		Profits profits = new Profits();
-		profits.setNFC(-exchangeNum);
-		profits.setUserId(userId);
-		profits.setShareProfit(0D);
-		profits.setAnimalProfit(0D);
-		profits.setSharerId(null);
-		profits.setState(2);
-		profitsDao.shareProfitsToFeed(profits);
-		return 2;
-	}
+//	
+//	/**
+//	 *用NFC币兑换饲料页面显示
+//	 * @param request
+//	 * @return
+//	 */
+//	@Override
+//	public FeedExchangeParam tryNFCToFeed(Integer userId) {
+//		User user = userDao.queryById(userId);
+//		Integer NFC = queryAllNFC(userId);
+//		FeedExchangeParam feedExchangeParam = new FeedExchangeParam();
+//		if(NFC!=null) {
+//			feedExchangeParam.setNFC(NFC);
+//			feedExchangeParam.setMaxExchangeNum(NFC);
+//		}else {
+//			feedExchangeParam.setNFC(0);
+//			feedExchangeParam.setMaxExchangeNum(0);
+//		}
+//		feedExchangeParam.setLevel(user.getLevel());
+//		feedExchangeParam.setUserId(userId);		
+//		return feedExchangeParam;
+//	}
+//	
+//	/**
+//	 *NFC币兑换饲料确认页面
+//	 * @param request
+//	 * @return
+//	 */
+//	@Override
+//	public Integer NFCToFeed(FeedExchangeParam feedExchangeParam) {
+//		Integer maxExchangeNum = feedExchangeParam.getMaxExchangeNum();
+//		Integer exchangeNum = feedExchangeParam.getExchangeNum(); 
+//		Double feedNum=Double.parseDouble(exchangeNum+"");
+//		Integer userId = feedExchangeParam.getUserId();
+//		User user = userDao.queryById(userId);
+//		if(exchangeNum>maxExchangeNum) {
+//			return 0;
+//		}
+//		if(!user.getSecondpsw().equals(feedExchangeParam.getSecondPsw())) {
+//			return 1;//二级密码错误
+//		}
+//		//增加饲料
+//		Feed feed = new Feed();
+//		feed.setUserId(userId);
+//		feed.setNum(feedNum);
+//		feed.setType(4);
+//		feed.setDate(new Date());
+//		feedDao.insert(feed);
+//		//扣除NFC币
+//		Profits profits = new Profits();
+//		profits.setNFC(-exchangeNumD);
+//		profits.setUserId(userId);
+//		profits.setShareProfit(0D);
+//		profits.setAnimalProfit(0D);
+//		profits.setSharerId(null);
+//		profits.setState(2);
+//		profitsDao.shareProfitsToFeed(profits);
+//		return 2;
+//	}
 	/**
 	 * 提现列表
 	 */

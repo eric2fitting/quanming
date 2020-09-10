@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 	
-	<property name="logback.logdir" value="D:\app\logs"></property>
+	<property name="logback.logdir" value="/home/qmApp/log"></property>
 	<property name="application.name" value="app"></property>
 
 	<contextName>app</contextName>

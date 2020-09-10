@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -443,7 +444,7 @@ public class AutomaticService {
 	}
 	
 	/**
-	 * 10点05自动将多余玩家按比例匹配给管理员
+	 * 10点12自动将多余玩家按比例匹配给管理员
 	 */
 	@Scheduled(cron="0 12 10 * * ?")
 	public void leftMatch1() {
@@ -451,7 +452,7 @@ public class AutomaticService {
 	}
 	
 	/**
-	 * 13点05自动将多余玩家按比例匹配给管理员
+	 * 13点12自动将多余玩家按比例匹配给管理员
 	 */
 	@Scheduled(cron="0 12 13 * * ?")
 	public void leftMatch2() {
@@ -459,7 +460,7 @@ public class AutomaticService {
 	}
 	
 	/**
-	 * 16点05自动将多余玩家按比例匹配给管理员
+	 * 16点12自动将多余玩家按比例匹配给管理员
 	 */
 	@Scheduled(cron="0 12 16 * * ?")
 	public void leftMatch3() {
@@ -576,6 +577,7 @@ public class AutomaticService {
 	@Scheduled(cron="0 05 20 * * ?")
 	public void updateTotalMoney() {
 		log.info("开始更新个人总资产");
+		Long l1=System.currentTimeMillis();
 		try {
 			List<User> users=userDao.queryAll();
 			for(User user:users) {
@@ -603,7 +605,41 @@ public class AutomaticService {
 		} catch (Exception e) {
 			log.info("更新个人总资产出错");
 		}
-		log.info("更新个人总资产完成");
+		log.info("更新个人总资产完成,用时："+(System.currentTimeMillis()-l1));
+	}
+	
+	/**
+	 * 每晚22：05更新用户的等级，检查今天是否有预约。
+	 */
+	@Scheduled(cron="0 05 22 * * ?")
+	//@Scheduled(fixedRate=60*1000*5)
+	public void checkUnActiveUser() {
+		log.info("开始检查用户及下级的活跃状态");
+		long l1 = System.currentTimeMillis();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String today = simpleDateFormat.format(date);
+		List<User> users=userDao.queryAll();
+		//按等级的升序排列，o1
+		Collections.sort(users,new Comparator<User>() {
+			@Override
+			public int compare(User o1, User o2) {
+				return o1.getLevel()-o2.getLevel();
+			}
+		});
+		log.info("最低等级----"+users.get(0).getLevel());
+		log.info("最高等级----"+users.get(users.size()-1).getLevel());
+		for(User user:users) {
+			List<Order> orders = orderDao.queryByUserIdAndDate(user.getId(),today);
+			if(orders.size()==0) {
+				//说明该用户今日没预约，改为已激活
+				user.setState("已激活");
+				userDao.updateStateToUnActive(user);
+				//上级用户等级是否受影响
+				propertyService.updateOlderUserLevel(user);
+			}
+		}
+		log.info("用户及下级的活跃状态检查完毕,用时："+(System.currentTimeMillis()-l1)+"毫秒");
 	}
 }
 

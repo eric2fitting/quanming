@@ -105,17 +105,19 @@ public class Base64ToImgUtil {
            int length = imageByte.length;
            //追加文件夹
            //File file = new File("E:/Ericcccccccccccccccccccccc/pics/");
-           File file = new File("D:/pics/");
+           //File file = new File("D:/pics/");
+           File file = new File("/home/qmApp/pic");
            if(!file.exists()){
                file.mkdirs();
            }
            //path = "E:/Ericcccccccccccccccccccccc/pics/"+UUID.randomUUID()+ "." + type;
-           path = "D:/pics/"+UUID.randomUUID()+ "." + type;
+           path = file+"/"+UUID.randomUUID()+ "." + type;
            FileOutputStream fos = new FileOutputStream(path);//isAppend如果为true，为追加写入，否则为覆盖写入
            fos.write(imageByte,0,length);
            fos.close();
            //path = path.replaceAll("E:/Ericcccccccccccccccccccccc/pics/","/pics/");
-           path = path.replaceAll("D:/pics/","/pics/");
+           //path = path.replaceAll("D:/pics/","/pics/");
+           path=path.replaceAll("/home/qmApp/pic/","/pic/");
        }catch (Exception e){
            e.printStackTrace();
        }

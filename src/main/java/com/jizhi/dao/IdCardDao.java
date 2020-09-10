@@ -12,7 +12,7 @@ public interface IdCardDao {
 	int update(IdCard idCard);
 	//查看身份证认证了几次
 	Integer querySizeByIdNum(String idNum);
-	@Select("select * from idCard where user_id=#{userId}")
+	@Select("select * from idcard where user_id=#{userId}")
 	IdCard queryByUserId(Integer userId);
 
 }

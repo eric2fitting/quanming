@@ -31,7 +31,7 @@
 	</update>
 	
 	<select id="queryAll" parameterType="java.lang.Integer" resultMap="accountCard">
-		select id,user_id,type,accountName,accountNum,pic from accountCard where user_id=#{userId}
+		select id,user_id,type,accountName,accountNum,pic from accountcard where user_id=#{userId}
 	</select>
 	
 </mapper>
