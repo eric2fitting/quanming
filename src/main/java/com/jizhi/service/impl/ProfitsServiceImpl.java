@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jizhi.dao.FeedDao;
+import com.jizhi.dao.OtherInfoDao;
 import com.jizhi.dao.ProfitsDao;
 import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.Feed;
+import com.jizhi.pojo.OtherInfo;
 import com.jizhi.pojo.Profits;
 import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.FeedExchangeParam;
@@ -65,6 +67,7 @@ public class ProfitsServiceImpl implements ProfitsService{
 	 */
 	@Override
 	public Integer updateShareProfit(String token, UserInfo userInfo) {
+		
 		Integer sharerId=Integer.parseInt(redisService.get(token));
 		Double shareProfit = userInfo.getShareProfit();
 		//查询自己的总分享收益
@@ -107,7 +110,7 @@ public class ProfitsServiceImpl implements ProfitsService{
 	}
 
 	@Override
-	public Integer queryAllNFC(Integer id) {
+	public Double queryAllNFC(Integer id) {
 		return profitsDao.queryAllNFC(id);
 	}
 	

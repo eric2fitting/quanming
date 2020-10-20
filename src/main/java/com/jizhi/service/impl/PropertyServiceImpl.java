@@ -301,13 +301,13 @@ public class PropertyServiceImpl implements PropertyService{
 		Integer buyerId=order.getUserId();
 		User buyer = userDao.queryById(buyerId);
 		//判断该买家是否是第一次购买成功，若是，更改状态为活跃状态
-		List<Property> Properties = propertyDao.queryByUserId(buyerId);
-		if(Properties.size()==0) {
-			//此次是第一次购买,将状态变为活跃
-			userDao.updateState(buyerId);
-			//并查看自己变为活跃后是否对推荐者及前人们的等级是否有影响
-			updateOlderUserLevel(buyer);
-		}
+//		List<Property> Properties = propertyDao.queryByUserId(buyerId);
+//		if(Properties.size()==0) {
+//			//此次是第一次购买,将状态变为活跃
+//			userDao.updateState(buyerId);
+//			//并查看自己变为活跃后是否对推荐者及前人们的等级是否有影响
+//			updateOlderUserLevel(buyer);
+//		}
 		//往资产表里添加新数据-买家买入后在资产表里生成自己的新资产
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Animal animal = animalService.queryById(animalId);
@@ -402,7 +402,7 @@ public class PropertyServiceImpl implements PropertyService{
 			BigDecimal sellerprofit_b=new BigDecimal(sellerprofit);
 			if(sharer!=null) {
 				if(buyer.getLevel()<sharer.getLevel() || sharer.getLevel()<2 ) {
-					if(haveOrderedToday(sharer.getId())) {
+					if("活跃".equals(sharer.getState())) {
 						Profits profits_1=new Profits();
 						profits_1.setUserId(buyerId);
 						profits_1.setNFC(0D);
@@ -420,7 +420,7 @@ public class PropertyServiceImpl implements PropertyService{
 					User secondSharer=userDao.queryByInviteCode(secondInviteCode);
 					if(secondSharer!=null) {
 						if(buyer.getLevel()<secondSharer.getLevel() || secondSharer.getLevel()<2) {
-							if(haveOrderedToday(secondSharer.getId())) {
+							if("活跃".equals(secondSharer.getState())) {
 								Profits profits2=new Profits();
 								profits2.setUserId(buyerId);
 								profits2.setNFC(0D);
@@ -438,7 +438,7 @@ public class PropertyServiceImpl implements PropertyService{
 							User thirdSharer=userDao.queryByInviteCode(thirdInviteCode);
 							if(thirdSharer!=null) {
 								if(buyer.getLevel()<thirdSharer.getLevel() || thirdSharer.getLevel()<2) {
-									if(haveOrderedToday(thirdSharer.getId())) {
+									if("活跃".equals(thirdSharer.getState())) {
 										Profits profits3=new Profits();
 										profits3.setUserId(buyerId);
 										profits3.setNFC(0D);
@@ -470,7 +470,7 @@ public class PropertyServiceImpl implements PropertyService{
 			User sharer = userDao.queryByInviteCode(invitedCode);
 			if(sharer!=null) {
 				if(sharer.getLevel()>buyer.getLevel()) {
-					if(haveOrderedToday(sharer.getId())) {
+					if("活跃".equals(sharer.getState())) {
 						Profits profits=new Profits();
 						profits.setUserId(buyer.getId());
 						profits.setNFC(0D);
@@ -518,20 +518,20 @@ public class PropertyServiceImpl implements PropertyService{
 		}
 	}
 	
-	/**
-	 * 查看上一级是否今天有预约，有预约才可以得到分享收益
-	 * @param userId
-	 * @return
-	 */
-	public boolean haveOrderedToday(Integer userId) {
-		Date date = new Date();
-		String today = simpleDateFormat.format(date);
-		List<Order> orders=orderDao.queryByUserIdAndDate(userId,today);
-		if(orders.size()>0) {
-			return true;
-		}
-		return false;
-	}
+//	/**
+//	 * 查看上一级是否今天有预约，有预约才可以得到分享收益
+//	 * @param userId
+//	 * @return
+//	 */
+//	public boolean haveOrderedToday(Integer userId) {
+//		Date date = new Date();
+//		String today = simpleDateFormat.format(date);
+//		List<Order> orders=orderDao.queryByUserIdAndDate(userId,today);
+//		if(orders.size()>0) {
+//			return true;
+//		}
+//		return false;
+//	}
 	
 	
 	

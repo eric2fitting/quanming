@@ -42,7 +42,7 @@ public class OrderController {
 			
 		}else if(i==2){
 			finalResult.setCode("104");
-			finalResult.setMsg("饲料不足");
+			finalResult.setMsg("金券不足");
 		}else if (i==0) {
 			finalResult.setCode("104");
 			finalResult.setMsg("至少添加2种收益方式，必须添加银行卡");

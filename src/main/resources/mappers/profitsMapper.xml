@@ -18,7 +18,7 @@
 		select sum(animalProfit) from profits where userId=#{userId}
 	</select>
 	
-	<select id="queryAllNFC" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	<select id="queryAllNFC" parameterType="java.lang.Integer" resultType="java.lang.Double">
 		select sum(NFC) from profits where userId=#{userId}
 	</select>
 	

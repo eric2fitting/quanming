@@ -10,7 +10,7 @@
 	</resultMap>
 	
 	<select id="query" resultMap="otherInfo">
-		select * from other_info
+		select * from other_info limit 1
 	</select>
 
 </mapper>

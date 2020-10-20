@@ -22,7 +22,7 @@ public interface ProfitsService {
 	//根据用户id查询总的动物收益
 	Double queryAllAnimalProfits(Integer id);
 	//根据用户id查询总的NFC币
-	Integer queryAllNFC(Integer id);
+	Double queryAllNFC(Integer id);
 
 	FeedExchangeParam tryShareProfitsToFeed(Integer userId);
 

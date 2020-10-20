@@ -69,10 +69,10 @@ public class MatchServiceImpl implements MatchService{
 	private ExchangeRateDao exchangeRateDao;
 	
 	private String title="恭喜你匹配成功";
-	private String content1="【EGP数字链】尊敬的用户您好，恭喜您已成功匹配链上旺铺，赶快登陆APP查看吧！";
+	private String content1="【在线商铺】尊敬的EGP用户您好，恭喜您已成功匹配线上旺铺，赶快登陆APP查看吧！";
 	private String content3="买家已付款，请尽快核实并确认";
 	private String title1="买家已付款";
-	private String content="【EGP数字链】尊敬的用户您好，您链上的旺铺被成功出租，赶快登陆APP核对确认吧！";
+	private String content="【在线商铺】尊敬的EGP用户您好，您线上的旺铺已成功转让，赶快登陆APP核对确认吧！";
 	
 	//一对一匹配，写入数据库
 	public void doMatch(Order order, Property property) {

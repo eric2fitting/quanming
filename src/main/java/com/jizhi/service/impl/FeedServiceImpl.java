@@ -60,7 +60,9 @@ public class FeedServiceImpl implements FeedService{
 			feedVO.setUserId(feed.getUserId());
 			if(feed.getType()==3 || feed.getType()==5) {
 				User other = userDao.queryById(feed.getOtherId());
-				feedVO.setPhone(other.getTel());
+				StringBuilder sb = new StringBuilder(other.getTel());
+				sb=sb.replace(3, 7, "****");
+				feedVO.setPhone(sb.toString());
 			}
 			result.add(feedVO);
 		}
@@ -75,17 +77,17 @@ public class FeedServiceImpl implements FeedService{
 		Double sendNum = feedSendParam.getNum();//转赠数量
 		Integer userId = feedSendParam.getUserId();//用户id
 		String tel = feedSendParam.getTel();//受赠者手机
-		if(sendNum<100D || sendNum%100!=0) {
-			return "转赠数量必须是100的倍数";
+		if(sendNum<10D || sendNum%10!=0) {
+			return "转赠数量必须是10的倍数";
 		}
 		Double total = feedDao.queryTotalFeedByUserId(userId);
-		if(total<sendNum+150) {
-			return "转赠后剩余饲料不能小于150";
+		if(total<sendNum+20) {
+			return "转赠后剩余金券不能小于20";
 		}
 		User record = userDao.queryByTel(tel);//获赠者
 		User user = userDao.queryById(userId);//赠送者
 		if(user.getLevel()==0) {
-			return "级别达到v1才能转赠";
+			return "2星会员才能进行转赠";
 		}
 		if(record==null) {
 			return "你所转赠的用户不存在";

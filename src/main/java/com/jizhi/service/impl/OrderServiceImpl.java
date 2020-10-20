@@ -16,11 +16,13 @@ import com.jizhi.dao.AccountCardDao;
 import com.jizhi.dao.FeedDao;
 import com.jizhi.dao.OrderDao;
 import com.jizhi.dao.OrderTimeDao;
+import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.AccountCard;
 import com.jizhi.pojo.Animal;
 import com.jizhi.pojo.Feed;
 import com.jizhi.pojo.Order;
 import com.jizhi.pojo.OrderTime;
+import com.jizhi.pojo.User;
 import com.jizhi.pojo.vo.AnimaInfo;
 import com.jizhi.pojo.vo.IsOrderOrOverTime;
 import com.jizhi.pojo.vo.OrderDetail;
@@ -48,6 +50,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private AccountCardDao accountCardDao;
+	
+	@Autowired
+	private UserDao userDao;
 	/**
 	 * 添加预约
 	 */
@@ -109,6 +114,11 @@ public class OrderServiceImpl implements OrderService{
 		feed.setType(1);
 		feed.setUserId(userId);
 		feedDao.insert(feed);
+		//将用户状态变为活跃
+		User buyer = userDao.queryById(userId);
+		if(!"活跃".equals(buyer.getState())) {
+			userDao.updateState(userId);
+		}
 		return 1;
 	}
 	
@@ -137,7 +147,7 @@ public class OrderServiceImpl implements OrderService{
 		if(feedOwns==null) {
 			animaInfo.setFeedOwns(0D);
 		}else {
-			animaInfo.setFeedOwns(feedOwns);
+			animaInfo.setFeedOwns(new BigDecimal(feedOwns).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
 		}
 		animaInfo.setAnimalSize(animal.getSize());
 		animaInfo.setAnimalType(animal.getAnimalType());

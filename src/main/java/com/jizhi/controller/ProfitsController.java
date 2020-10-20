@@ -1,12 +1,17 @@
 package com.jizhi.controller;
 
+import com.jizhi.dao.OtherInfoDao;
 import com.jizhi.pojo.FinalResult;
+import com.jizhi.pojo.OtherInfo;
 import com.jizhi.pojo.vo.FeedExchangeParam;
 import com.jizhi.pojo.vo.ShareProfitsVO;
 import com.jizhi.pojo.vo.UserInfo;
 import com.jizhi.service.ProfitsService;
+import com.jizhi.service.impl.AutomaticService;
 import com.jizhi.util.RedisService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("profits")
 @RestController
 public class ProfitsController {
-	
+	private static final Logger log = LoggerFactory.getLogger(ProfitsController.class);
 	@Autowired
 	private ProfitsService profitsService;
 	@Autowired
 	private RedisService redisService;
+	@Autowired
+	private OtherInfoDao otherInfoDao;
 	/**
 	 * 提现
 	 * @param request
@@ -35,9 +42,12 @@ public class ProfitsController {
 	public FinalResult updateShareProfit(HttpServletRequest request,@RequestBody UserInfo userInfo) {
 		String token = request.getHeader("token");
 		FinalResult finalResult = new FinalResult();
-		if(userInfo.getShareProfit()%200!=0 || userInfo.getShareProfit()<200) {
+		OtherInfo otherInfo = otherInfoDao.query();
+		Double earnMoney = otherInfo.getEarnMoney();
+		if(earnMoney>userInfo.getShareProfit() || userInfo.getShareProfit()%earnMoney!=0) {
+			log.info("提现要求:"+earnMoney+";提现金额:"+userInfo.getShareProfit()+";取模:"+userInfo.getShareProfit()%earnMoney);
 			finalResult.setCode("104");
-			finalResult.setMsg("提现金额必须是200的倍数");
+			finalResult.setMsg("提现金额必须是"+earnMoney+"的倍数");
 			return finalResult;
 		}
 		Integer i=profitsService.updateShareProfit(token,userInfo);

@@ -18,7 +18,7 @@ public class SMS {
 	static String ac = "qmncduanxin";		//帐号
 	static String pw = "dd112211";	//帐号的密码
 	//static String mobile = "18381855237";	//需要下发的手机号码
-	static String content = "【EGP数字链】尊敬的用户您好，你的验证码为：";	//需要下发的短信内容
+	static String content = "【在线商铺】尊敬的EGP用户，你的验证码为：";	//需要下发的短信内容
 	static String xml = "http://sms.izjun.cn";
 	
 	static Date date = null;//new Date()

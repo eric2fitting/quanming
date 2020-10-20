@@ -13,7 +13,7 @@ public class UserInfo implements Serializable{
 	private Double totalMoney;
 	private Double animalProfit;
 	private Double shareProfit;
-	private Integer NFC;
+	private Double NFC;
 	private Integer level;
 	public String getUserName() {
 		return userName;
@@ -45,10 +45,10 @@ public class UserInfo implements Serializable{
 	public void setShareProfit(Double shareProfit) {
 		this.shareProfit = shareProfit;
 	}
-	public Integer getNFC() {
+	public Double getNFC() {
 		return NFC;
 	}
-	public void setNFC(Integer nFC) {
+	public void setNFC(Double nFC) {
 		NFC = nFC;
 	}
 	public Integer getLevel() {

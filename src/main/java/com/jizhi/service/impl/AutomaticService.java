@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -588,9 +589,9 @@ public class AutomaticService {
 					totalProperty=0D;
 				}
 				//总nfc
-				Integer totalNFC = profitsDao.queryAllNFC(userId);
+				Double totalNFC = profitsDao.queryAllNFC(userId);
 				if(totalNFC==null) {
-					totalNFC=0;
+					totalNFC=0D;
 				}
 				//总分享收益
 				Double totalShare = profitsDao.queryShareProfit(userId);
@@ -630,13 +631,16 @@ public class AutomaticService {
 		log.info("最低等级----"+users.get(0).getLevel());
 		log.info("最高等级----"+users.get(users.size()-1).getLevel());
 		for(User user:users) {
-			List<Order> orders = orderDao.queryByUserIdAndDate(user.getId(),today);
-			if(orders.size()==0) {
-				//说明该用户今日没预约，改为已激活
-				user.setState("已激活");
-				userDao.updateStateToUnActive(user);
-				//上级用户等级是否受影响
-				propertyService.updateOlderUserLevel(user);
+			//只需判断活跃用户
+			if(StringUtils.equals("活跃", user.getState())) {
+				List<Order> orders = orderDao.queryByUserIdAndDate(user.getId(),today);
+				if(orders.size()==0) {
+					//说明该用户今日没预约，改为已激活
+					user.setState("已激活");
+					userDao.updateStateToUnActive(user);
+					//上级用户等级是否受影响
+					propertyService.updateOlderUserLevel(user);
+				}
 			}
 		}
 		log.info("用户及下级的活跃状态检查完毕,用时："+(System.currentTimeMillis()-l1)+"毫秒");

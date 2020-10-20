@@ -354,7 +354,7 @@ public class UserServiceImpl implements UserSevice{
 		//查询总的动物收益
 		Double allAnimalProfits=profitsService.queryAllAnimalProfits(id);
 		//查询中的NFC币
-		Integer nfcs=profitsService.queryAllNFC(id);
+		Double nfcs=profitsService.queryAllNFC(id);
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUserName(user.getUserName());
 		userInfo.setTel(user.getTel());
@@ -372,7 +372,7 @@ public class UserServiceImpl implements UserSevice{
 		if (nfcs!=null) {
 			userInfo.setNFC(nfcs);
 		}else {
-			userInfo.setNFC(0);
+			userInfo.setNFC(0D);
 		}
 		Double shareProfit=profitsService.queryShareProfit(id);
 		if(shareProfit==null) {
