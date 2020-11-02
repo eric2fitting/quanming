@@ -14,7 +14,7 @@ public class Property {
 	private Integer isSold;//0表示没有，1正在出售，2表示已经出售
 	private Integer role;//0表示是普通玩家的，1表示是管理员的。
 	private String code;//区块编号
-	
+	private Integer canSell;//是否可以出售
 	public Integer getId() {
 		return id;
 	}
@@ -68,6 +68,12 @@ public class Property {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+	public Integer getCanSell() {
+		return canSell;
+	}
+	public void setCanSell(Integer canSell) {
+		this.canSell = canSell;
 	}
 
 }

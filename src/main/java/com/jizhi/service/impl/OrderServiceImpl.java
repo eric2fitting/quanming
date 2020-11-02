@@ -16,6 +16,7 @@ import com.jizhi.dao.AccountCardDao;
 import com.jizhi.dao.FeedDao;
 import com.jizhi.dao.OrderDao;
 import com.jizhi.dao.OrderTimeDao;
+import com.jizhi.dao.PropertyDao;
 import com.jizhi.dao.UserDao;
 import com.jizhi.pojo.AccountCard;
 import com.jizhi.pojo.Animal;
@@ -53,6 +54,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private  PropertyDao propertyDao;
 	/**
 	 * 添加预约
 	 */
@@ -119,6 +123,8 @@ public class OrderServiceImpl implements OrderService{
 		if(!"活跃".equals(buyer.getState())) {
 			userDao.updateState(userId);
 		}
+		//将该时段的动物可售状态变为0
+		propertyDao.updateCansellAfterOrder(userId ,animalId,orderTime.getStartTime());
 		return 1;
 	}
 	

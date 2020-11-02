@@ -1,16 +1,24 @@
 
 package com.jizhi.service.impl;
+/**
+ * 定时任务时间：8点05份、10点05份、10点10份、11点10份、11点30、11点40
+ */
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -86,9 +94,12 @@ public class AutomaticService {
 	/**
 	 * 自动匹配预约用户和资产拥有者
 	 */
-	@Scheduled(fixedRate=60*1000*5)
+	@Scheduled(cron="0 01 10 * * ?")
+	@Scheduled(cron="0 01 13 * * ?")
+	@Scheduled(cron="0 01 16 * * ?")
 	public void match() {
 		System.out.println("自动匹配开始执行");
+		long startWorkTime=System.currentTimeMillis();
 		log.info("自动匹配开始执行");
 		SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm");
 		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");	
@@ -261,19 +272,23 @@ public class AutomaticService {
 			
 		} catch (Exception e) {
 			System.out.println("自动匹配出错");
+			log.info(e.getMessage());
 			log.info("自动匹配出错");
 		}
 		System.out.println("自动匹配执行结束");
-		log.info("自动匹配执行结束");
+		log.info("自动匹配执行结束,用时："+(System.currentTimeMillis()-startWorkTime)/1000.0);
 	}
 	
 	/**
 	 * 根据最后时间进行自动确认
 	 */
-	@Scheduled(fixedRate=60*1000*5)
+	@Scheduled(cron="0 01 12 * * ?")
+	@Scheduled(cron="0 01 15 * * ?")
+	@Scheduled(cron="0 01 18 * * ?")
 	public void confirm() {
 		try {
 			System.out.println("自动确认开始执行");
+			long startWorkTime=System.currentTimeMillis();
 			log.info("自动确认开始执行");
 			SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm");
 			SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -350,44 +365,53 @@ public class AutomaticService {
 							map.put("userId", order.getUserId());
 							map.put("isFrozen", 1);
 							userSevice.updateIsFrozen(map);
+							//将买家所有资产变为不可售
+							propertyDao.updateCansellByUserId(order.getUserId());
 							//删除原有的匹配信息
 							matchService.deleteById(match.getId());
-								
-							ArrayList<Date> startTimest=new ArrayList<Date>();//存放所有开始时间
-							//更改卖家的买入时间到下一轮匹配
-							String buyTime=property.getBuyTime();
-							Date buyTime1=simpleDateFormat1.parse(buyTime);
-							List<OrderTime> times=orderTimeDao.queryByAnimalId(animalId);
-							for(OrderTime orderTime:times) {
-								startTimest.add(simpleDateFormat1.parse(orderTime.getStartTime()));
-							}
-							Collections.sort(startTimest);
-							int index = startTimest.indexOf(buyTime1);
-							if(index==startTimest.size()-1) {//买入时间是今天的最后时间
-								//买入时间是今天的最后时间，将该动物的购买时间换成第二天的第一个时间段
-								String changtime=simpleDateFormat1.format(startTimest.get(0));
-								HashMap<String,Object> map1=new HashMap<String,Object>();
-								map1.put("id", property.getId());
-								map1.put("buyTime", changtime);
-								//计算买入时间的第二天是多久
-								String oldDate=property.getBuyDate();
-								Calendar c1=Calendar.getInstance();
-								c1.setTime(simpleDateFormat2.parse(oldDate));
-								c1.add(Calendar.DAY_OF_YEAR, 1);
-								Date changed = c1.getTime();
-								String newDate = simpleDateFormat2.format(changed);
-								map1.put("buyDate",newDate);
-								propertyService.updateBuyDateTime(map1);
-							}else {
-								//将买入时间换成下一个时间段
-								Date changDate=startTimest.get(index+1);
-								String changTime = simpleDateFormat1.format(changDate);
-								HashMap<String,Object> map1=new HashMap<String,Object>();
-								map1.put("id", property.getId());
-								map1.put("buyTime", changTime);
-								map1.put("buyDate",property.getBuyDate());
-								propertyService.updateBuyDateTime(map1);
-							}
+							
+							//更改property状态为0
+							property.setIsSold(0);
+							propertyDao.updateState(property);
+							//将用户该时段的改类型的商铺全部延后一天
+							List<Property> updateList = propertyDao.queryByUserIdAndBuyTime(property.getAnimalId(),property.getUserId(),property.getBuyTime());
+							int sum=updatePropertiesBuyDate(updateList);
+							log.info(String.format("用户：%s商铺id:%s，时间：%s，买入时间修改了%s条", property.getUserId(),property.getAnimalId(),property.getBuyTime(),sum));
+//							ArrayList<Date> startTimest=new ArrayList<Date>();//存放所有开始时间
+//							//更改卖家的买入时间到下一轮匹配
+//							String buyTime=property.getBuyTime();
+//							Date buyTime1=simpleDateFormat1.parse(buyTime);
+//							List<OrderTime> times=orderTimeDao.queryByAnimalId(animalId);
+//							for(OrderTime orderTime:times) {
+//								startTimest.add(simpleDateFormat1.parse(orderTime.getStartTime()));
+//							}
+//							Collections.sort(startTimest);
+//							int index = startTimest.indexOf(buyTime1);
+//							if(index==startTimest.size()-1) {//买入时间是今天的最后时间
+//								//买入时间是今天的最后时间，将该动物的购买时间换成第二天的第一个时间段
+//								String changtime=simpleDateFormat1.format(startTimest.get(0));
+//								HashMap<String,Object> map1=new HashMap<String,Object>();
+//								map1.put("id", property.getId());
+//								map1.put("buyTime", changtime);
+//								//计算买入时间的第二天是多久
+//								String oldDate=property.getBuyDate();
+//								Calendar c1=Calendar.getInstance();
+//								c1.setTime(simpleDateFormat2.parse(oldDate));
+//								c1.add(Calendar.DAY_OF_YEAR, 1);
+//								Date changed = c1.getTime();
+//								String newDate = simpleDateFormat2.format(changed);
+//								map1.put("buyDate",newDate);
+//								propertyService.updateBuyDateTime(map1);
+//							}else {
+//								//将买入时间换成下一个时间段
+//								Date changDate=startTimest.get(index+1);
+//								String changTime = simpleDateFormat1.format(changDate);
+//								HashMap<String,Object> map1=new HashMap<String,Object>();
+//								map1.put("id", property.getId());
+//								map1.put("buyTime", changTime);
+//								map1.put("buyDate",property.getBuyDate());
+//								propertyService.updateBuyDateTime(map1);
+//							}
 						}	
 					}
 				}
@@ -418,10 +442,11 @@ public class AutomaticService {
 			}
 			
 			System.out.println("自动确认执行结束");
-			log.info("自动确认执行结束");
+			log.info("自动确认执行结束,用时："+(System.currentTimeMillis()-startWorkTime)/1000.0);
 		}
 		 catch (Exception e) {
 			System.out.println("自动确认出错");
+			log.info(e.getMessage());
 			log.info("自动确认出错");
 		}
 	}
@@ -447,7 +472,7 @@ public class AutomaticService {
 	/**
 	 * 10点12自动将多余玩家按比例匹配给管理员
 	 */
-	@Scheduled(cron="0 12 10 * * ?")
+	@Scheduled(cron="0 06 10 * * ?")
 	public void leftMatch1() {
 		autoMatchLeft("10:00");
 	}
@@ -455,7 +480,7 @@ public class AutomaticService {
 	/**
 	 * 13点12自动将多余玩家按比例匹配给管理员
 	 */
-	@Scheduled(cron="0 12 13 * * ?")
+	@Scheduled(cron="0 06 13 * * ?")
 	public void leftMatch2() {
 		autoMatchLeft("13:00");
 	}
@@ -463,7 +488,7 @@ public class AutomaticService {
 	/**
 	 * 16点12自动将多余玩家按比例匹配给管理员
 	 */
-	@Scheduled(cron="0 12 16 * * ?")
+	@Scheduled(cron="0 06 16 * * ?")
 	public void leftMatch3() {
 		autoMatchLeft("16:00");
 	}
@@ -532,6 +557,7 @@ public class AutomaticService {
 			}
 			log.info("多余订单匹配成功---"+buyTime);
 		} catch (Exception e) {
+			log.info(e.getMessage());
 			log.info("多余订单匹配失败---"+buyTime);
 		}
 		
@@ -645,5 +671,96 @@ public class AutomaticService {
 		}
 		log.info("用户及下级的活跃状态检查完毕,用时："+(System.currentTimeMillis()-l1)+"毫秒");
 	}
+	
+	/**
+	 * 每晚23点10分判断是否将资产出售的条件变为1
+	 */
+	@Scheduled(cron="0 10 23 * * ?")
+	public void forbidProperty() {
+		log.info("开始跟新资产可售状态");
+		User superAdmin = userDao.queryById(501);
+		int a=0;
+		if(superAdmin!=null) {
+			//超级管理员的isConfirmed为1时表示要去用户必须预约了才能出售，所以每个资产变为不可出售
+			if(superAdmin.getIsConfirmed().equals(1)) {
+				a=propertyDao.updateCanSell();
+			}
+		}
+		log.info("跟新资产可售状态结束,更新条数："+a);
+	}
+	
+	/**
+	 * 延后商铺的买入时间1天
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 10 22 * * ?")
+	public void updateBuyDate() throws Exception {
+		log.info("开始跟新资产买入时间");
+		long l1=System.currentTimeMillis();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String today = simpleDateFormat.format(new Date());
+		List<Animal> allAnimal = animalDao.queryAll();
+		Set<Property> updateSet = new HashSet<Property>();
+		int count=0;
+		for(Animal animal:allAnimal) {
+			Integer waitDays = animal.getCycle();
+			Integer animalId = animal.getId();
+			Calendar c1=Calendar.getInstance();
+			c1.setTime(simpleDateFormat.parse(today));
+			c1.add(Calendar.DAY_OF_YEAR, -waitDays);
+			Date changed = c1.getTime();
+			String buyDay = simpleDateFormat.format(changed);
+			List<Property> queryNotOrderAndSellList = propertyDao.queryNotOrderAndSellList(animalId,buyDay);
+			for(Property property:queryNotOrderAndSellList) {
+				List<Property> properties=propertyDao.queryByUserIdAndBuyTime(animalId,property.getUserId(),property.getBuyTime());
+				updateSet.addAll(properties);
+			}
+		}
+		count=updatePropertiesBuyDate(updateSet);
+		log.info("跟新资产买入时间结束,更新条数："+count+"条,用时："+(System.currentTimeMillis()-l1)/1000.0);
+	}
+	
+	/**
+	 * 把所有的动物买入时间延后一天
+	 * @param collection
+	 * @return
+	 * @throws Exception
+	 */
+	private int updatePropertiesBuyDate(Collection<Property> collection) throws Exception {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		int sum=0;
+		for(Property property:collection) {
+			String oldDate=property.getBuyDate();
+			Calendar c1=Calendar.getInstance();
+			c1.setTime(simpleDateFormat.parse(oldDate));
+			c1.add(Calendar.DAY_OF_YEAR, 1);
+			Date changed = c1.getTime();
+			String newDate = simpleDateFormat.format(changed);
+			int a=propertyDao.updateBuyDateById(newDate,property.getId());
+			sum+=a;
+		}
+		return sum;
+	}
+	
+//	@Scheduled(fixedRate=60*10000000*60)
+//	public void updateBuyTime() throws Exception {
+//		log.info("开始改变买入时间");
+//		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+//		List<Property> list = propertyDao.queryAllNotSell();
+//		int i=0;
+//		for(Property property:list) {
+//			String oldDate=property.getBuyDate();
+//			Calendar c1=Calendar.getInstance();
+//			c1.setTime(simpleDateFormat2.parse(oldDate));
+//			c1.add(Calendar.DAY_OF_YEAR, 3);
+//			Date changed = c1.getTime();
+//			String newDate = simpleDateFormat2.format(changed);
+//			int a=propertyDao.updateBuyDateById(newDate,property.getId());
+//			i+=a;
+//		}
+//		
+//		log.info("全部修改完成："+i);
+//	}
+	
 }
 

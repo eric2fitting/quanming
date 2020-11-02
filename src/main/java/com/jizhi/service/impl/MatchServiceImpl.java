@@ -134,8 +134,8 @@ public class MatchServiceImpl implements MatchService{
 				e.printStackTrace();
 			}
 			//给双方发推送
-			appPushUtil.pushMsg(buyerCid, title, content1);
-			appPushUtil.pushMsg(sellerCid, title, content1);
+//			appPushUtil.pushMsg(buyerCid, title, content1);
+//			appPushUtil.pushMsg(sellerCid, title, content1);
 		}
 	}
 	

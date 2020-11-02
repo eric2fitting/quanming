@@ -13,12 +13,13 @@
 		<result column="isSold" property="isSold"/>
 		<result column="role" property="role"/>
 		<result column="code" property="code"/>
+		<result column="can_sell" property="canSell"/>
 	</resultMap>
 	
 	<select id="queryCanSell" parameterType="java.util.Map" resultMap="property">
-		select id,userId,animalId,price,buyDate,buyTime,role,code from property 
+		select id,userId,animalId,price,buyDate,buyTime,role,code,can_sell from property 
 		where 
-		animalId=#{animalId} and buyDate=#{buyDate} and buyTime=#{buyTime} and isSold=0 and role=0
+		animalId=#{animalId} and buyDate&lt;=#{buyDate} and buyTime=#{buyTime} and isSold=0 and role=0 and can_sell=0
 	</select>
 	
 	<update id="updateToSold" parameterType="java.lang.Integer">
@@ -34,13 +35,13 @@
 	</select>
 	
 	<select id="queryById" parameterType="java.lang.Integer" resultMap="property">
-		select id,userId,animalId,buyDate,buyTime,price,role,code 
+		select id,userId,animalId,buyDate,buyTime,price,role,code,can_sell 
 		from property 
 		where id=#{id}
 	</select>
 	
 	<select id="queryByUserId" parameterType="java.lang.Integer" resultMap="property">
-		select id,userId,animalId,price,buyDate,buyTime,isSold,role,code  
+		select id,userId,animalId,price,buyDate,buyTime,isSold,role,code,can_sell 
 		from property 
 		where userId=#{userId} and (isSold=0 or isSold=1)
 	</select>
